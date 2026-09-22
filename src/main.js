@@ -14,14 +14,22 @@ back:"BACK",hub:"SAVANNAH PARK",hubWelcome:"Welcome to the park!",
 missions:"MISSIONS",animals:"ANIMALS",learn:"LEARNING",badges:"MY BADGES",
 outfit:"Choose your outfit!",map:"CHOOSE A MISSION",soon:"Coming soon!",
 ok:"OK!",stars:"Stars",m1:"Become a Junior Ranger",m2:"Meet Mimi",
-m3:"Count the Zebra Herd",training:"Ranger Training",instruction:"Tap each item to get ready!",
+m3:"Count the Zebra Herd",m4:"Find the Lost Lion Cub",
+m5:"Cross the River",m6:"Help Tembo Find Water",m7:"Animal Words",
+m8:"Clean Up the Park",m9:"Discover Hidden Tracks",m10:"First Ranger Challenge",
+training:"Ranger Training",instruction:"Tap each item to get ready!",
 hat:"Safari Hat",mapItem:"Park Map",badge:"Ranger Badge",
 finish:"MISSION COMPLETE!",reward:"You earned a star!",continue:"CONTINUE",
 collected:"Collected",mimiIntro:"Leo: Look! It's Mimi the monkey!",
 mimiTask:"Help Mimi find 3 bananas!",bananas:"Bananas",great:"Great job!",
 locked:"Complete the previous mission first!",find:"Find the bananas!",
 zebraTask:"How many zebras can you see?",
-correct:"That's right! Great counting!",wrong:"Try again! Count carefully!"
+correct:"That's right! Great counting!",wrong:"Try again! Count carefully!",
+lionIntro:"Leo: A lion cub is lost! Let's help!",
+lionTask:"Find 3 clues to locate the lost cub!",
+clues:"Clues",clue1:"Tiny paw prints",clue2:"Golden fur",clue3:"Lion's den",
+clueFound:"Clue found!",lionFound:"You found the lost lion cub!",
+lionHelp:"The cub is safe! Great ranger work!"
 },
 fr:{
 title:"LES RANGERS",adventure:"SAUVAGES",tagline:"Explore. Apprends. Protège la nature.",
@@ -32,6 +40,9 @@ hubWelcome:"Bienvenue au parc !",missions:"MISSIONS",animals:"ANIMAUX",
 learn:"APPRENDRE",badges:"MES BADGES",outfit:"Choisis ta tenue !",
 map:"CHOISIS UNE MISSION",soon:"Bientôt disponible !",ok:"OK !",stars:"Étoiles",
 m1:"Devenir jeune Ranger",m2:"Rencontre Mimi",m3:"Compter le troupeau de zèbres",
+m4:"Retrouver le lionceau perdu",m5:"Traverser la rivière",
+m6:"Aider Tembo à trouver de l'eau",m7:"Les mots des animaux",
+m8:"Nettoyer le parc",m9:"Découvrir les traces",m10:"Défi du Ranger",
 training:"Entraînement Ranger",instruction:"Touche chaque objet !",
 hat:"Chapeau",mapItem:"Carte du parc",badge:"Badge Ranger",
 finish:"MISSION TERMINÉE !",reward:"Tu as gagné une étoile !",
@@ -40,7 +51,13 @@ mimiIntro:"Leo : Regarde ! Voici Mimi le singe !",
 mimiTask:"Aide Mimi à trouver 3 bananes !",bananas:"Bananes",great:"Bravo !",
 locked:"Termine la mission précédente !",find:"Trouve les bananes !",
 zebraTask:"Combien de zèbres vois-tu ?",
-correct:"Bravo ! Tu as bien compté !",wrong:"Essaie encore ! Compte bien !"
+correct:"Bravo ! Tu as bien compté !",wrong:"Essaie encore ! Compte bien !",
+lionIntro:"Leo : Un lionceau est perdu ! Aidons-le !",
+lionTask:"Trouve 3 indices pour retrouver le lionceau !",
+clues:"Indices",clue1:"Petites empreintes",clue2:"Poils dorés",
+clue3:"Tanière du lion",clueFound:"Indice trouvé !",
+lionFound:"Tu as retrouvé le lionceau !",
+lionHelp:"Le lionceau est en sécurité ! Bravo !"
 },
 es:{
 title:"GUARDIANES",adventure:"SALVAJES",
@@ -53,8 +70,12 @@ missions:"MISIONES",animals:"ANIMALES",learn:"APRENDER",
 badges:"MIS MEDALLAS",outfit:"¡Elige tu uniforme!",
 map:"ELIGE UNA MISIÓN",soon:"¡Muy pronto!",ok:"¡OK!",
 stars:"Estrellas",m1:"Ser un Ranger Junior",m2:"Conoce a Mimi",
-m3:"Cuenta la manada de cebras",training:"Entrenamiento Ranger",
-instruction:"¡Toca cada objeto!",hat:"Sombrero",mapItem:"Mapa del parque",
+m3:"Cuenta la manada de cebras",m4:"Encuentra al cachorro de león",
+m5:"Cruza el río",m6:"Ayuda a Tembo a encontrar agua",
+m7:"Palabras de animales",m8:"Limpia el parque",
+m9:"Descubre huellas ocultas",m10:"Desafío Ranger",
+training:"Entrenamiento Ranger",instruction:"¡Toca cada objeto!",
+hat:"Sombrero",mapItem:"Mapa del parque",
 badge:"Insignia Ranger",finish:"¡MISIÓN COMPLETADA!",
 reward:"¡Ganaste una estrella!",continue:"CONTINUAR",
 collected:"Conseguido",mimiIntro:"Leo: ¡Mira! ¡Es Mimi, la monita!",
@@ -63,7 +84,13 @@ great:"¡Muy bien!",locked:"¡Completa la misión anterior primero!",
 find:"¡Encuentra las bananas!",
 zebraTask:"¿Cuántas cebras puedes ver?",
 correct:"¡Correcto! ¡Muy bien contado!",
-wrong:"¡Inténtalo otra vez! ¡Cuenta bien!"
+wrong:"¡Inténtalo otra vez! ¡Cuenta bien!",
+lionIntro:"Leo: ¡Un cachorro de león está perdido! ¡Ayudémoslo!",
+lionTask:"¡Encuentra 3 pistas para localizarlo!",
+clues:"Pistas",clue1:"Pequeñas huellas",clue2:"Pelo dorado",
+clue3:"La guarida del león",clueFound:"¡Pista encontrada!",
+lionFound:"¡Encontraste al cachorro perdido!",
+lionHelp:"¡El cachorro está a salvo! ¡Buen trabajo!"
 }
 };
 
@@ -209,17 +236,20 @@ class Missions extends Phaser.Scene{
 constructor(){super("Missions");}
 create(){
 savannah(this);txt(this,270,50,t("map"),28);txt(this,270,95,`⭐ ${stars} ${t("stars")}`,20);
-const names=[t("m1"),t("m2"),t("m3"),"Find Lost Lion Cub","Cross the River",
-"Help Tembo Find Water","Animal Words","Clean Up the Park","Discover Hidden Tracks","First Ranger Challenge"];
+const names=[t("m1"),t("m2"),t("m3"),t("m4"),t("m5"),t("m6"),t("m7"),t("m8"),t("m9"),t("m10")];
 names.forEach((name,i)=>{
 const x=145+(i%2)*250,y=190+Math.floor(i/2)*125;
-const unlocked=i===0||(i===1&&completed.includes(0))||(i===2&&completed.includes(1));
+const unlocked=i===0||
+(i===1&&completed.includes(0))||
+(i===2&&completed.includes(1))||
+(i===3&&completed.includes(2));
 const done=completed.includes(i);
 btn(this,x,y,220,96,`${done?"✅":unlocked?"🌟":"🔒"} ${i+1}. ${name}`,
 done?0x65a84b:unlocked?0xe5a52f:0x78909c,()=>{
 if(i===0)this.scene.start("MissionOne");
 else if(i===1&&unlocked)this.scene.start("MissionTwo");
 else if(i===2&&unlocked)this.scene.start("MissionThree");
+else if(i===3&&unlocked)this.scene.start("MissionFour");
 else this.popup(unlocked?t("soon"):t("locked"));
 },15);
 });
@@ -277,7 +307,6 @@ btn(this,270,875,220,58,t("back"),0x3d83c5,()=>this.scene.start("Missions"),20);
 }
 }
 
-// MISSION 3 — COUNT THE ZEBRA HERD
 class MissionThree extends Phaser.Scene{
 constructor(){super("MissionThree");}
 create(){
@@ -286,16 +315,12 @@ leo(this,115,205,.55);txt(this,300,150,t("zebraTask"),23,"#fff6c7");
 
 const zebra=(x,y,sc=1)=>{
 const c=this.add.container(x,y).setScale(sc),g=this.add.graphics();
-// Legs and hooves
 g.fillStyle(0xffffff,1);g.fillRoundedRect(-28,20,13,35,5);g.fillRoundedRect(15,20,13,35,5);
 g.fillStyle(0x302c2a,1);g.fillRoundedRect(-29,48,15,8,3);g.fillRoundedRect(14,48,15,8,3);
-// Body and stripes
 g.fillStyle(0xffffff,1);g.fillEllipse(0,0,76,48);
 g.lineStyle(6,0x292929,1);g.lineBetween(-20,-20,-10,20);g.lineBetween(0,-22,8,22);g.lineBetween(20,-18,25,15);
-// Neck, head, mane
 g.fillStyle(0xffffff,1);g.fillRoundedRect(20,-30,20,40,7);g.fillEllipse(35,-32,35,27);
 g.fillStyle(0x292929,1);g.fillRoundedRect(18,-49,8,24,3);
-// Ear, eye, muzzle
 g.fillStyle(0xffffff,1);g.fillTriangle(25,-42,28,-58,34,-42);
 g.fillStyle(0x292929,1);g.fillCircle(43,-34,3);
 g.fillStyle(0xf0c9b5,1);g.fillEllipse(49,-25,17,10);
@@ -330,30 +355,127 @@ btn(this,270,920,220,52,t("back"),0x3d83c5,()=>this.scene.start("Missions"),19);
 }
 }
 
+// MISSION 4 — FIND THE LOST LION CUB
+class MissionFour extends Phaser.Scene{
+constructor(){super("MissionFour");}
+
+create(){
+savannah(this);
+
+txt(this,270,48,t("m4"),27);
+leo(this,100,205,.52);
+
+const bubble=this.add.graphics();
+bubble.fillStyle(0xffffff,1);
+bubble.fillRoundedRect(25,300,490,85,20);
+txt(this,270,337,t("lionIntro"),20,"#315b35");
+txt(this,270,420,t("lionTask"),21,"#fff6c7");
+
+const clues=[
+{x:110,y:535,emoji:"🐾",name:t("clue1")},
+{x:430,y:535,emoji:"🟡",name:t("clue2")},
+{x:270,y:680,emoji:"🌳",name:t("clue3")}
+];
+
+let found=0;
+const status=txt(this,270,765,`${t("clues")}: 0 / 3`,23,"#fff6c7");
+
+clues.forEach((clue,i)=>{
+const g=this.add.graphics();
+g.fillStyle(0xffffff,1);
+g.fillRoundedRect(clue.x-65,clue.y-65,130,130,20);
+
+txt(this,clue.x,clue.y-15,clue.emoji,40);
+txt(this,clue.x,clue.y+43,clue.name,14,"#315b35");
+
+const hit=this.add.rectangle(clue.x,clue.y,130,130,0xffffff,0)
+.setInteractive({useHandCursor:true});
+
+hit.on("pointerdown",()=>{
+if(g.getData("found"))return;
+
+g.setData("found",true);
+g.clear();
+g.fillStyle(0x65a84b,1);
+g.fillRoundedRect(clue.x-65,clue.y-65,130,130,20);
+
+txt(this,clue.x,clue.y,"✅",42);
+
+found++;
+status.setText(`${t("clues")}: ${found} / 3`);
+
+if(found<3){
+txt(this,270,825,t("clueFound"),20,"#fff6c7");
+}else{
+this.showLionCub();
+}
+});
+});
+
+btn(this,270,920,220,52,t("back"),0x3d83c5,
+()=>this.scene.start("Missions"),19);
+}
+
+showLionCub(){
+const overlay=this.add.graphics();
+overlay.fillStyle(0x315b35,.96);
+overlay.fillRoundedRect(25,250,490,430,25);
+
+txt(this,270,305,"🦁",100);
+txt(this,270,425,t("lionFound"),25,"#fff6c7");
+txt(this,270,490,t("lionHelp"),21,"#ffffff");
+
+btn(this,270,590,300,65,t("continue"),0x35a85b,
+()=>this.scene.start("Complete",{mission:3}),22);
+}
+}
+
 class Complete extends Phaser.Scene{
 constructor(){super("Complete");}
 init(data){this.mission=data.mission||0;}
+
 create(){
 savannah(this);
+
 const already=completed.includes(this.mission);
 if(!already){
-completed.push(this.mission);stars++;
+completed.push(this.mission);
+stars++;
 localStorage.setItem("wr_v1_completed",JSON.stringify(completed));
 localStorage.setItem("wr_v1_stars",String(stars));
 }
-txt(this,270,170,t("finish"),30,"#fff6c7");txt(this,270,285,"🏆",100);
-const missionName=this.mission===0?t("m1"):this.mission===1?t("m2"):t("m3");
-txt(this,270,405,missionName,25);txt(this,270,480,t("reward"),23);
+
+txt(this,270,170,t("finish"),30,"#fff6c7");
+txt(this,270,285,"🏆",100);
+
+const missionNames=[
+t("m1"),t("m2"),t("m3"),t("m4")
+];
+
+txt(this,270,405,missionNames[this.mission]||t("m1"),25);
+txt(this,270,480,t("reward"),23);
 txt(this,270,540,`⭐ ${t("stars")}: ${stars}`,23);
-if(this.mission===1)mimi(this,270,640,.65);else leo(this,270,640,.65);
-btn(this,270,775,340,70,t("continue"),0x35a85b,()=>this.scene.start("Missions"),23);
-btn(this,270,865,250,58,t("hub"),0x3d83c5,()=>this.scene.start("Park"),20);
+
+if(this.mission===1)mimi(this,270,640,.65);
+else leo(this,270,640,.65);
+
+btn(this,270,775,340,70,t("continue"),0x35a85b,
+()=>this.scene.start("Missions"),23);
+
+btn(this,270,865,250,58,t("hub"),0x3d83c5,
+()=>this.scene.start("Park"),20);
 }
 }
 
 new Phaser.Game({
-type:Phaser.AUTO,width:W,height:H,parent:"game",
+type:Phaser.AUTO,
+width:W,
+height:H,
+parent:"game",
 backgroundColor:"#65c9ed",
 scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH},
-scene:[Home,Ranger,Park,Missions,MissionOne,MissionTwo,MissionThree,Complete]
+scene:[
+Home,Ranger,Park,Missions,
+MissionOne,MissionTwo,MissionThree,MissionFour,Complete
+]
 });

@@ -1,148 +1,205 @@
 import Phaser from 'phaser';
 
-class WildRangersScene extends Phaser.Scene {
+const W = 540;
+const H = 960;
+
+const LANGUAGES = {
+en: {
+title: 'WILD RANGERS',
+adventure: 'ADVENTURE',
+tagline: 'Explore. Learn. Protect Nature.',
+welcome: 'Ready, Junior Ranger?',
+start: 'START ADVENTURE',
+footer: 'A safari full of discovery awaits!',
+create: 'CREATE YOUR RANGER',
+choose: 'Choose your ranger outfit',
+continue: 'CONTINUE',
+back: 'BACK',
+hub: 'WELCOME TO THE SAVANNAH!',
+missions: 'MISSIONS',
+animals: 'WILDLIFE',
+learn: 'LEARNING',
+badges: 'BADGES'
+},
+fr: {
+title: 'WILD RANGERS',
+adventure: 'AVENTURE',
+tagline: 'Explore. Apprends. Protège la nature.',
+welcome: 'Prêt, jeune ranger ?',
+start: "COMMENCER L’AVENTURE",
+footer: 'Un safari plein de découvertes t’attend !',
+create: 'CRÉE TON RANGER',
+choose: 'Choisis la tenue de ton ranger',
+continue: 'CONTINUER',
+back: 'RETOUR',
+hub: 'BIENVENUE DANS LA SAVANE !',
+missions: 'MISSIONS',
+animals: 'ANIMAUX',
+learn: 'APPRENDRE',
+badges: 'BADGES'
+},
+es: {
+title: 'WILD RANGERS',
+adventure: 'AVENTURA',
+tagline: 'Explora. Aprende. Protege la naturaleza.',
+welcome: '¿Listo, joven ranger?',
+start: 'COMENZAR AVENTURA',
+footer: '¡Te espera un safari lleno de descubrimientos!',
+create: 'CREA TU RANGER',
+choose: 'Elige el traje de tu ranger',
+continue: 'CONTINUAR',
+back: 'VOLVER',
+hub: '¡BIENVENIDO A LA SABANA!',
+missions: 'MISIONES',
+animals: 'ANIMALES',
+learn: 'APRENDER',
+badges: 'INSIGNIAS'
+}
+};
+
+const OUTFITS = [0xE0A438, 0x4A8C9E, 0x5A3E2B, 0x8B5FA6];
+
+function getLanguage() {
+return localStorage.getItem('wr_v1_lang') || 'en';
+}
+
+function getText(key) {
+return LANGUAGES[getLanguage()][key];
+}
+
+function makeText(scene, x, y, text, size = 24, color = '#FFFFFF') {
+return scene.add.text(x, y, text, {
+fontFamily: 'Arial, sans-serif',
+fontSize: "${size}px",
+fontStyle: 'bold',
+color,
+align: 'center',
+wordWrap: { width: 460 }
+}).setOrigin(0.5);
+}
+
+function makeButton(scene, x, y, label, callback, color = 0xE0A438, width = 310) {
+const box = scene.add.graphics();
+box.fillStyle(0x354A29, 1);
+box.fillRoundedRect(x - width / 2, y - 34, width, 76, 22);
+box.fillStyle(color, 1);
+box.lineStyle(3, 0xFFF0B9, 1);
+box.fillRoundedRect(x - width / 2, y - 42, width, 76, 22);
+box.strokeRoundedRect(x - width / 2, y - 42, width, 76, 22);
+
+const text = makeText(scene, x, y - 4, label, 20, '#3D321F');
+
+const hit = scene.add.rectangle(x, y - 4, width, 84, 0xffffff, 0);
+hit.setInteractive({ useHandCursor: true });
+hit.on('pointerdown', callback);
+
+return { box, text, hit };
+}
+
+class HomeScene extends Phaser.Scene {
 constructor() {
-super('WildRangersScene');
-this.language = 'en';
+super('HomeScene');
 }
 
 create() {
-this.drawBackground();
-this.drawLeo();
-this.drawTitle();
-this.drawStartButton();
-this.drawLanguageSelector();
+this.drawSafari();
 
-this.scale.on('resize', () => this.scene.restart());
+makeText(this, W / 2, 75, getText('title'), 36, '#FFF5D8')
+  .setStroke('#59452A', 6);
+
+makeText(this, W / 2, 120, getText('adventure'), 29, '#FFE08A')
+  .setStroke('#59452A', 5);
+
+makeText(this, W / 2, 184, getText('tagline'), 16)
+  .setStroke('#72512C', 3);
+
+makeText(this, W / 2, 280, getText('welcome'), 22)
+  .setStroke('#5B432C', 4);
+
+this.drawLeo(W / 2, 510);
+
+makeButton(this, W / 2, 755, getText('start'), () => {
+  this.scene.start('RangerScene');
+});
+
+makeText(this, W / 2, 855, getText('footer'), 14);
+
+this.addLanguageButtons();
 
 }
 
-drawBackground() {
-const { width: w, height: h } = this.scale;
-
+drawSafari() {
 this.cameras.main.setBackgroundColor('#F5B85B');
 
-// Sky
-const sky = this.add.graphics();
-sky.fillGradientStyle(
-  0xF6C56B, 0xF6C56B,
-  0xE9844D, 0xE9844D, 1
-);
-sky.fillRect(0, 0, w, h);
+const g = this.add.graphics();
+g.fillGradientStyle(0xF6C56B, 0xF6C56B, 0xE9844D, 0xE9844D, 1);
+g.fillRect(0, 0, W, H);
 
-// Sun
-this.add.circle(w * 0.78, h * 0.17, 62, 0xFFE7A0);
+this.add.circle(420, 170, 62, 0xFFE7A0);
 
-// Distant hills
-const hills = this.add.graphics();
-hills.fillStyle(0xB7A64D, 1);
-hills.fillEllipse(w * 0.18, h * 0.57, w * 0.9, h * 0.28);
-hills.fillEllipse(w * 0.88, h * 0.59, w * 0.9, h * 0.32);
+g.fillStyle(0xB7A64D, 1);
+g.fillEllipse(100, 550, 430, 260);
+g.fillEllipse(480, 570, 430, 300);
 
-// Savannah ground
-const ground = this.add.graphics();
-ground.fillStyle(0x657D3B, 1);
-ground.fillRect(0, h * 0.63, w, h * 0.37);
+g.fillStyle(0x657D3B, 1);
+g.fillRect(0, 620, W, 340);
 
-// Foreground grass
-ground.fillStyle(0x435F32, 1);
-ground.fillEllipse(w * 0.5, h * 0.91, w * 1.3, h * 0.24);
+g.fillStyle(0x435F32, 1);
+g.fillEllipse(270, 900, 720, 190);
 
-// Simple acacia trees
-this.drawTree(w * 0.13, h * 0.60, 0.85);
-this.drawTree(w * 0.88, h * 0.61, 0.72);
-
-// Decorative stars/sparkles
-this.add.text(w * 0.16, h * 0.16, '✦', {
-  fontSize: '26px',
-  color: '#FFF1C6'
-});
-
-this.add.text(w * 0.83, h * 0.34, '✦', {
-  fontSize: '20px',
-  color: '#FFF1C6'
-});
+this.drawTree(70, 620, 0.7);
+this.drawTree(475, 625, 0.65);
 
 }
 
-drawTree(x, y, scale) {
-const tree = this.add.graphics();
-
-tree.fillStyle(0x62472F, 1);
-tree.fillRoundedRect(x - 7 * scale, y - 72 * scale, 14 * scale, 80 * scale, 5);
-
-tree.fillStyle(0x3D5A32, 1);
-tree.fillEllipse(x, y - 83 * scale, 112 * scale, 35 * scale);
-tree.fillEllipse(x - 25 * scale, y - 95 * scale, 48 * scale, 28 * scale);
-tree.fillEllipse(x + 27 * scale, y - 94 * scale, 50 * scale, 27 * scale);
-
+drawTree(x, y, s) {
+const g = this.add.graphics();
+g.fillStyle(0x62472F, 1);
+g.fillRoundedRect(x - 6 * s, y - 70 * s, 12 * s, 75 * s, 4);
+g.fillStyle(0x3D5A32, 1);
+g.fillEllipse(x, y - 82 * s, 105 * s, 34 * s);
+g.fillEllipse(x - 22 * s, y - 94 * s, 48 * s, 28 * s);
+g.fillEllipse(x + 25 * s, y - 94 * s, 48 * s, 28 * s);
 }
 
-drawLeo() {
-const { width: w, height: h } = this.scale;
-const x = w / 2;
-const y = h * 0.57;
-
+drawLeo(x, y, outfit = 0xE0A438) {
 const leo = this.add.container(x, y);
+const g = this.add.graphics();
 
-// Legs
-const legs = this.add.graphics();
-legs.fillStyle(0x59402D, 1);
-legs.fillRoundedRect(-31, 56, 22, 58, 8);
-legs.fillRoundedRect(9, 56, 22, 58, 8);
-leo.add(legs);
+g.fillStyle(0x59402D, 1);
+g.fillRoundedRect(-31, 55, 22, 58, 8);
+g.fillRoundedRect(9, 55, 22, 58, 8);
 
-// Body / ranger shirt
-const body = this.add.graphics();
-body.fillStyle(0xD99A36, 1);
-body.fillRoundedRect(-47, -8, 94, 86, 24);
-body.fillStyle(0xF3D18A, 1);
-body.fillRoundedRect(-9, 1, 18, 57, 7);
-leo.add(body);
+g.fillStyle(outfit, 1);
+g.fillRoundedRect(-47, -8, 94, 82, 22);
 
-// Arms
-const arms = this.add.graphics();
-arms.fillStyle(0x9B653D, 1);
-arms.fillRoundedRect(-64, 3, 22, 59, 10);
-arms.fillRoundedRect(42, 3, 22, 59, 10);
-leo.add(arms);
+g.fillStyle(0x9B653D, 1);
+g.fillRoundedRect(-64, 0, 20, 58, 9);
+g.fillRoundedRect(44, 0, 20, 58, 9);
 
-// Head
-const head = this.add.graphics();
-head.fillStyle(0xB87948, 1);
-head.fillCircle(0, -47, 48);
+g.fillStyle(0xB87948, 1);
+g.fillCircle(0, -48, 48);
+g.fillCircle(-38, -76, 13);
+g.fillCircle(38, -76, 13);
 
-// Ears
-head.fillCircle(-39, -75, 13);
-head.fillCircle(39, -75, 13);
+g.fillStyle(0x493326, 1);
+g.fillEllipse(0, -82, 76, 28);
 
-// Hair
-head.fillStyle(0x493326, 1);
-head.fillEllipse(0, -81, 76, 30);
+g.fillStyle(0x2B211B, 1);
+g.fillCircle(-16, -49, 4);
+g.fillCircle(16, -49, 4);
 
-// Eyes
-head.fillStyle(0x2B211B, 1);
-head.fillCircle(-16, -49, 4);
-head.fillCircle(16, -49, 4);
+g.lineStyle(3, 0x57351F, 1);
+g.beginPath();
+g.arc(0, -37, 14, 0.2, Math.PI - 0.2, false);
+g.strokePath();
 
-// Smile
-head.lineStyle(3, 0x57351F, 1);
-head.beginPath();
-head.arc(0, -36, 14, 0.2, Math.PI - 0.2, false);
-head.strokePath();
+g.fillStyle(0xE0A438, 1);
+g.fillEllipse(0, -88, 104, 20);
+g.fillRoundedRect(-33, -112, 66, 27, 10);
 
-leo.add(head);
+leo.add(g);
 
-// Ranger hat
-const hat = this.add.graphics();
-hat.fillStyle(0xE0A438, 1);
-hat.fillEllipse(0, -87, 104, 20);
-hat.fillRoundedRect(-33, -112, 66, 27, 10);
-hat.fillStyle(0x6C512D, 1);
-hat.fillRect(-31, -94, 62, 6);
-leo.add(hat);
-
-// Friendly idle animation
 this.tweens.add({
   targets: leo,
   y: y - 7,
@@ -152,204 +209,192 @@ this.tweens.add({
   ease: 'Sine.easeInOut'
 });
 
-}
-
-drawTitle() {
-const { width: w, height: h } = this.scale;
-
-this.add.text(w / 2, h * 0.075, 'WILD RANGERS', {
-  fontFamily: 'Arial, sans-serif',
-  fontSize: '34px',
-  fontStyle: 'bold',
-  color: '#FFF5D8',
-  stroke: '#59452A',
-  strokeThickness: 6,
-  align: 'center'
-}).setOrigin(0.5);
-
-this.add.text(w / 2, h * 0.12, 'ADVENTURE', {
-  fontFamily: 'Arial, sans-serif',
-  fontSize: '29px',
-  fontStyle: 'bold',
-  color: '#FFE08A',
-  stroke: '#59452A',
-  strokeThickness: 5,
-  align: 'center'
-}).setOrigin(0.5);
-
-this.add.text(w / 2, h * 0.19, this.getTagline(), {
-  fontFamily: 'Arial, sans-serif',
-  fontSize: '16px',
-  fontStyle: 'bold',
-  color: '#FFF8E7',
-  stroke: '#72512C',
-  strokeThickness: 3,
-  align: 'center'
-}).setOrigin(0.5);
-
-this.welcome = this.add.text(w / 2, h * 0.29, this.getWelcome(), {
-  fontFamily: 'Arial, sans-serif',
-  fontSize: '21px',
-  fontStyle: 'bold',
-  color: '#FFFFFF',
-  stroke: '#5B432C',
-  strokeThickness: 4,
-  align: 'center'
-}).setOrigin(0.5);
+return leo;
 
 }
 
-drawStartButton() {
-const { width: w, height: h } = this.scale;
-const y = h * 0.79;
+addLanguageButtons() {
+['en', 'fr', 'es'].forEach((lang, i) => {
+const x = 178 + i * 92;
+const y = 925;
 
-const button = this.add.container(w / 2, y);
+  const bg = this.add.rectangle(x, y, 72, 42,
+    getLanguage() === lang ? 0xE0A438 : 0x435B32);
+  bg.setStrokeStyle(2, 0xFFF0B9);
 
-const shadow = this.add.graphics();
-shadow.fillStyle(0x354A29, 1);
-shadow.fillRoundedRect(-154, -30, 308, 76, 28);
+  makeText(this, x, y, lang.toUpperCase(), 16)
+    .setInteractive({ useHandCursor: true })
+    .on('pointerdown', () => {
+      localStorage.setItem('wr_v1_lang', lang);
+      this.scene.restart();
+    });
 
-const face = this.add.graphics();
-face.fillStyle(0xE0A438, 1);
-face.lineStyle(4, 0xFFF0B9, 1);
-face.fillRoundedRect(-154, -40, 308, 76, 28);
-face.strokeRoundedRect(-154, -40, 308, 76, 28);
-
-const label = this.add.text(0, -2, this.getStartLabel(), {
-  fontFamily: 'Arial, sans-serif',
-  fontSize: '21px',
-  fontStyle: 'bold',
-  color: '#3D321F',
-  align: 'center'
-}).setOrigin(0.5);
-
-button.add([shadow, face, label]);
-button.setSize(308, 82);
-button.setInteractive(
-  new Phaser.Geom.Rectangle(-154, -42, 308, 84),
-  Phaser.Geom.Rectangle.Contains
-);
-
-button.on('pointerover', () => button.setScale(1.04));
-button.on('pointerout', () => button.setScale(1));
-button.on('pointerdown', () => {
-  label.setText(this.getComingSoon());
+  bg.setInteractive({ useHandCursor: true })
+    .on('pointerdown', () => {
+      localStorage.setItem('wr_v1_lang', lang);
+      this.scene.restart();
+    });
 });
 
-this.startLabel = label;
-
-this.add.text(w / 2, h * 0.88, this.getFooter(), {
-  fontFamily: 'Arial, sans-serif',
-  fontSize: '13px',
-  color: '#FFF3D4',
-  align: 'center',
-  stroke: '#40502A',
-  strokeThickness: 3
-}).setOrigin(0.5);
-
+}
 }
 
-drawLanguageSelector() {
-const { width: w, height: h } = this.scale;
-const languages = [
-{ code: 'en', label: 'EN' },
-{ code: 'fr', label: 'FR' },
-{ code: 'es', label: 'ES' }
-];
+class RangerScene extends Phaser.Scene {
+constructor() {
+super('RangerScene');
+this.outfit = OUTFITS[0];
+}
 
-const startX = w / 2 - 94;
+create() {
+this.cameras.main.setBackgroundColor('#EFB65C');
 
-languages.forEach((lang, index) => {
-  const x = startX + index * 94;
-  const y = h * 0.94;
+const g = this.add.graphics();
+g.fillStyle(0x657D3B, 1);
+g.fillRect(0, 620, W, 340);
+g.fillStyle(0x435F32, 1);
+g.fillEllipse(270, 900, 720, 190);
 
-  const button = this.add.container(x, y);
-  const bg = this.add.graphics();
+makeText(this, W / 2, 95, getText('create'), 29, '#FFF5D8')
+  .setStroke('#59452A', 5);
 
-  bg.fillStyle(
-    this.language === lang.code ? 0xE0A438 : 0x435B32,
-    1
-  );
-  bg.lineStyle(2, 0xFFF0B9, 1);
-  bg.fillRoundedRect(-36, -20, 72, 40, 14);
-  bg.strokeRoundedRect(-36, -20, 72, 40, 14);
+makeText(this, W / 2, 160, getText('choose'), 19, '#FFFFFF')
+  .setStroke('#59452A', 3);
 
-  const text = this.add.text(0, 0, lang.label, {
-    fontFamily: 'Arial, sans-serif',
-    fontSize: '16px',
-    fontStyle: 'bold',
-    color: '#FFFFFF'
-  }).setOrigin(0.5);
+this.preview = this.drawPreview(W / 2, 400, this.outfit);
 
-  button.add([bg, text]);
-  button.setSize(72, 40);
-  button.setInteractive(
-    new Phaser.Geom.Rectangle(-36, -20, 72, 40),
-    Phaser.Geom.Rectangle.Contains
-  );
+this.outfitButtons = [];
 
-  button.on('pointerdown', () => {
-    this.language = lang.code;
-    this.scene.restart();
+OUTFITS.forEach((color, i) => {
+  const x = 100 + i * 113;
+  const y = 600;
+
+  const circle = this.add.circle(x, y, 37, color);
+  circle.setStrokeStyle(4, 0xFFF0B9);
+  circle.setInteractive({ useHandCursor: true });
+
+  circle.on('pointerdown', () => {
+    this.outfit = color;
+    this.preview.destroy();
+    this.preview = this.drawPreview(W / 2, 400, this.outfit);
   });
+
+  this.outfitButtons.push(circle);
+});
+
+makeButton(this, W / 2, 740, getText('continue'), () => {
+  localStorage.setItem('wr_v1_outfit', String(this.outfit));
+  this.scene.start('ParkScene');
+});
+
+makeButton(this, W / 2, 840, getText('back'), () => {
+  this.scene.start('HomeScene');
+}, 0xF7EFD8, 220);
+
+}
+
+drawPreview(x, y, outfit) {
+const preview = this.add.container(x, y);
+const g = this.add.graphics();
+
+g.fillStyle(0x59402D, 1);
+g.fillRoundedRect(-24, 40, 18, 54, 7);
+g.fillRoundedRect(6, 40, 18, 54, 7);
+
+g.fillStyle(outfit, 1);
+g.fillRoundedRect(-39, -10, 78, 70, 18);
+
+g.fillStyle(0xB87948, 1);
+g.fillCircle(0, -50, 40);
+g.fillCircle(-31, -73, 10);
+g.fillCircle(31, -73, 10);
+
+g.fillStyle(0x493326, 1);
+g.fillEllipse(0, -80, 62, 23);
+
+g.fillStyle(0x2B211B, 1);
+g.fillCircle(-13, -51, 3);
+g.fillCircle(13, -51, 3);
+
+g.fillStyle(0xE0A438, 1);
+g.fillEllipse(0, -85, 85, 16);
+g.fillRoundedRect(-27, -105, 54, 22, 8);
+
+preview.add(g);
+return preview;
+
+}
+}
+
+class ParkScene extends Phaser.Scene {
+constructor() {
+super('ParkScene');
+}
+
+create() {
+this.cameras.main.setBackgroundColor('#F5B85B');
+
+const g = this.add.graphics();
+g.fillStyle(0xB7A64D, 1);
+g.fillEllipse(150, 400, 500, 260);
+g.fillEllipse(470, 460, 480, 300);
+g.fillStyle(0x657D3B, 1);
+g.fillRect(0, 570, W, 390);
+
+makeText(this, W / 2, 100, getText('hub'), 25, '#FFF5D8')
+  .setStroke('#59452A', 5);
+
+const outfit = Number(localStorage.getItem('wr_v1_outfit')) || OUTFITS[0];
+this.drawRanger(W / 2, 320, outfit);
+
+[
+  ['missions', 510],
+  ['animals', 620],
+  ['learn', 730],
+  ['badges', 840]
+].forEach(([key, y]) => {
+  makeButton(this, W / 2, y, getText(key), () => {
+    // These destinations will be connected as we build each feature.
+  }, 0xE0A438, 300);
 });
 
 }
 
-getTagline() {
-return {
-en: 'Explore. Learn. Protect Nature.',
-fr: 'Explore. Apprends. Protège la nature.',
-es: 'Explora. Aprende. Protege la naturaleza.'
-}[this.language];
-}
+drawRanger(x, y, outfit) {
+const g = this.add.graphics();
 
-getWelcome() {
-return {
-en: 'Ready, Junior Ranger?',
-fr: 'Prêt, jeune ranger ?',
-es: '¿Listo, joven ranger?'
-}[this.language];
-}
+g.fillStyle(0x59402D, 1);
+g.fillRoundedRect(x - 28, y + 42, 18, 45, 7);
+g.fillRoundedRect(x + 10, y + 42, 18, 45, 7);
 
-getStartLabel() {
-return {
-en: 'START ADVENTURE',
-fr: "COMMENCER L’AVENTURE",
-es: 'COMENZAR AVENTURA'
-}[this.language];
-}
+g.fillStyle(outfit, 1);
+g.fillRoundedRect(x - 40, y - 8, 80, 62, 18);
 
-getComingSoon() {
-return {
-en: 'Adventure coming soon!',
-fr: 'Aventure bientôt disponible !',
-es: '¡Aventura muy pronto!'
-}[this.language];
-}
+g.fillStyle(0xB87948, 1);
+g.fillCircle(x, y - 45, 39);
 
-getFooter() {
-return {
-en: 'A safari full of discovery awaits!',
-fr: 'Un safari plein de découvertes t’attend !',
-es: '¡Te espera un safari lleno de descubrimientos!'
-}[this.language];
+g.fillStyle(0x493326, 1);
+g.fillEllipse(x, y - 76, 62, 23);
+
+g.fillStyle(0x2B211B, 1);
+g.fillCircle(x - 13, y - 45, 3);
+g.fillCircle(x + 13, y - 45, 3);
+
+g.fillStyle(0xE0A438, 1);
+g.fillEllipse(x, y - 81, 85, 16);
+g.fillRoundedRect(x - 27, y - 101, 54, 22, 8);
+
 }
 }
 
-const config = {
+const game = new Phaser.Game({
 type: Phaser.AUTO,
 parent: 'game-container',
-width: 540,
-height: 960,
+width: W,
+height: H,
 backgroundColor: '#16211A',
-
 scale: {
 mode: Phaser.Scale.FIT,
 autoCenter: Phaser.Scale.CENTER_BOTH
 },
-
-scene: [WildRangersScene]
-};
-
-new Phaser.Game(config);
+scene: [HomeScene, RangerScene, ParkScene]
+});

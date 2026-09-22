@@ -1,400 +1,640 @@
-import Phaser from 'phaser';
+import Phaser from "phaser";
 
 const W = 540;
 const H = 960;
 
 const LANGUAGES = {
-en: {
-title: 'WILD RANGERS',
-adventure: 'ADVENTURE',
-tagline: 'Explore. Learn. Protect Nature.',
-welcome: 'Ready, Junior Ranger?',
-start: 'START ADVENTURE',
-footer: 'A safari full of discovery awaits!',
-create: 'CREATE YOUR RANGER',
-choose: 'Choose your ranger outfit',
-continue: 'CONTINUE',
-back: 'BACK',
-hub: 'WELCOME TO THE SAVANNAH!',
-missions: 'MISSIONS',
-animals: 'WILDLIFE',
-learn: 'LEARNING',
-badges: 'BADGES'
-},
-fr: {
-title: 'WILD RANGERS',
-adventure: 'AVENTURE',
-tagline: 'Explore. Apprends. Protège la nature.',
-welcome: 'Prêt, jeune ranger ?',
-start: "COMMENCER L’AVENTURE",
-footer: 'Un safari plein de découvertes t’attend !',
-create: 'CRÉE TON RANGER',
-choose: 'Choisis la tenue de ton ranger',
-continue: 'CONTINUER',
-back: 'RETOUR',
-hub: 'BIENVENUE DANS LA SAVANE !',
-missions: 'MISSIONS',
-animals: 'ANIMAUX',
-learn: 'APPRENDRE',
-badges: 'BADGES'
-},
-es: {
-title: 'WILD RANGERS',
-adventure: 'AVENTURA',
-tagline: 'Explora. Aprende. Protege la naturaleza.',
-welcome: '¿Listo, joven ranger?',
-start: 'COMENZAR AVENTURA',
-footer: '¡Te espera un safari lleno de descubrimientos!',
-create: 'CREA TU RANGER',
-choose: 'Elige el traje de tu ranger',
-continue: 'CONTINUAR',
-back: 'VOLVER',
-hub: '¡BIENVENIDO A LA SABANA!',
-missions: 'MISIONES',
-animals: 'ANIMALES',
-learn: 'APRENDER',
-badges: 'INSIGNIAS'
-}
+  en: {
+    title: "WILD RANGERS",
+    subtitle: "ADVENTURE",
+    tagline: "Explore. Learn. Protect Nature.",
+    welcome: "Welcome, Little Ranger!",
+    start: "LET'S EXPLORE!",
+    footer: "A wild adventure awaits!",
+    create: "CREATE YOUR RANGER",
+    choose: "Choose your ranger outfit",
+    continue: "LET'S GO!",
+    back: "BACK",
+    hub: "SAVANNAH PARK",
+    hubWelcome: "Welcome to the park!",
+    missions: "MISSIONS",
+    animals: "ANIMALS",
+    learn: "LEARNING",
+    badges: "MY BADGES",
+    outfit: "Choose your outfit!",
+    leo: "Hi, Ranger! I'm Leo!",
+    selectLang: "Language",
+  },
+
+  fr: {
+    title: "LES RANGERS",
+    subtitle: "SAUVAGES",
+    tagline: "Explore. Apprends. Protège la nature.",
+    welcome: "Bienvenue, petit Ranger !",
+    start: "PARTONS EXPLORER !",
+    footer: "Une aventure t'attend !",
+    create: "CRÉE TON RANGER",
+    choose: "Choisis ta tenue",
+    continue: "C'EST PARTI !",
+    back: "RETOUR",
+    hub: "PARC DE LA SAVANE",
+    hubWelcome: "Bienvenue au parc !",
+    missions: "MISSIONS",
+    animals: "ANIMAUX",
+    learn: "APPRENDRE",
+    badges: "MES BADGES",
+    outfit: "Choisis ta tenue !",
+    leo: "Salut, Ranger ! Moi, c'est Leo !",
+    selectLang: "Langue",
+  },
+
+  es: {
+    title: "GUARDIANES",
+    subtitle: "SALVAJES",
+    tagline: "Explora. Aprende. Protege la naturaleza.",
+    welcome: "¡Bienvenido, pequeño Ranger!",
+    start: "¡VAMOS A EXPLORAR!",
+    footer: "¡Una aventura te espera!",
+    create: "CREA TU RANGER",
+    choose: "Elige tu uniforme",
+    continue: "¡VAMOS!",
+    back: "VOLVER",
+    hub: "PARQUE DE LA SABANA",
+    hubWelcome: "¡Bienvenido al parque!",
+    missions: "MISIONES",
+    animals: "ANIMALES",
+    learn: "APRENDER",
+    badges: "MIS MEDALLAS",
+    outfit: "¡Elige tu uniforme!",
+    leo: "¡Hola, Ranger! ¡Soy Leo!",
+    selectLang: "Idioma",
+  },
 };
 
-const OUTFITS = [0xE0A438, 0x4A8C9E, 0x5A3E2B, 0x8B5FA6];
+let currentLang = localStorage.getItem("wr_v1_lang") || "en";
 
-function getLanguage() {
-return localStorage.getItem('wr_v1_lang') || 'en';
+function T(key) {
+  return LANGUAGES[currentLang]?.[key] || LANGUAGES.en[key] || key;
 }
 
-function getText(key) {
-return LANGUAGES[getLanguage()][key];
+// --------------------------------------------------
+// SHARED CARTOON HELPERS
+// --------------------------------------------------
+
+function addText(scene, x, y, text, size = 24, color = "#ffffff") {
+  return scene.add.text(x, y, text, {
+    fontFamily: "Trebuchet MS, Arial, sans-serif",
+    fontSize: `${size}px`,
+    fontStyle: "bold",
+    color,
+    align: "center",
+    wordWrap: { width: 470 },
+    stroke: "#4b3825",
+    strokeThickness: size >= 28 ? 3 : 1,
+  }).setOrigin(0.5);
 }
 
-function makeText(scene, x, y, text, size = 24, color = '#FFFFFF') {
-return scene.add.text(x, y, text, {
-fontFamily: 'Arial, sans-serif',
-fontSize: "${size}px",
-fontStyle: 'bold',
-color,
-align: 'center',
-wordWrap: { width: 460 }
-}).setOrigin(0.5);
-}
+function roundedButton(scene, x, y, w, h, label, color, callback, fontSize = 25) {
+  const shadow = scene.add.graphics();
+  shadow.fillStyle(0x49321f, 0.35);
+  shadow.fillRoundedRect(x - w / 2 + 3, y - h / 2 + 7, w, h, 24);
 
-function makeButton(scene, x, y, label, callback, color = 0xE0A438, width = 310) {
-const box = scene.add.graphics();
-box.fillStyle(0x354A29, 1);
-box.fillRoundedRect(x - width / 2, y - 34, width, 76, 22);
-box.fillStyle(color, 1);
-box.lineStyle(3, 0xFFF0B9, 1);
-box.fillRoundedRect(x - width / 2, y - 42, width, 76, 22);
-box.strokeRoundedRect(x - width / 2, y - 42, width, 76, 22);
+  const button = scene.add.graphics();
+  button.fillStyle(0xffffff, 1);
+  button.fillRoundedRect(x - w / 2, y - h / 2, w, h, 24);
+  button.fillStyle(color, 1);
+  button.fillRoundedRect(x - w / 2 + 5, y - h / 2 + 5, w - 10, h - 12, 20);
 
-const text = makeText(scene, x, y - 4, label, 20, '#3D321F');
+  button.fillStyle(0xffffff, 0.18);
+  button.fillRoundedRect(x - w / 2 + 12, y - h / 2 + 9, w - 24, 13, 8);
 
-const hit = scene.add.rectangle(x, y - 4, width, 84, 0xffffff, 0);
-hit.setInteractive({ useHandCursor: true });
-hit.on('pointerdown', callback);
+  const text = addText(scene, x, y - 1, label, fontSize);
 
-return { box, text, hit };
-}
+  const hit = scene.add.rectangle(x, y, w, h, 0xffffff, 0)
+    .setInteractive({ useHandCursor: true });
 
-class HomeScene extends Phaser.Scene {
-constructor() {
-super('HomeScene');
-}
+  hit.on("pointerdown", callback);
 
-create() {
-this.drawSafari();
-
-makeText(this, W / 2, 75, getText('title'), 36, '#FFF5D8')
-  .setStroke('#59452A', 6);
-
-makeText(this, W / 2, 120, getText('adventure'), 29, '#FFE08A')
-  .setStroke('#59452A', 5);
-
-makeText(this, W / 2, 184, getText('tagline'), 16)
-  .setStroke('#72512C', 3);
-
-makeText(this, W / 2, 280, getText('welcome'), 22)
-  .setStroke('#5B432C', 4);
-
-this.drawLeo(W / 2, 510);
-
-makeButton(this, W / 2, 755, getText('start'), () => {
-  this.scene.start('RangerScene');
-});
-
-makeText(this, W / 2, 855, getText('footer'), 14);
-
-this.addLanguageButtons();
-
-}
-
-drawSafari() {
-this.cameras.main.setBackgroundColor('#F5B85B');
-
-const g = this.add.graphics();
-g.fillGradientStyle(0xF6C56B, 0xF6C56B, 0xE9844D, 0xE9844D, 1);
-g.fillRect(0, 0, W, H);
-
-this.add.circle(420, 170, 62, 0xFFE7A0);
-
-g.fillStyle(0xB7A64D, 1);
-g.fillEllipse(100, 550, 430, 260);
-g.fillEllipse(480, 570, 430, 300);
-
-g.fillStyle(0x657D3B, 1);
-g.fillRect(0, 620, W, 340);
-
-g.fillStyle(0x435F32, 1);
-g.fillEllipse(270, 900, 720, 190);
-
-this.drawTree(70, 620, 0.7);
-this.drawTree(475, 625, 0.65);
-
-}
-
-drawTree(x, y, s) {
-const g = this.add.graphics();
-g.fillStyle(0x62472F, 1);
-g.fillRoundedRect(x - 6 * s, y - 70 * s, 12 * s, 75 * s, 4);
-g.fillStyle(0x3D5A32, 1);
-g.fillEllipse(x, y - 82 * s, 105 * s, 34 * s);
-g.fillEllipse(x - 22 * s, y - 94 * s, 48 * s, 28 * s);
-g.fillEllipse(x + 25 * s, y - 94 * s, 48 * s, 28 * s);
-}
-
-drawLeo(x, y, outfit = 0xE0A438) {
-const leo = this.add.container(x, y);
-const g = this.add.graphics();
-
-g.fillStyle(0x59402D, 1);
-g.fillRoundedRect(-31, 55, 22, 58, 8);
-g.fillRoundedRect(9, 55, 22, 58, 8);
-
-g.fillStyle(outfit, 1);
-g.fillRoundedRect(-47, -8, 94, 82, 22);
-
-g.fillStyle(0x9B653D, 1);
-g.fillRoundedRect(-64, 0, 20, 58, 9);
-g.fillRoundedRect(44, 0, 20, 58, 9);
-
-g.fillStyle(0xB87948, 1);
-g.fillCircle(0, -48, 48);
-g.fillCircle(-38, -76, 13);
-g.fillCircle(38, -76, 13);
-
-g.fillStyle(0x493326, 1);
-g.fillEllipse(0, -82, 76, 28);
-
-g.fillStyle(0x2B211B, 1);
-g.fillCircle(-16, -49, 4);
-g.fillCircle(16, -49, 4);
-
-g.lineStyle(3, 0x57351F, 1);
-g.beginPath();
-g.arc(0, -37, 14, 0.2, Math.PI - 0.2, false);
-g.strokePath();
-
-g.fillStyle(0xE0A438, 1);
-g.fillEllipse(0, -88, 104, 20);
-g.fillRoundedRect(-33, -112, 66, 27, 10);
-
-leo.add(g);
-
-this.tweens.add({
-  targets: leo,
-  y: y - 7,
-  duration: 1100,
-  yoyo: true,
-  repeat: -1,
-  ease: 'Sine.easeInOut'
-});
-
-return leo;
-
-}
-
-addLanguageButtons() {
-['en', 'fr', 'es'].forEach((lang, i) => {
-const x = 178 + i * 92;
-const y = 925;
-
-  const bg = this.add.rectangle(x, y, 72, 42,
-    getLanguage() === lang ? 0xE0A438 : 0x435B32);
-  bg.setStrokeStyle(2, 0xFFF0B9);
-
-  makeText(this, x, y, lang.toUpperCase(), 16)
-    .setInteractive({ useHandCursor: true })
-    .on('pointerdown', () => {
-      localStorage.setItem('wr_v1_lang', lang);
-      this.scene.restart();
-    });
-
-  bg.setInteractive({ useHandCursor: true })
-    .on('pointerdown', () => {
-      localStorage.setItem('wr_v1_lang', lang);
-      this.scene.restart();
-    });
-});
-
-}
-}
-
-class RangerScene extends Phaser.Scene {
-constructor() {
-super('RangerScene');
-this.outfit = OUTFITS[0];
-}
-
-create() {
-this.cameras.main.setBackgroundColor('#EFB65C');
-
-const g = this.add.graphics();
-g.fillStyle(0x657D3B, 1);
-g.fillRect(0, 620, W, 340);
-g.fillStyle(0x435F32, 1);
-g.fillEllipse(270, 900, 720, 190);
-
-makeText(this, W / 2, 95, getText('create'), 29, '#FFF5D8')
-  .setStroke('#59452A', 5);
-
-makeText(this, W / 2, 160, getText('choose'), 19, '#FFFFFF')
-  .setStroke('#59452A', 3);
-
-this.preview = this.drawPreview(W / 2, 400, this.outfit);
-
-this.outfitButtons = [];
-
-OUTFITS.forEach((color, i) => {
-  const x = 100 + i * 113;
-  const y = 600;
-
-  const circle = this.add.circle(x, y, 37, color);
-  circle.setStrokeStyle(4, 0xFFF0B9);
-  circle.setInteractive({ useHandCursor: true });
-
-  circle.on('pointerdown', () => {
-    this.outfit = color;
-    this.preview.destroy();
-    this.preview = this.drawPreview(W / 2, 400, this.outfit);
+  hit.on("pointerover", () => {
+    button.setAlpha(0.85);
+    text.setScale(1.04);
   });
 
-  this.outfitButtons.push(circle);
-});
+  hit.on("pointerout", () => {
+    button.setAlpha(1);
+    text.setScale(1);
+  });
 
-makeButton(this, W / 2, 740, getText('continue'), () => {
-  localStorage.setItem('wr_v1_outfit', String(this.outfit));
-  this.scene.start('ParkScene');
-});
-
-makeButton(this, W / 2, 840, getText('back'), () => {
-  this.scene.start('HomeScene');
-}, 0xF7EFD8, 220);
-
+  return { button, text, hit, shadow };
 }
 
-drawPreview(x, y, outfit) {
-const preview = this.add.container(x, y);
-const g = this.add.graphics();
+function drawCloud(scene, x, y, scale = 1) {
+  const g = scene.add.graphics();
+  g.fillStyle(0xffffff, 0.92);
 
-g.fillStyle(0x59402D, 1);
-g.fillRoundedRect(-24, 40, 18, 54, 7);
-g.fillRoundedRect(6, 40, 18, 54, 7);
-
-g.fillStyle(outfit, 1);
-g.fillRoundedRect(-39, -10, 78, 70, 18);
-
-g.fillStyle(0xB87948, 1);
-g.fillCircle(0, -50, 40);
-g.fillCircle(-31, -73, 10);
-g.fillCircle(31, -73, 10);
-
-g.fillStyle(0x493326, 1);
-g.fillEllipse(0, -80, 62, 23);
-
-g.fillStyle(0x2B211B, 1);
-g.fillCircle(-13, -51, 3);
-g.fillCircle(13, -51, 3);
-
-g.fillStyle(0xE0A438, 1);
-g.fillEllipse(0, -85, 85, 16);
-g.fillRoundedRect(-27, -105, 54, 22, 8);
-
-preview.add(g);
-return preview;
-
+  g.fillCircle(x, y, 24 * scale);
+  g.fillCircle(x + 25 * scale, y - 12 * scale, 30 * scale);
+  g.fillCircle(x + 55 * scale, y, 23 * scale);
+  g.fillRoundedRect(
+    x - 5 * scale,
+    y - 4 * scale,
+    65 * scale,
+    25 * scale,
+    12 * scale
+  );
 }
+
+function drawTree(scene, x, y, scale = 1) {
+  const g = scene.add.graphics();
+
+  // Trunk
+  g.fillStyle(0x85502d, 1);
+  g.fillRoundedRect(x - 9 * scale, y, 18 * scale, 75 * scale, 6);
+
+  // Acacia canopy
+  g.fillStyle(0x3e8b45, 1);
+  g.fillEllipse(x, y - 12 * scale, 125 * scale, 36 * scale);
+
+  g.fillStyle(0x58a94e, 1);
+  g.fillEllipse(x - 28 * scale, y - 25 * scale, 55 * scale, 28 * scale);
+  g.fillEllipse(x + 20 * scale, y - 28 * scale, 58 * scale, 29 * scale);
 }
+
+function drawSavannah(scene) {
+  const g = scene.add.graphics();
+
+  // Sky
+  g.fillGradientStyle(0x65c9ed, 0x65c9ed, 0xafe8f7, 0xafe8f7, 1);
+  g.fillRect(0, 0, W, H);
+
+  // Sun
+  g.fillStyle(0xffe36b, 1);
+  g.fillCircle(430, 145, 58);
+  g.fillStyle(0xfff1a5, 1);
+  g.fillCircle(430, 145, 44);
+
+  // Clouds
+  drawCloud(scene, 65, 145, 0.8);
+  drawCloud(scene, 280, 95, 0.65);
+
+  // Distant hills
+  g.fillStyle(0xa7d56c, 1);
+  g.fillEllipse(100, 510, 450, 230);
+  g.fillEllipse(450, 500, 480, 260);
+
+  // Savannah grass
+  g.fillStyle(0x82bd4d, 1);
+  g.fillRect(0, 540, W, 420);
+
+  // Rolling foreground hills
+  g.fillStyle(0x6eae42, 1);
+  g.fillEllipse(70, 700, 520, 280);
+  g.fillEllipse(480, 740, 480, 300);
+
+  g.fillStyle(0x9bd45a, 1);
+  g.fillEllipse(260, 850, 650, 250);
+
+  // Little flowers
+  for (let i = 0; i < 18; i++) {
+    const x = Phaser.Math.Between(15, 525);
+    const y = Phaser.Math.Between(610, 930);
+
+    g.fillStyle(i % 2 ? 0xffe06b : 0xffffff, 1);
+    g.fillCircle(x, y, 4);
+  }
+
+  drawTree(scene, 55, 490, 0.8);
+  drawTree(scene, 485, 510, 0.75);
+}
+
+// --------------------------------------------------
+// CARTOON LEO
+// --------------------------------------------------
+
+function drawLeo(scene, x, y, scale = 1, outfit = 0x2c9b58) {
+  const c = scene.add.container(x, y);
+  c.setScale(scale);
+
+  const g = scene.add.graphics();
+
+  // Legs
+  g.fillStyle(0x6b442b, 1);
+  g.fillRoundedRect(-35, 78, 25, 65, 10);
+  g.fillRoundedRect(10, 78, 25, 65, 10);
+
+  // Boots
+  g.fillStyle(0x49301e, 1);
+  g.fillRoundedRect(-43, 124, 37, 22, 10);
+  g.fillRoundedRect(7, 124, 37, 22, 10);
+
+  // Body
+  g.fillStyle(outfit, 1);
+  g.fillRoundedRect(-48, -5, 96, 105, 28);
+
+  // Shirt highlight
+  g.fillStyle(0xffffff, 0.14);
+  g.fillRoundedRect(-34, 4, 25, 74, 12);
+
+  // Belt
+  g.fillStyle(0x684126, 1);
+  g.fillRoundedRect(-47, 65, 94, 12, 5);
+
+  // Belt buckle
+  g.fillStyle(0xffd45e, 1);
+  g.fillRoundedRect(-8, 64, 17, 14, 4);
+
+  // Neck
+  g.fillStyle(0xb96e3d, 1);
+  g.fillRoundedRect(-17, -28, 34, 36, 10);
+
+  // Ears
+  g.fillStyle(0x8e542f, 1);
+  g.fillCircle(-44, -66, 20);
+  g.fillCircle(44, -66, 20);
+
+  g.fillStyle(0xf2b27b, 1);
+  g.fillCircle(-44, -66, 11);
+  g.fillCircle(44, -66, 11);
+
+  // Head
+  g.fillStyle(0xc9824a, 1);
+  g.fillCircle(0, -64, 59);
+
+  // Face muzzle
+  g.fillStyle(0xf4c18d, 1);
+  g.fillEllipse(0, -39, 66, 43);
+
+  // Eyes
+  g.fillStyle(0xffffff, 1);
+  g.fillEllipse(-22, -70, 21, 28);
+  g.fillEllipse(22, -70, 21, 28);
+
+  g.fillStyle(0x382619, 1);
+  g.fillCircle(-20, -67, 7);
+  g.fillCircle(20, -67, 7);
+
+  g.fillStyle(0xffffff, 1);
+  g.fillCircle(-22, -71, 3);
+  g.fillCircle(18, -71, 3);
+
+  // Nose
+  g.fillStyle(0x4b2c24, 1);
+  g.fillEllipse(0, -45, 17, 11);
+
+  // Smile
+  g.lineStyle(3, 0x6a3927, 1);
+  g.beginPath();
+  g.arc(0, -35, 17, 0.25, Math.PI - 0.25, false);
+  g.strokePath();
+
+  // Safari hat brim
+  g.fillStyle(0x9c682e, 1);
+  g.fillEllipse(0, -112, 130, 25);
+
+  // Hat crown
+  g.fillStyle(0xe8b653, 1);
+  g.fillRoundedRect(-43, -153, 86, 43, 15);
+
+  // Hat band
+  g.fillStyle(0x3c8d48, 1);
+  g.fillRect(-41, -123, 82, 9);
+
+  // Hat shine
+  g.fillStyle(0xffffff, 0.2);
+  g.fillRoundedRect(-30, -147, 13, 25, 6);
+
+  c.add(g);
+
+  // Gentle floating animation
+  scene.tweens.add({
+    targets: c,
+    y: y - 7,
+    duration: 1200,
+    yoyo: true,
+    repeat: -1,
+    ease: "Sine.easeInOut",
+  });
+
+  return c;
+}
+
+// --------------------------------------------------
+// HOME SCREEN
+// --------------------------------------------------
+
+class HomeScene extends Phaser.Scene {
+  constructor() {
+    super("HomeScene");
+  }
+
+  create() {
+    drawSavannah(this);
+
+    // Title panel
+    const panel = this.add.graphics();
+    panel.fillStyle(0x315b35, 0.92);
+    panel.fillRoundedRect(30, 28, 480, 155, 30);
+    panel.lineStyle(5, 0xffd45e, 1);
+    panel.strokeRoundedRect(30, 28, 480, 155, 30);
+
+    addText(this, W / 2, 72, T("title"), 38, "#fff6c7");
+    addText(this, W / 2, 119, T("subtitle"), 31, "#ffdf65");
+    addText(this, W / 2, 215, T("tagline"), 19, "#ffffff");
+
+    drawLeo(this, W / 2, 470, 1.35);
+
+    // Welcome bubble
+    const bubble = this.add.graphics();
+    bubble.fillStyle(0xffffff, 1);
+    bubble.fillRoundedRect(45, 625, 450, 66, 25);
+    bubble.fillTriangle(255, 690, 285, 690, 270, 710);
+
+    addText(this, W / 2, 657, T("welcome"), 24, "#315b35");
+
+    roundedButton(
+      this,
+      W / 2,
+      765,
+      420,
+      78,
+      T("start"),
+      0x35a85b,
+      () => this.scene.start("RangerScene"),
+      25
+    );
+
+    addText(this, W / 2, 830, T("footer"), 19);
+
+    // Language buttons
+    ["en", "fr", "es"].forEach((lang, i) => {
+      const x = 170 + i * 100;
+
+      roundedButton(
+        this,
+        x,
+        900,
+        82,
+        48,
+        lang.toUpperCase(),
+        currentLang === lang ? 0xe5a52f : 0x3c83b8,
+        () => {
+          currentLang = lang;
+          localStorage.setItem("wr_v1_lang", lang);
+          this.scene.restart();
+        },
+        18
+      );
+    });
+  }
+}
+
+// --------------------------------------------------
+// RANGER CREATION
+// --------------------------------------------------
+
+class RangerScene extends Phaser.Scene {
+  constructor() {
+    super("RangerScene");
+  }
+
+  create() {
+    drawSavannah(this);
+
+    addText(this, W / 2, 75, T("create"), 31, "#fff5c6");
+    addText(this, W / 2, 125, T("choose"), 21);
+
+    const colors = [
+      0x2c9b58,
+      0xe5a52f,
+      0x3d83c5,
+      0xc75c4a,
+    ];
+
+    let selected = Number(localStorage.getItem("wr_v1_outfit")) || 0;
+
+    const ranger = drawLeo(
+      this,
+      W / 2,
+      430,
+      1.45,
+      colors[selected]
+    );
+
+    // Outfit selection cards
+    colors.forEach((color, i) => {
+      const x = 90 + i * 120;
+      const y = 675;
+
+      const card = this.add.graphics();
+      card.fillStyle(0xffffff, 1);
+      card.fillRoundedRect(x - 42, y - 42, 84, 84, 18);
+
+      card.fillStyle(color, 1);
+      card.fillRoundedRect(x - 34, y - 34, 68, 68, 15);
+
+      if (i === selected) {
+        card.lineStyle(5, 0xffe05d, 1);
+        card.strokeRoundedRect(x - 42, y - 42, 84, 84, 18);
+      }
+
+      this.add.rectangle(x, y, 90, 90, 0xffffff, 0)
+        .setInteractive({ useHandCursor: true })
+        .on("pointerdown", () => {
+          selected = i;
+          localStorage.setItem("wr_v1_outfit", String(i));
+          this.scene.restart();
+        });
+    });
+
+    addText(this, W / 2, 755, T("outfit"), 22);
+
+    roundedButton(
+      this,
+      W / 2,
+      835,
+      370,
+      75,
+      T("continue"),
+      0x35a85b,
+      () => {
+        localStorage.setItem("wr_v1_outfit", String(selected));
+        this.scene.start("ParkScene");
+      },
+      26
+    );
+
+    roundedButton(
+      this,
+      100,
+      920,
+      150,
+      55,
+      T("back"),
+      0x3d83c5,
+      () => this.scene.start("HomeScene"),
+      20
+    );
+  }
+}
+
+// --------------------------------------------------
+// PARK HUB
+// --------------------------------------------------
 
 class ParkScene extends Phaser.Scene {
-constructor() {
-super('ParkScene');
+  constructor() {
+    super("ParkScene");
+  }
+
+  create() {
+    drawSavannah(this);
+
+    const panel = this.add.graphics();
+    panel.fillStyle(0x315b35, 0.94);
+    panel.fillRoundedRect(25, 35, 490, 125, 25);
+    panel.lineStyle(4, 0xffd45e, 1);
+    panel.strokeRoundedRect(25, 35, 490, 125, 25);
+
+    addText(this, W / 2, 78, T("hub"), 32, "#fff6c7");
+    addText(this, W / 2, 120, T("hubWelcome"), 20);
+
+    const outfitColors = [
+      0x2c9b58,
+      0xe5a52f,
+      0x3d83c5,
+      0xc75c4a,
+    ];
+
+    const outfitIndex =
+      Number(localStorage.getItem("wr_v1_outfit")) || 0;
+
+    drawLeo(
+      this,
+      W / 2,
+      350,
+      0.85,
+      outfitColors[outfitIndex]
+    );
+
+    // Park menu cards
+    roundedButton(
+      this,
+      155,
+      575,
+      240,
+      95,
+      "🌟  " + T("missions"),
+      0x35a85b,
+      () => this.showComingSoon(T("missions")),
+      23
+    );
+
+    roundedButton(
+      this,
+      405,
+      575,
+      220,
+      95,
+      "🦓  " + T("animals"),
+      0xe5a52f,
+      () => this.showComingSoon(T("animals")),
+      22
+    );
+
+    roundedButton(
+      this,
+      155,
+      710,
+      240,
+      95,
+      "📚  " + T("learn"),
+      0x3d83c5,
+      () => this.showComingSoon(T("learn")),
+      23
+    );
+
+    roundedButton(
+      this,
+      405,
+      710,
+      220,
+      95,
+      "🏅  " + T("badges"),
+      0xb86ac9,
+      () => this.showComingSoon(T("badges")),
+      21
+    );
+
+    roundedButton(
+      this,
+      W / 2,
+      865,
+      250,
+      65,
+      T("back"),
+      0x3d83c5,
+      () => this.scene.start("HomeScene"),
+      22
+    );
+  }
+
+  showComingSoon(section) {
+    const box = this.add.graphics();
+    box.fillStyle(0x315b35, 0.97);
+    box.fillRoundedRect(45, 390, 450, 180, 25);
+    box.lineStyle(4, 0xffd45e, 1);
+    box.strokeRoundedRect(45, 390, 450, 180, 25);
+
+    const message = addText(
+      this,
+      W / 2,
+      445,
+      section,
+      28,
+      "#fff6c7"
+    );
+
+    const sub = addText(
+      this,
+      W / 2,
+      490,
+      "Coming soon!",
+      23
+    );
+
+    roundedButton(
+      this,
+      W / 2,
+      535,
+      150,
+      48,
+      "OK!",
+      0x35a85b,
+      () => {
+        box.destroy();
+        message.destroy();
+        sub.destroy();
+      },
+      20
+    );
+  }
 }
 
-create() {
-this.cameras.main.setBackgroundColor('#F5B85B');
+// --------------------------------------------------
+// GAME START
+// --------------------------------------------------
 
-const g = this.add.graphics();
-g.fillStyle(0xB7A64D, 1);
-g.fillEllipse(150, 400, 500, 260);
-g.fillEllipse(470, 460, 480, 300);
-g.fillStyle(0x657D3B, 1);
-g.fillRect(0, 570, W, 390);
+const config = {
+  type: Phaser.AUTO,
+  width: W,
+  height: H,
+  backgroundColor: "#65c9ed",
+  parent: "game",
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+  },
+  scene: [HomeScene, RangerScene, ParkScene],
+};
 
-makeText(this, W / 2, 100, getText('hub'), 25, '#FFF5D8')
-  .setStroke('#59452A', 5);
-
-const outfit = Number(localStorage.getItem('wr_v1_outfit')) || OUTFITS[0];
-this.drawRanger(W / 2, 320, outfit);
-
-[
-  ['missions', 510],
-  ['animals', 620],
-  ['learn', 730],
-  ['badges', 840]
-].forEach(([key, y]) => {
-  makeButton(this, W / 2, y, getText(key), () => {
-    // These destinations will be connected as we build each feature.
-  }, 0xE0A438, 300);
-});
-
-}
-
-drawRanger(x, y, outfit) {
-const g = this.add.graphics();
-
-g.fillStyle(0x59402D, 1);
-g.fillRoundedRect(x - 28, y + 42, 18, 45, 7);
-g.fillRoundedRect(x + 10, y + 42, 18, 45, 7);
-
-g.fillStyle(outfit, 1);
-g.fillRoundedRect(x - 40, y - 8, 80, 62, 18);
-
-g.fillStyle(0xB87948, 1);
-g.fillCircle(x, y - 45, 39);
-
-g.fillStyle(0x493326, 1);
-g.fillEllipse(x, y - 76, 62, 23);
-
-g.fillStyle(0x2B211B, 1);
-g.fillCircle(x - 13, y - 45, 3);
-g.fillCircle(x + 13, y - 45, 3);
-
-g.fillStyle(0xE0A438, 1);
-g.fillEllipse(x, y - 81, 85, 16);
-g.fillRoundedRect(x - 27, y - 101, 54, 22, 8);
-
-}
-}
-
-const game = new Phaser.Game({
-type: Phaser.AUTO,
-parent: 'game-container',
-width: W,
-height: H,
-backgroundColor: '#16211A',
-scale: {
-mode: Phaser.Scale.FIT,
-autoCenter: Phaser.Scale.CENTER_BOTH
-},
-scene: [HomeScene, RangerScene, ParkScene]
-});
+new Phaser.Game(config);

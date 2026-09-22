@@ -5,24 +5,27 @@ let lang = localStorage.getItem("wr_v1_lang") || "en";
 let stars = Number(localStorage.getItem("wr_v1_stars")) || 0;
 let completed = JSON.parse(localStorage.getItem("wr_v1_completed") || "[]");
 
-const words = {
+const L = {
   en: {
     title:"WILD RANGERS", adventure:"ADVENTURE",
-    tagline:"Explore. Learn. Protect Nature.",
-    welcome:"Welcome, Little Ranger!", start:"LET'S EXPLORE!",
-    footer:"A wild adventure awaits!", create:"CREATE YOUR RANGER",
-    choose:"Choose your ranger outfit", go:"LET'S GO!",
-    back:"BACK", hub:"SAVANNAH PARK", hubWelcome:"Welcome to the park!",
-    missions:"MISSIONS", animals:"ANIMALS", learn:"LEARNING",
-    badges:"MY BADGES", outfit:"Choose your outfit!",
-    map:"CHOOSE A MISSION", soon:"Coming soon!",
-    mission1:"Become a Junior Ranger", task:"Ranger Training",
-    instruction:"Tap each item to get ready!",
+    tagline:"Explore. Learn. Protect Nature.", welcome:"Welcome, Little Ranger!",
+    start:"LET'S EXPLORE!", footer:"A wild adventure awaits!",
+    create:"CREATE YOUR RANGER", choose:"Choose your ranger outfit",
+    go:"LET'S GO!", back:"BACK", hub:"SAVANNAH PARK",
+    hubWelcome:"Welcome to the park!", missions:"MISSIONS",
+    animals:"ANIMALS", learn:"LEARNING", badges:"MY BADGES",
+    outfit:"Choose your outfit!", map:"CHOOSE A MISSION",
+    soon:"Coming soon!", ok:"OK!", stars:"Stars",
+    m1:"Become a Junior Ranger", m2:"Meet Mimi",
+    training:"Ranger Training", instruction:"Tap each item to get ready!",
     hat:"Safari Hat", mapItem:"Park Map", badge:"Ranger Badge",
     finish:"MISSION COMPLETE!", reward:"You earned a star!",
     continue:"CONTINUE", collected:"Collected",
-    locked:"More adventures coming soon!", ok:"OK!",
-    stars:"Stars"
+    mimiIntro:"Leo: Look! It's Mimi the monkey!",
+    mimiTask:"Help Mimi find 3 bananas!",
+    bananas:"Bananas", great:"Great job!",
+    locked:"Complete the previous mission first!",
+    find:"Find the bananas!"
   },
   fr: {
     title:"LES RANGERS", adventure:"SAUVAGES",
@@ -34,12 +37,17 @@ const words = {
     hubWelcome:"Bienvenue au parc !", missions:"MISSIONS",
     animals:"ANIMAUX", learn:"APPRENDRE", badges:"MES BADGES",
     outfit:"Choisis ta tenue !", map:"CHOISIS UNE MISSION",
-    soon:"Bientôt disponible !", mission1:"Devenir jeune Ranger",
-    task:"Entraînement Ranger", instruction:"Touche chaque objet !",
+    soon:"Bientôt disponible !", ok:"OK !", stars:"Étoiles",
+    m1:"Devenir jeune Ranger", m2:"Rencontre Mimi",
+    training:"Entraînement Ranger", instruction:"Touche chaque objet !",
     hat:"Chapeau", mapItem:"Carte du parc", badge:"Badge Ranger",
     finish:"MISSION TERMINÉE !", reward:"Tu as gagné une étoile !",
     continue:"CONTINUER", collected:"Trouvé",
-    locked:"D'autres aventures bientôt !", ok:"OK !", stars:"Étoiles"
+    mimiIntro:"Leo : Regarde ! Voici Mimi le singe !",
+    mimiTask:"Aide Mimi à trouver 3 bananes !",
+    bananas:"Bananes", great:"Bravo !",
+    locked:"Termine la mission précédente !",
+    find:"Trouve les bananes !"
   },
   es: {
     title:"GUARDIANES", adventure:"SALVAJES",
@@ -51,18 +59,23 @@ const words = {
     hubWelcome:"¡Bienvenido al parque!", missions:"MISIONES",
     animals:"ANIMALES", learn:"APRENDER", badges:"MIS MEDALLAS",
     outfit:"¡Elige tu uniforme!", map:"ELIGE UNA MISIÓN",
-    soon:"¡Muy pronto!", mission1:"Ser un Ranger Junior",
-    task:"Entrenamiento Ranger", instruction:"¡Toca cada objeto!",
+    soon:"¡Muy pronto!", ok:"¡OK!", stars:"Estrellas",
+    m1:"Ser un Ranger Junior", m2:"Conoce a Mimi",
+    training:"Entrenamiento Ranger", instruction:"¡Toca cada objeto!",
     hat:"Sombrero", mapItem:"Mapa del parque", badge:"Insignia Ranger",
     finish:"¡MISIÓN COMPLETADA!", reward:"¡Ganaste una estrella!",
     continue:"CONTINUAR", collected:"Conseguido",
-    locked:"¡Más aventuras pronto!", ok:"¡OK!", stars:"Estrellas"
+    mimiIntro:"Leo: ¡Mira! ¡Es Mimi, la monita!",
+    mimiTask:"¡Ayuda a Mimi a encontrar 3 bananas!",
+    bananas:"Bananas", great:"¡Muy bien!",
+    locked:"¡Completa la misión anterior primero!",
+    find:"¡Encuentra las bananas!"
   }
 };
 
-const t = k => words[lang]?.[k] || words.en[k] || k;
+const t = k => L[lang]?.[k] || L.en[k] || k;
 
-function text(s,x,y,str,size=24,color="#fff") {
+function txt(s,x,y,str,size=23,color="#fff") {
   return s.add.text(x,y,str,{
     fontFamily:"Trebuchet MS, Arial",
     fontSize:size+"px",fontStyle:"bold",color,
@@ -71,7 +84,7 @@ function text(s,x,y,str,size=24,color="#fff") {
   }).setOrigin(.5);
 }
 
-function button(s,x,y,w,h,label,color,fn,size=22) {
+function btn(s,x,y,w,h,label,color,fn,size=22) {
   const g=s.add.graphics();
   g.fillStyle(0x49321f,.3);
   g.fillRoundedRect(x-w/2+3,y-h/2+6,w,h,20);
@@ -79,10 +92,9 @@ function button(s,x,y,w,h,label,color,fn,size=22) {
   g.fillRoundedRect(x-w/2,y-h/2,w,h,20);
   g.fillStyle(color,1);
   g.fillRoundedRect(x-w/2+5,y-h/2+5,w-10,h-12,16);
-  text(s,x,y-2,label,size);
+  txt(s,x,y-2,label,size);
   s.add.rectangle(x,y,w,h,0xffffff,0)
-    .setInteractive({useHandCursor:true})
-    .on("pointerdown",fn);
+    .setInteractive({useHandCursor:true}).on("pointerdown",fn);
 }
 
 function cloud(s,x,y,sc=1) {
@@ -130,7 +142,6 @@ function leo(s,x,y,sc=1,outfit=0x2c9b58) {
   g.fillStyle(0xf4c18d,1);g.fillEllipse(0,-38,64,40);
   g.fillStyle(0xffffff,1);g.fillEllipse(-21,-68,20,27);g.fillEllipse(21,-68,20,27);
   g.fillStyle(0x382619,1);g.fillCircle(-20,-65,7);g.fillCircle(20,-65,7);
-  g.fillStyle(0xffffff,1);g.fillCircle(-22,-69,3);g.fillCircle(18,-69,3);
   g.fillStyle(0x4b2c24,1);g.fillEllipse(0,-44,16,10);
   g.lineStyle(3,0x6a3927,1);g.beginPath();g.arc(0,-35,15,.2,Math.PI-.2);g.strokePath();
   g.fillStyle(0x9c682e,1);g.fillEllipse(0,-108,125,23);
@@ -141,21 +152,66 @@ function leo(s,x,y,sc=1,outfit=0x2c9b58) {
   return c;
 }
 
+// Mimi: cartoon monkey with round ears, face and curled tail
+function mimi(s,x,y,sc=1) {
+  const c=s.add.container(x,y).setScale(sc),g=s.add.graphics();
+
+  // Tail
+  g.lineStyle(12,0x8b552f,1);
+  g.beginPath();g.arc(48,40,35,0,Math.PI*1.8,false);g.strokePath();
+
+  // Body and arms
+  g.fillStyle(0x9b6036,1);
+  g.fillEllipse(0,35,78,95);
+  g.fillEllipse(-42,25,25,55);
+  g.fillEllipse(42,25,25,55);
+
+  // Feet
+  g.fillStyle(0x704329,1);
+  g.fillEllipse(-22,78,34,18);
+  g.fillEllipse(22,78,34,18);
+
+  // Ears
+  g.fillStyle(0x8b552f,1);
+  g.fillCircle(-38,-35,23);g.fillCircle(38,-35,23);
+  g.fillStyle(0xf3a58b,1);
+  g.fillCircle(-38,-35,12);g.fillCircle(38,-35,12);
+
+  // Head and face
+  g.fillStyle(0x9b6036,1);g.fillCircle(0,-27,48);
+  g.fillStyle(0xf5c69a,1);g.fillEllipse(0,-14,58,43);
+
+  // Eyes
+  g.fillStyle(0xffffff,1);
+  g.fillCircle(-17,-34,10);g.fillCircle(17,-34,10);
+  g.fillStyle(0x34251c,1);
+  g.fillCircle(-16,-33,4);g.fillCircle(18,-33,4);
+
+  // Nose and smile
+  g.fillStyle(0x553522,1);g.fillEllipse(0,-17,12,8);
+  g.lineStyle(3,0x6b3e2a,1);
+  g.beginPath();g.arc(0,-7,12,.2,Math.PI-.2);g.strokePath();
+
+  c.add(g);
+  s.tweens.add({targets:c,y:y-10,duration:650,yoyo:true,repeat:-1,ease:"Sine.easeInOut"});
+  return c;
+}
+
+const outfitColors=[0x2c9b58,0xe5a52f,0x3d83c5,0xc75c4a];
+
 class Home extends Phaser.Scene {
   constructor(){super("Home");}
   create(){
     savannah(this);
-    const p=this.add.graphics();p.fillStyle(0x315b35,.94);
-    p.fillRoundedRect(30,28,480,150,28);
-    text(this,270,72,t("title"),37,"#fff6c7");
-    text(this,270,119,t("adventure"),29,"#ffdf65");
-    text(this,270,215,t("tagline"),18);
-    leo(this,270,465,1.25);
-    text(this,270,650,t("welcome"),24,"#fff6c7");
-    button(this,270,755,420,78,t("start"),0x35a85b,
+    txt(this,270,70,t("title"),37,"#fff6c7");
+    txt(this,270,115,t("adventure"),29,"#ffdf65");
+    txt(this,270,195,t("tagline"),18);
+    leo(this,270,440,1.25);
+    txt(this,270,625,t("welcome"),24,"#fff6c7");
+    btn(this,270,755,420,78,t("start"),0x35a85b,
       ()=>this.scene.start("Ranger"),24);
-    text(this,270,825,t("footer"),18);
-    ["en","fr","es"].forEach((l,i)=>button(this,170+i*100,900,82,48,l.toUpperCase(),
+    txt(this,270,825,t("footer"),18);
+    ["en","fr","es"].forEach((l,i)=>btn(this,170+i*100,900,82,48,l.toUpperCase(),
       lang===l?0xe5a52f:0x3d83c5,()=>{
         lang=l;localStorage.setItem("wr_v1_lang",l);this.scene.restart();
       },17));
@@ -165,12 +221,11 @@ class Home extends Phaser.Scene {
 class Ranger extends Phaser.Scene {
   constructor(){super("Ranger");}
   create(){
-    savannah(this);text(this,270,75,t("create"),30);
-    text(this,270,125,t("choose"),21);
-    const colors=[0x2c9b58,0xe5a52f,0x3d83c5,0xc75c4a];
+    savannah(this);txt(this,270,75,t("create"),30);
+    txt(this,270,125,t("choose"),21);
     let chosen=Number(localStorage.getItem("wr_v1_outfit"))||0;
-    leo(this,270,430,1.35,colors[chosen]);
-    colors.forEach((col,i)=>{
+    leo(this,270,430,1.35,outfitColors[chosen]);
+    outfitColors.forEach((col,i)=>{
       const x=90+i*120,g=this.add.graphics();
       g.fillStyle(0xffffff,1);g.fillRoundedRect(x-39,635,78,78,16);
       g.fillStyle(col,1);g.fillRoundedRect(x-32,642,64,64,13);
@@ -178,138 +233,157 @@ class Ranger extends Phaser.Scene {
       this.add.rectangle(x,674,85,90,0xffffff,0).setInteractive()
         .on("pointerdown",()=>{chosen=i;localStorage.setItem("wr_v1_outfit",i);this.scene.restart();});
     });
-    text(this,270,755,t("outfit"),21);
-    button(this,270,835,370,72,t("go"),0x35a85b,
-      ()=>this.scene.start("Park"),25);
-    button(this,100,920,150,52,t("back"),0x3d83c5,
-      ()=>this.scene.start("Home"),19);
+    txt(this,270,755,t("outfit"),21);
+    btn(this,270,835,370,72,t("go"),0x35a85b,()=>this.scene.start("Park"),25);
+    btn(this,100,920,150,52,t("back"),0x3d83c5,()=>this.scene.start("Home"),19);
   }
 }
 
 class Park extends Phaser.Scene {
   constructor(){super("Park");}
   create(){
-    savannah(this);
-    text(this,270,75,t("hub"),31);
-    text(this,270,120,t("hubWelcome"),20);
-    const colors=[0x2c9b58,0xe5a52f,0x3d83c5,0xc75c4a];
-    leo(this,270,330,.8,colors[Number(localStorage.getItem("wr_v1_outfit"))||0]);
-    text(this,270,475,`⭐ ${t("stars")}: ${stars}`,23);
-    button(this,155,590,240,90,"🌟 "+t("missions"),0x35a85b,
-      ()=>this.scene.start("Missions"),21);
-    button(this,405,590,220,90,"🦓 "+t("animals"),0xe5a52f,
-      ()=>this.notice(),20);
-    button(this,155,715,240,90,"📚 "+t("learn"),0x3d83c5,
-      ()=>this.notice(),21);
-    button(this,405,715,220,90,"🏅 "+t("badges"),0xb86ac9,
-      ()=>this.notice(),19);
-    button(this,270,865,240,60,t("back"),0x3d83c5,
-      ()=>this.scene.start("Home"),20);
+    savannah(this);txt(this,270,75,t("hub"),31);
+    txt(this,270,120,t("hubWelcome"),20);
+    leo(this,270,330,.8,outfitColors[Number(localStorage.getItem("wr_v1_outfit"))||0]);
+    txt(this,270,475,`⭐ ${t("stars")}: ${stars}`,23);
+    btn(this,155,590,240,90,"🌟 "+t("missions"),0x35a85b,()=>this.scene.start("Missions"),21);
+    btn(this,405,590,220,90,"🦓 "+t("animals"),0xe5a52f,()=>this.notice(),20);
+    btn(this,155,715,240,90,"📚 "+t("learn"),0x3d83c5,()=>this.notice(),21);
+    btn(this,405,715,220,90,"🏅 "+t("badges"),0xb86ac9,()=>this.notice(),19);
+    btn(this,270,865,240,60,t("back"),0x3d83c5,()=>this.scene.start("Home"),20);
   }
   notice(){
-    const box=this.add.graphics();box.fillStyle(0x315b35,.97);
-    box.fillRoundedRect(45,390,450,150,22);
-    const msg=text(this,270,440,t("soon"),25);
-    button(this,270,500,130,48,t("ok"),0x35a85b,()=>{
-      box.destroy();msg.destroy();
-    },19);
+    const g=this.add.graphics();g.fillStyle(0x315b35,.97);g.fillRoundedRect(45,390,450,150,22);
+    const m=txt(this,270,440,t("soon"),23);
+    btn(this,270,500,130,48,t("ok"),0x35a85b,()=>{g.destroy();m.destroy();},19);
   }
 }
-
-const missionNames=[
-  ["mission1","🦁"],["Meet Mimi","🐒"],["Count Zebra Herd","🦓"],
-  ["Find Lost Lion Cub","🐾"],["Cross the River","🌊"],
-  ["Help Tembo Find Water","🐘"],["Animal Words","📚"],
-  ["Clean Up the Park","♻️"],["Discover Hidden Tracks","🔎"],
-  ["First Ranger Challenge","🏅"]
-];
 
 class Missions extends Phaser.Scene {
   constructor(){super("Missions");}
   create(){
-    savannah(this);
-    text(this,270,55,t("map"),29);
-    text(this,270,105,`⭐ ${stars}  ${t("stars")}`,20);
-    missionNames.forEach((m,i)=>{
-      const col=i%2,row=Math.floor(i/2);
-      const x=145+col*250,y=205+row*125;
+    savannah(this);txt(this,270,50,t("map"),28);
+    txt(this,270,95,`⭐ ${stars} ${t("stars")}`,20);
+
+    const names=[t("m1"),t("m2"),"Count Zebra Herd","Find Lost Lion Cub",
+      "Cross the River","Help Tembo Find Water","Animal Words",
+      "Clean Up the Park","Discover Hidden Tracks","First Ranger Challenge"];
+
+    names.forEach((name,i)=>{
+      const x=145+(i%2)*250,y=190+Math.floor(i/2)*125;
+      const unlocked=i===0 || (i===1 && completed.includes(0));
       const done=completed.includes(i);
-      const label=i===0?t("mission1"):m[0];
-      button(this,x,y,220,96,
-        `${done?"✅":m[1]} ${i+1}. ${label}`,
-        done?0x65a84b:(i===0?0xe5a52f:0x78909c),
+      btn(this,x,y,220,96,`${done?"✅":unlocked?"🌟":"🔒"} ${i+1}. ${name}`,
+        done?0x65a84b:unlocked?0xe5a52f:0x78909c,
         ()=>{
           if(i===0)this.scene.start("MissionOne");
-          else this.popup();
-        },16);
+          else if(i===1 && unlocked)this.scene.start("MissionTwo");
+          else this.popup(unlocked?t("soon"):t("locked"));
+        },15);
     });
-    button(this,270,875,230,58,t("back"),0x3d83c5,
-      ()=>this.scene.start("Park"),20);
+
+    btn(this,270,875,230,58,t("back"),0x3d83c5,()=>this.scene.start("Park"),20);
   }
-  popup(){
-    const g=this.add.graphics();g.fillStyle(0x315b35,.97);
-    g.fillRoundedRect(45,390,450,155,22);
-    const msg=text(this,270,440,t("locked"),23);
-    button(this,270,500,130,48,t("ok"),0x35a85b,()=>{
-      g.destroy();msg.destroy();
-    },19);
+  popup(message){
+    const g=this.add.graphics();g.fillStyle(0x315b35,.97);g.fillRoundedRect(45,390,450,155,22);
+    const m=txt(this,270,440,message,22);
+    btn(this,270,500,130,48,t("ok"),0x35a85b,()=>{g.destroy();m.destroy();},19);
   }
 }
 
+// Mission 1: collect three ranger-training items
 class MissionOne extends Phaser.Scene {
   constructor(){super("MissionOne");}
   create(){
-    savannah(this);
-    text(this,270,55,t("task"),29);
-    text(this,270,105,t("instruction"),20);
-    leo(this,270,270,.8);
-    this.items=[
-      {emoji:"🧢",name:t("hat")},
-      {emoji:"🗺️",name:t("mapItem")},
-      {emoji:"🏅",name:t("badge")}
-    ];
-    this.found=[];
-    this.status=text(this,270,390,`${t("collected")}: 0 / 3`,22,"#fff6c7");
-    this.items.forEach((item,i)=>{
-      const x=100+i*170,y=535;
-      const g=this.add.graphics();g.fillStyle(0xffffff,1);
-      g.fillRoundedRect(x-65,y-65,130,130,20);
-      text(this,x,y-15,item.emoji,42,"#ffffff");
-      text(this,x,y+43,item.name,15,"#315b35");
-      this.add.rectangle(x,y,130,130,0xffffff,0).setInteractive()
-        .on("pointerdown",()=>{
-          if(this.found.includes(i))return;
-          this.found.push(i);
-          g.clear();g.fillStyle(0x65a84b,1);g.fillRoundedRect(x-65,y-65,130,130,20);
-          text(this,x,y,"✅",45);
-          this.status.setText(`${t("collected")}: ${this.found.length} / 3`);
-          if(this.found.length===3)this.time.delayedCall(500,()=>this.scene.start("MissionComplete"));
-        });
+    savannah(this);txt(this,270,55,t("training"),29);
+    txt(this,270,105,t("instruction"),20);
+    leo(this,270,265,.8);
+
+    const items=[["🧢",t("hat")],["🗺️",t("mapItem")],["🏅",t("badge")]];
+    let found=[];
+    const status=txt(this,270,390,`${t("collected")}: 0 / 3`,22);
+
+    items.forEach((item,i)=>{
+      const x=100+i*170,y=535,g=this.add.graphics();
+      g.fillStyle(0xffffff,1);g.fillRoundedRect(x-65,y-65,130,130,20);
+      txt(this,x,y-15,item[0],42);
+      txt(this,x,y+43,item[1],15,"#315b35");
+      this.add.rectangle(x,y,130,130,0xffffff,0).setInteractive().on("pointerdown",()=>{
+        if(found.includes(i))return;
+        found.push(i);g.clear();g.fillStyle(0x65a84b,1);g.fillRoundedRect(x-65,y-65,130,130,20);
+        txt(this,x,y,"✅",45);
+        status.setText(`${t("collected")}: ${found.length} / 3`);
+        if(found.length===3)this.time.delayedCall(400,()=>this.scene.start("Complete",{mission:0}));
+      });
     });
-    button(this,270,820,220,60,t("back"),0x3d83c5,
-      ()=>this.scene.start("Missions"),20);
+
+    btn(this,270,820,220,60,t("back"),0x3d83c5,()=>this.scene.start("Missions"),20);
   }
 }
 
-class MissionComplete extends Phaser.Scene {
-  constructor(){super("MissionComplete");}
+// Mission 2: Meet Mimi and collect three bananas
+class MissionTwo extends Phaser.Scene {
+  constructor(){super("MissionTwo");}
   create(){
     savannah(this);
-    const already=completed.includes(0);
+    txt(this,270,45,t("m2"),30);
+    leo(this,155,240,.65);
+    mimi(this,365,245,.85);
+
+    // Dialogue bubble
+    const bubble=this.add.graphics();
+    bubble.fillStyle(0xffffff,1);bubble.fillRoundedRect(25,355,490,95,22);
+    txt(this,270,402,t("mimiIntro"),19,"#315b35");
+    txt(this,270,485,t("mimiTask"),22,"#fff6c7");
+
+    const spots=[
+      {x:105,y:620},{x:270,y:690},{x:435,y:610}
+    ];
+    let found=0;
+    const status=txt(this,270,780,`${t("bananas")}: 0 / 3`,23,"#fff6c7");
+
+    spots.forEach((p,i)=>{
+      const g=this.add.graphics();
+      g.fillStyle(0xffffff,1);g.fillRoundedRect(p.x-48,p.y-48,96,96,18);
+      txt(this,p.x,p.y,"🍌",42);
+      this.add.rectangle(p.x,p.y,96,96,0xffffff,0).setInteractive().on("pointerdown",()=>{
+        if(g.getData("found"))return;
+        g.setData("found",true);
+        g.clear();g.fillStyle(0x65a84b,1);g.fillRoundedRect(p.x-48,p.y-48,96,96,18);
+        txt(this,p.x,p.y,"✅",38);
+        found++;
+        status.setText(`${t("bananas")}: ${found} / 3`);
+        if(found===3)this.time.delayedCall(500,()=>this.scene.start("Complete",{mission:1}));
+      });
+    });
+
+    btn(this,270,875,220,58,t("back"),0x3d83c5,()=>this.scene.start("Missions"),20);
+  }
+}
+
+class Complete extends Phaser.Scene {
+  constructor(){super("Complete");}
+  init(data){this.mission=data.mission||0;}
+  create(){
+    savannah(this);
+    const already=completed.includes(this.mission);
     if(!already){
-      completed.push(0);stars+=1;
+      completed.push(this.mission);stars++;
       localStorage.setItem("wr_v1_completed",JSON.stringify(completed));
       localStorage.setItem("wr_v1_stars",String(stars));
     }
-    text(this,270,180,t("finish"),31,"#fff6c7");
-    text(this,270,300,"🏆",100);
-    text(this,270,430,t("mission1"),25);
-    text(this,270,500,already?t("reward"):`⭐ ${t("reward")}`,23);
-    text(this,270,560,`⭐ ${t("stars")}: ${stars}`,23);
-    button(this,270,700,350,75,t("continue"),0x35a85b,
-      ()=>this.scene.start("Missions"),23);
-    button(this,270,800,260,60,t("hub"),0x3d83c5,
-      ()=>this.scene.start("Park"),20);
+
+    txt(this,270,170,t("finish"),30,"#fff6c7");
+    txt(this,270,285,"🏆",100);
+    txt(this,270,405,this.mission===0?t("m1"):t("m2"),25);
+    txt(this,270,480,t("reward"),23);
+    txt(this,270,540,`⭐ ${t("stars")}: ${stars}`,23);
+
+    if(this.mission===1)mimi(this,270,640,.65);
+    else leo(this,270,640,.65);
+
+    btn(this,270,775,340,70,t("continue"),0x35a85b,()=>this.scene.start("Missions"),23);
+    btn(this,270,865,250,58,t("hub"),0x3d83c5,()=>this.scene.start("Park"),20);
   }
 }
 
@@ -317,5 +391,5 @@ new Phaser.Game({
   type:Phaser.AUTO,width:W,height:H,parent:"game",
   backgroundColor:"#65c9ed",
   scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH},
-  scene:[Home,Ranger,Park,Missions,MissionOne,MissionComplete]
+  scene:[Home,Ranger,Park,Missions,MissionOne,MissionTwo,Complete]
 });

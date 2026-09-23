@@ -10,24 +10,30 @@ const outfitColors = [0x2c9b58, 0xe5a52f, 0x3d83c5, 0xc75c4a];
 
 const L = {
 en: {
-title:"WILD RANGERS", adventure:"ADVENTURE", tagline:"Explore. Learn. Protect Nature.",
-welcome:"Welcome, Little Ranger!", start:"LET'S EXPLORE!", footer:"A wild adventure awaits!",
-create:"CREATE YOUR RANGER", choose:"Choose your ranger outfit", go:"LET'S GO!",
+title:"WILD RANGERS", adventure:"ADVENTURE",
+tagline:"Explore. Learn. Protect Nature.",
+welcome:"Welcome, Little Ranger!", start:"LET'S EXPLORE!",
+footer:"A wild adventure awaits!", create:"CREATE YOUR RANGER",
+choose:"Choose your ranger outfit", go:"LET'S GO!",
 back:"BACK", hub:"SAVANNAH PARK", hubWelcome:"Welcome to the park!",
-missions:"MISSIONS", animals:"ANIMALS", learn:"LEARNING", badges:"MY BADGES",
-outfit:"Choose your outfit!", map:"CHOOSE A MISSION", soon:"Coming soon!",
-ok:"OK!", stars:"Stars", m1:"Become a Junior Ranger", m2:"Meet Mimi",
-m3:"Count the Zebra Herd", m4:"Find the Lost Lion Cub", m5:"Cross the River",
-m6:"Help Tembo Find Water", m7:"Animal Words", m8:"Clean Up the Park",
+missions:"MISSIONS", animals:"ANIMALS", learn:"LEARNING",
+badges:"MY BADGES", outfit:"Choose your outfit!",
+map:"CHOOSE A MISSION", soon:"Coming soon!", ok:"OK!",
+stars:"Stars", m1:"Become a Junior Ranger", m2:"Meet Mimi",
+m3:"Count the Zebra Herd", m4:"Find the Lost Lion Cub",
+m5:"Cross the River", m6:"Help Tembo Find Water",
+m7:"Animal Words", m8:"Clean Up the Park",
 m9:"Discover Hidden Tracks", m10:"First Ranger Challenge",
 training:"Ranger Training", instruction:"Tap each item to get ready!",
 hat:"Safari Hat", mapItem:"Park Map", badge:"Ranger Badge",
-finish:"MISSION COMPLETE!", reward:"You earned a star!", continue:"CONTINUE",
-collected:"Collected", mimiIntro:"Leo: Look! It's Mimi the monkey!",
-mimiTask:"Help Mimi find 3 bananas!", bananas:"Bananas", great:"Great job!",
-locked:"Complete the previous mission first!", find:"Find the bananas!",
-zebraTask:"How many zebras can you see?",
-correct:"That's right! Great counting!", wrong:"Try again! Count carefully!",
+finish:"MISSION COMPLETE!", reward:"You earned a star!",
+continue:"CONTINUE", collected:"Collected",
+mimiIntro:"Leo: Look! It's Mimi the monkey!",
+mimiTask:"Help Mimi find 3 bananas!", bananas:"Bananas",
+great:"Great job!", locked:"Complete the previous mission first!",
+find:"Find the bananas!", zebraTask:"How many zebras can you see?",
+correct:"That's right! Great counting!",
+wrong:"Try again! Count carefully!",
 lionIntro:"Leo: A lion cub is lost! Let's help!",
 lionTask:"Find 3 clues to locate the lost cub!", clues:"Clues",
 clue1:"Tiny paw prints", clue2:"Golden fur", clue3:"Lion's den",
@@ -37,20 +43,23 @@ riverIntro:"Leo: Let's cross this river!",
 riverTask:"Tap the stones in number order!",
 crossing:"Stones crossed", stoneCorrect:"Great step! Keep going!",
 stoneWrong:"Oops! Find the next number!",
-riverSuccess:"You crossed the river! Amazing!"
+riverSuccess:"You crossed the river! Amazing!",
+temboIntro:"Leo: Tembo is thirsty! Let's find water!",
+temboTask:"Tap all 3 water drops to help Tembo!",
+water:"Water drops", waterFound:"Water drop found!",
+temboSuccess:"Tembo found water! Great ranger work!"
 },
-
 fr: {
 title:"LES RANGERS", adventure:"SAUVAGES",
 tagline:"Explore. Apprends. Protège la nature.",
 welcome:"Bienvenue, petit Ranger !", start:"PARTONS EXPLORER !",
 footer:"Une aventure t'attend !", create:"CRÉE TON RANGER",
-choose:"Choisis ta tenue", go:"C'EST PARTI !", back:"RETOUR",
-hub:"PARC DE LA SAVANE", hubWelcome:"Bienvenue au parc !",
-missions:"MISSIONS", animals:"ANIMAUX", learn:"APPRENDRE",
-badges:"MES BADGES", outfit:"Choisis ta tenue !",
-map:"CHOISIS UNE MISSION", soon:"Bientôt disponible !",
-ok:"OK !", stars:"Étoiles",
+choose:"Choisis ta tenue", go:"C'EST PARTI !",
+back:"RETOUR", hub:"PARC DE LA SAVANE",
+hubWelcome:"Bienvenue au parc !", missions:"MISSIONS",
+animals:"ANIMAUX", learn:"APPRENDRE", badges:"MES BADGES",
+outfit:"Choisis ta tenue !", map:"CHOISIS UNE MISSION",
+soon:"Bientôt disponible !", ok:"OK !", stars:"Étoiles",
 m1:"Devenir jeune Ranger", m2:"Rencontre Mimi",
 m3:"Compter le troupeau de zèbres", m4:"Retrouver le lionceau perdu",
 m5:"Traverser la rivière", m6:"Aider Tembo à trouver de l'eau",
@@ -61,9 +70,8 @@ hat:"Chapeau", mapItem:"Carte du parc", badge:"Badge Ranger",
 finish:"MISSION TERMINÉE !", reward:"Tu as gagné une étoile !",
 continue:"CONTINUER", collected:"Trouvé",
 mimiIntro:"Leo : Regarde ! Voici Mimi le singe !",
-mimiTask:"Aide Mimi à trouver 3 bananes !",
-bananas:"Bananes", great:"Bravo !",
-locked:"Termine la mission précédente !",
+mimiTask:"Aide Mimi à trouver 3 bananes !", bananas:"Bananes",
+great:"Bravo !", locked:"Termine la mission précédente !",
 find:"Trouve les bananes !",
 zebraTask:"Combien de zèbres vois-tu ?",
 correct:"Bravo ! Tu as bien compté !",
@@ -78,9 +86,12 @@ riverIntro:"Leo : Traversons cette rivière !",
 riverTask:"Touche les pierres dans l'ordre !",
 crossing:"Pierres traversées", stoneCorrect:"Bravo ! Continue !",
 stoneWrong:"Oups ! Trouve le numéro suivant !",
-riverSuccess:"Tu as traversé la rivière ! Bravo !"
+riverSuccess:"Tu as traversé la rivière ! Bravo !",
+temboIntro:"Leo : Tembo a soif ! Trouvons de l'eau !",
+temboTask:"Touche les 3 gouttes d'eau pour aider Tembo !",
+water:"Gouttes d'eau", waterFound:"Goutte trouvée !",
+temboSuccess:"Tembo a trouvé de l'eau ! Bravo !"
 },
-
 es: {
 title:"GUARDIANES", adventure:"SALVAJES",
 tagline:"Explora. Aprende. Protege la naturaleza.",
@@ -118,60 +129,64 @@ riverIntro:"Leo: ¡Crucemos este río!",
 riverTask:"¡Toca las piedras en orden!",
 crossing:"Piedras cruzadas", stoneCorrect:"¡Muy bien! ¡Sigue!",
 stoneWrong:"¡Ups! ¡Busca el siguiente número!",
-riverSuccess:"¡Cruzaste el río! ¡Increíble!"
+riverSuccess:"¡Cruzaste el río! ¡Increíble!",
+temboIntro:"Leo: ¡Tembo tiene sed! ¡Busquemos agua!",
+temboTask:"¡Toca las 3 gotas de agua para ayudar a Tembo!",
+water:"Gotas de agua", waterFound:"¡Gota encontrada!",
+temboSuccess:"¡Tembo encontró agua! ¡Buen trabajo!"
 }
 };
 
 const t = k => L[lang]?.[k] || L.en[k] || k;
 
-function txt(s, x, y, str, size = 23, color = "#fff") {
-  return s.add.text(x, y, str, {
-    fontFamily: "Trebuchet MS, Arial",
-    fontSize: size + "px",
-    fontStyle: "bold",
+function txt(s,x,y,str,size=23,color="#fff"){
+  return s.add.text(x,y,str,{
+    fontFamily:"Trebuchet MS, Arial",
+    fontSize:size+"px",
+    fontStyle:"bold",
     color,
-    align: "center",
-    wordWrap: { width: 460 },
-    stroke: "#49331f",
-    strokeThickness: 2
+    align:"center",
+    wordWrap:{width:460},
+    stroke:"#49331f",
+    strokeThickness:2
   }).setOrigin(.5);
 }
 
-function btn(s, x, y, w, h, label, color, fn, size = 22) {
-  const g = s.add.graphics();
-  g.fillStyle(0x49321f, .3);
-  g.fillRoundedRect(x-w/2+3, y-h/2+6, w, h, 20);
-  g.fillStyle(0xffffff, 1);
-  g.fillRoundedRect(x-w/2, y-h/2, w, h, 20);
-  g.fillStyle(color, 1);
-  g.fillRoundedRect(x-w/2+5, y-h/2+5, w-10, h-12, 16);
-  txt(s, x, y-2, label, size);
-  s.add.rectangle(x, y, w, h, 0xffffff, 0)
-    .setInteractive({ useHandCursor: true })
-    .on("pointerdown", fn);
+function btn(s,x,y,w,h,label,color,fn,size=22){
+  const g=s.add.graphics();
+  g.fillStyle(0x49321f,.3);
+  g.fillRoundedRect(x-w/2+3,y-h/2+6,w,h,20);
+  g.fillStyle(0xffffff,1);
+  g.fillRoundedRect(x-w/2,y-h/2,w,h,20);
+  g.fillStyle(color,1);
+  g.fillRoundedRect(x-w/2+5,y-h/2+5,w-10,h-12,16);
+  txt(s,x,y-2,label,size);
+  s.add.rectangle(x,y,w,h,0xffffff,0)
+    .setInteractive({useHandCursor:true})
+    .on("pointerdown",fn);
 }
 
-function cloud(s, x, y, sc = 1) {
-  const g = s.add.graphics();
-  g.fillStyle(0xffffff, .9);
-  g.fillCircle(x, y, 22*sc);
-  g.fillCircle(x+25*sc, y-10*sc, 28*sc);
-  g.fillCircle(x+52*sc, y, 22*sc);
-  g.fillRoundedRect(x-3*sc, y, 60*sc, 18*sc, 10);
+function cloud(s,x,y,sc=1){
+  const g=s.add.graphics();
+  g.fillStyle(0xffffff,.9);
+  g.fillCircle(x,y,22*sc);
+  g.fillCircle(x+25*sc,y-10*sc,28*sc);
+  g.fillCircle(x+52*sc,y,22*sc);
+  g.fillRoundedRect(x-3*sc,y,60*sc,18*sc,10);
 }
 
-function tree(s, x, y, sc = 1) {
-  const g = s.add.graphics();
-  g.fillStyle(0x85502d, 1);
-  g.fillRoundedRect(x-8*sc, y, 16*sc, 65*sc, 5);
-  g.fillStyle(0x3e8b45, 1);
-  g.fillEllipse(x, y-12*sc, 115*sc, 35*sc);
-  g.fillStyle(0x58a94e, 1);
-  g.fillEllipse(x-20*sc, y-23*sc, 55*sc, 25*sc);
+function tree(s,x,y,sc=1){
+  const g=s.add.graphics();
+  g.fillStyle(0x85502d,1);
+  g.fillRoundedRect(x-8*sc,y,16*sc,65*sc,5);
+  g.fillStyle(0x3e8b45,1);
+  g.fillEllipse(x,y-12*sc,115*sc,35*sc);
+  g.fillStyle(0x58a94e,1);
+  g.fillEllipse(x-20*sc,y-23*sc,55*sc,25*sc);
 }
 
-function savannah(s) {
-  const g = s.add.graphics();
+function savannah(s){
+  const g=s.add.graphics();
   g.fillGradientStyle(0x65c9ed,0x65c9ed,0xb2e9f6,0xb2e9f6,1);
   g.fillRect(0,0,W,H);
   g.fillStyle(0xffe36b,1);
@@ -192,9 +207,9 @@ function savannah(s) {
   tree(s,485,510,.7);
 }
 
-function leo(s, x, y, sc = 1, outfit = 0x2c9b58) {
-  const c = s.add.container(x,y).setScale(sc);
-  const g = s.add.graphics();
+function leo(s,x,y,sc=1,outfit=0x2c9b58){
+  const c=s.add.container(x,y).setScale(sc);
+  const g=s.add.graphics();
 
   g.fillStyle(0x6b442b,1);
   g.fillRoundedRect(-34,75,23,62,9);
@@ -244,9 +259,9 @@ function leo(s, x, y, sc = 1, outfit = 0x2c9b58) {
   return c;
 }
 
-function mimi(s, x, y, sc = 1) {
-  const c = s.add.container(x,y).setScale(sc);
-  const g = s.add.graphics();
+function mimi(s,x,y,sc=1){
+  const c=s.add.container(x,y).setScale(sc);
+  const g=s.add.graphics();
 
   g.lineStyle(12,0x8b552f,1);
   g.beginPath();
@@ -290,7 +305,42 @@ function mimi(s, x, y, sc = 1) {
   return c;
 }
 
-class Home extends Phaser.Scene {
+function elephant(s,x,y,sc=1){
+  const c=s.add.container(x,y).setScale(sc);
+  const g=s.add.graphics();
+
+  g.fillStyle(0x899ba5,1);
+  g.fillEllipse(0,15,125,100);
+  g.fillEllipse(-45,-35,55,60);
+  g.fillEllipse(45,-35,55,60);
+  g.fillStyle(0xb4c2c9,1);
+  g.fillEllipse(-45,-35,32,38);
+  g.fillEllipse(45,-35,32,38);
+  g.fillStyle(0x899ba5,1);
+  g.fillCircle(0,-25,55);
+  g.fillRoundedRect(-48,35,28,70,10);
+  g.fillRoundedRect(20,35,28,70,10);
+  g.fillRoundedRect(-50,88,35,16,7);
+  g.fillRoundedRect(15,88,35,16,7);
+  g.fillRoundedRect(35,-15,25,65,12);
+  g.fillEllipse(47,45,28,25);
+  g.fillStyle(0xffffff,1);
+  g.fillCircle(-18,-33,13);
+  g.fillCircle(18,-33,13);
+  g.fillStyle(0x292929,1);
+  g.fillCircle(-16,-32,5);
+  g.fillCircle(20,-32,5);
+  g.lineStyle(3,0x596d77,1);
+  g.beginPath();
+  g.arc(0,-5,18,.2,Math.PI-.2);
+  g.strokePath();
+
+  c.add(g);
+  s.tweens.add({targets:c,y:y-5,duration:1000,yoyo:true,repeat:-1});
+  return c;
+}
+
+class Home extends Phaser.Scene{
   constructor(){super("Home");}
   create(){
     savannah(this);
@@ -314,7 +364,7 @@ class Home extends Phaser.Scene {
   }
 }
 
-class Ranger extends Phaser.Scene {
+class Ranger extends Phaser.Scene{
   constructor(){super("Ranger");}
   create(){
     savannah(this);
@@ -353,7 +403,7 @@ class Ranger extends Phaser.Scene {
   }
 }
 
-class Park extends Phaser.Scene {
+class Park extends Phaser.Scene{
   constructor(){super("Park");}
   create(){
     savannah(this);
@@ -386,7 +436,7 @@ class Park extends Phaser.Scene {
   }
 }
 
-class Missions extends Phaser.Scene {
+class Missions extends Phaser.Scene{
   constructor(){super("Missions");}
   create(){
     savannah(this);
@@ -401,10 +451,7 @@ class Missions extends Phaser.Scene {
     names.forEach((name,i)=>{
       const x=145+(i%2)*250;
       const y=190+Math.floor(i/2)*125;
-
-      // Mission 1 is open initially.
-      // Each next mission unlocks after the previous is completed.
-      const unlocked = i===0 || completed.includes(i-1);
+      const unlocked=i===0||completed.includes(i-1);
       const done=completed.includes(i);
 
       btn(this,x,y,220,96,
@@ -416,11 +463,12 @@ class Missions extends Phaser.Scene {
             return;
           }
 
-          if(i===0)this.scene.start("MissionOne");
-          else if(i===1)this.scene.start("MissionTwo");
-          else if(i===2)this.scene.start("MissionThree");
-          else if(i===3)this.scene.start("MissionFour");
-          else if(i===4)this.scene.start("MissionFive");
+          const scenes=[
+            "MissionOne","MissionTwo","MissionThree",
+            "MissionFour","MissionFive","MissionSix"
+          ];
+
+          if(i<scenes.length)this.scene.start(scenes[i]);
           else this.popup(t("soon"));
         },15
       );
@@ -441,7 +489,7 @@ class Missions extends Phaser.Scene {
   }
 }
 
-class MissionOne extends Phaser.Scene {
+class MissionOne extends Phaser.Scene{
   constructor(){super("MissionOne");}
   create(){
     savannah(this);
@@ -449,12 +497,7 @@ class MissionOne extends Phaser.Scene {
     txt(this,270,105,t("instruction"),20);
     leo(this,270,265,.8);
 
-    const items=[
-      ["🧢",t("hat")],
-      ["🗺️",t("mapItem")],
-      ["🏅",t("badge")]
-    ];
-
+    const items=[["🧢",t("hat")],["🗺️",t("mapItem")],["🏅",t("badge")]];
     let found=[];
     const status=txt(this,270,390,`${t("collected")}: 0 / 3`,22);
 
@@ -489,7 +532,7 @@ class MissionOne extends Phaser.Scene {
   }
 }
 
-class MissionTwo extends Phaser.Scene {
+class MissionTwo extends Phaser.Scene{
   constructor(){super("MissionTwo");}
   create(){
     savannah(this);
@@ -503,12 +546,7 @@ class MissionTwo extends Phaser.Scene {
     txt(this,270,402,t("mimiIntro"),19,"#315b35");
     txt(this,270,485,t("mimiTask"),22,"#fff6c7");
 
-    const spots=[
-      {x:105,y:620},
-      {x:270,y:690},
-      {x:435,y:610}
-    ];
-
+    const spots=[{x:105,y:620},{x:270,y:690},{x:435,y:610}];
     let found=0;
     const status=txt(this,270,780,`${t("bananas")}: 0 / 3`,23,"#fff6c7");
 
@@ -543,7 +581,7 @@ class MissionTwo extends Phaser.Scene {
   }
 }
 
-class MissionThree extends Phaser.Scene {
+class MissionThree extends Phaser.Scene{
   constructor(){super("MissionThree");}
   create(){
     savannah(this);
@@ -554,7 +592,6 @@ class MissionThree extends Phaser.Scene {
     const zebra=(x,y,sc=1)=>{
       const c=this.add.container(x,y).setScale(sc);
       const g=this.add.graphics();
-
       g.fillStyle(0xffffff,1);
       g.fillRoundedRect(-28,20,13,35,5);
       g.fillRoundedRect(15,20,13,35,5);
@@ -578,7 +615,6 @@ class MissionThree extends Phaser.Scene {
       g.fillCircle(43,-34,3);
       g.fillStyle(0xf0c9b5,1);
       g.fillEllipse(49,-25,17,10);
-
       c.add(g);
       return c;
     };
@@ -624,10 +660,8 @@ class MissionThree extends Phaser.Scene {
   }
 }
 
-// MISSION 4 — FIND THE LOST LION CUB
-class MissionFour extends Phaser.Scene {
+class MissionFour extends Phaser.Scene{
   constructor(){super("MissionFour");}
-
   create(){
     savannah(this);
     txt(this,270,48,t("m4"),27);
@@ -655,28 +689,24 @@ class MissionFour extends Phaser.Scene {
       txt(this,clue.x,clue.y-15,clue.emoji,40);
       txt(this,clue.x,clue.y+43,clue.name,14,"#315b35");
 
-      const hit=this.add.rectangle(
-        clue.x,clue.y,130,130,0xffffff,0
-      ).setInteractive({useHandCursor:true});
+      this.add.rectangle(clue.x,clue.y,130,130,0xffffff,0)
+        .setInteractive({useHandCursor:true})
+        .on("pointerdown",()=>{
+          if(g.getData("found"))return;
+          g.setData("found",true);
+          g.clear();
+          g.fillStyle(0x65a84b,1);
+          g.fillRoundedRect(clue.x-65,clue.y-65,130,130,20);
+          txt(this,clue.x,clue.y,"✅",42);
+          found++;
+          status.setText(`${t("clues")}: ${found} / 3`);
 
-      hit.on("pointerdown",()=>{
-        if(g.getData("found"))return;
-
-        g.setData("found",true);
-        g.clear();
-        g.fillStyle(0x65a84b,1);
-        g.fillRoundedRect(clue.x-65,clue.y-65,130,130,20);
-        txt(this,clue.x,clue.y,"✅",42);
-
-        found++;
-        status.setText(`${t("clues")}: ${found} / 3`);
-
-        if(found<3){
-          txt(this,270,825,t("clueFound"),20,"#fff6c7");
-        }else{
-          this.showLionCub();
-        }
-      });
+          if(found<3){
+            txt(this,270,825,t("clueFound"),20,"#fff6c7");
+          }else{
+            this.showLionCub();
+          }
+        });
     });
 
     btn(this,270,920,220,52,t("back"),0x3d83c5,
@@ -687,7 +717,6 @@ class MissionFour extends Phaser.Scene {
     const overlay=this.add.graphics();
     overlay.fillStyle(0x315b35,.96);
     overlay.fillRoundedRect(25,250,490,430,25);
-
     txt(this,270,305,"🦁",100);
     txt(this,270,425,t("lionFound"),25,"#fff6c7");
     txt(this,270,490,t("lionHelp"),21,"#ffffff");
@@ -698,16 +727,13 @@ class MissionFour extends Phaser.Scene {
 }
 
 // MISSION 5 — CROSS THE RIVER
-class MissionFive extends Phaser.Scene {
+class MissionFive extends Phaser.Scene{
   constructor(){super("MissionFive");}
-
   create(){
     savannah(this);
-
     txt(this,270,48,t("m5"),29);
     leo(this,100,205,.52);
 
-    // River
     const river=this.add.graphics();
     river.fillStyle(0x238fce,1);
     river.fillRoundedRect(0,390,W,405,25);
@@ -719,7 +745,6 @@ class MissionFive extends Phaser.Scene {
     txt(this,270,300,t("riverIntro"),20,"#fff6c7");
     txt(this,270,350,t("riverTask"),21,"#fff6c7");
 
-    // Tap stones in the order 1 → 2 → 3 → 4.
     const stones=[
       {x:90,y:445,n:1},
       {x:350,y:535,n:2},
@@ -727,59 +752,43 @@ class MissionFive extends Phaser.Scene {
       {x:420,y:735,n:4}
     ];
 
-    let step=0;
-    let finished=false;
-
-    const status=txt(
-      this,270,815,`${t("crossing")}: 0 / 4`,21,"#fff6c7"
-    );
-
+    let step=0,finished=false;
+    const status=txt(this,270,815,`${t("crossing")}: 0 / 4`,21,"#fff6c7");
     const feedback=txt(this,270,865,"",18,"#fff6c7");
 
     stones.forEach((stone,i)=>{
       const sg=this.add.graphics();
-
-      // Stone base
       sg.fillStyle(0x87999d,1);
       sg.fillEllipse(stone.x,stone.y,112,72);
       sg.fillStyle(0xc2d0d0,1);
       sg.fillEllipse(stone.x-5,stone.y-6,84,46);
-
       txt(this,stone.x,stone.y,String(stone.n),27,"#315b35");
 
-      const hit=this.add.rectangle(
-        stone.x,stone.y,120,85,0xffffff,0
-      ).setInteractive({useHandCursor:true});
+      this.add.rectangle(stone.x,stone.y,120,85,0xffffff,0)
+        .setInteractive({useHandCursor:true})
+        .on("pointerdown",()=>{
+          if(finished||i<step)return;
 
-      hit.on("pointerdown",()=>{
-        if(finished || i<step)return;
+          if(i===step){
+            step++;
+            sg.clear();
+            sg.fillStyle(0x65a84b,1);
+            sg.fillEllipse(stone.x,stone.y,112,72);
+            txt(this,stone.x,stone.y,"✓",32,"#ffffff");
+            status.setText(`${t("crossing")}: ${step} / 4`);
+            feedback.setText(t("stoneCorrect"));
 
-        if(i===step){
-          step++;
-
-          // Turn the correctly tapped stone green.
-          sg.clear();
-          sg.fillStyle(0x65a84b,1);
-          sg.fillEllipse(stone.x,stone.y,112,72);
-
-          txt(this,stone.x,stone.y,"✓",32,"#ffffff");
-
-          status.setText(`${t("crossing")}: ${step} / 4`);
-          feedback.setText(t("stoneCorrect"));
-
-          // Complete mission after all four stones.
-          if(step===stones.length){
-            finished=true;
-            feedback.setText(t("riverSuccess"));
-
-            this.time.delayedCall(1100,()=>{
-              this.scene.start("Complete",{mission:4});
-            });
+            if(step===stones.length){
+              finished=true;
+              feedback.setText(t("riverSuccess"));
+              this.time.delayedCall(1100,()=>{
+                this.scene.start("Complete",{mission:4});
+              });
+            }
+          }else{
+            feedback.setText(t("stoneWrong"));
           }
-        }else{
-          feedback.setText(t("stoneWrong"));
-        }
-      });
+        });
     });
 
     btn(this,270,930,220,50,t("back"),0x3d83c5,
@@ -787,17 +796,94 @@ class MissionFive extends Phaser.Scene {
   }
 }
 
-class Complete extends Phaser.Scene {
+// MISSION 6 — HELP TEMBO FIND WATER
+class MissionSix extends Phaser.Scene{
+  constructor(){super("MissionSix");}
+
+  create(){
+    savannah(this);
+
+    txt(this,270,48,t("m6"),28);
+    leo(this,100,205,.48);
+    elephant(this,390,235,.78);
+
+    const bubble=this.add.graphics();
+    bubble.fillStyle(0xffffff,1);
+    bubble.fillRoundedRect(25,305,490,90,20);
+
+    txt(this,270,345,t("temboIntro"),20,"#315b35");
+    txt(this,270,430,t("temboTask"),21,"#fff6c7");
+
+    // Three water drops to find.
+    const drops=[
+      {x:110,y:560},
+      {x:270,y:660},
+      {x:430,y:550}
+    ];
+
+    let found=0;
+    let finished=false;
+
+    const status=txt(
+      this,270,770,`${t("water")}: 0 / 3`,22,"#fff6c7"
+    );
+
+    const feedback=txt(this,270,820,"",19,"#fff6c7");
+
+    drops.forEach(drop=>{
+      const g=this.add.graphics();
+
+      g.fillStyle(0xffffff,1);
+      g.fillRoundedRect(drop.x-58,drop.y-58,116,116,22);
+
+      txt(this,drop.x,drop.y,"💧",54);
+
+      const hit=this.add.rectangle(
+        drop.x,drop.y,116,116,0xffffff,0
+      ).setInteractive({useHandCursor:true});
+
+      hit.on("pointerdown",()=>{
+        if(g.getData("found")||finished)return;
+
+        g.setData("found",true);
+
+        g.clear();
+        g.fillStyle(0x65a84b,1);
+        g.fillRoundedRect(drop.x-58,drop.y-58,116,116,22);
+
+        txt(this,drop.x,drop.y,"✅",42);
+
+        found++;
+        status.setText(`${t("water")}: ${found} / 3`);
+        feedback.setText(t("waterFound"));
+
+        if(found===3){
+          finished=true;
+          feedback.setText(t("temboSuccess"));
+
+          this.time.delayedCall(1200,()=>{
+            this.scene.start("Complete",{mission:5});
+          });
+        }
+      });
+    });
+
+    btn(this,270,920,220,52,t("back"),0x3d83c5,
+      ()=>this.scene.start("Missions"),19);
+  }
+}
+
+class Complete extends Phaser.Scene{
   constructor(){super("Complete");}
 
   init(data){
-    this.mission=data.mission ?? 0;
+    this.mission=data.mission??0;
   }
 
   create(){
     savannah(this);
 
-    // Award a star only on the first completion of a mission.
+    // Award a star only the first time a mission is completed.
     const already=completed.includes(this.mission);
 
     if(!already){
@@ -814,7 +900,7 @@ class Complete extends Phaser.Scene {
     txt(this,270,285,"🏆",100);
 
     const missionNames=[
-      t("m1"),t("m2"),t("m3"),t("m4"),t("m5")
+      t("m1"),t("m2"),t("m3"),t("m4"),t("m5"),t("m6")
     ];
 
     txt(this,270,405,missionNames[this.mission]||t("m1"),25);
@@ -823,6 +909,8 @@ class Complete extends Phaser.Scene {
 
     if(this.mission===1){
       mimi(this,270,640,.65);
+    }else if(this.mission===5){
+      elephant(this,270,640,.7);
     }else{
       leo(this,270,640,.65);
     }
@@ -855,6 +943,7 @@ new Phaser.Game({
     MissionThree,
     MissionFour,
     MissionFive,
+    MissionSix,
     Complete
   ]
 });

@@ -7,6 +7,158 @@ let stars=Number(localStorage.getItem("wr_v1_stars"))||0;
 let completed=JSON.parse(localStorage.getItem("wr_v1_completed")||"[]");
 let parentPin=localStorage.getItem("wr_v1_parent_pin")||"1234";
 
+/* =========================================================
+   RANGER SOUND SYSTEM
+========================================================= */
+
+let soundOn=localStorage.getItem("wr_v1_sound")!=="off";
+let audioCtx=null;
+let musicTimer=null;
+
+function startAudio(){
+ if(!soundOn)return;
+ try{
+  if(!audioCtx){
+   const Ctx=window.AudioContext||window.webkitAudioContext;
+   if(Ctx)audioCtx=new Ctx();
+  }
+  if(audioCtx&&audioCtx.state==="suspended")audioCtx.resume();
+ }catch(e){}
+}
+
+function tone(freq=440,duration=.08,type="sine",volume=.035,delay=0){
+ if(!soundOn)return;
+ startAudio();
+ if(!audioCtx)return;
+
+ try{
+  const osc=audioCtx.createOscillator();
+  const gain=audioCtx.createGain();
+
+  osc.type=type;
+  osc.frequency.setValueAtTime(freq,audioCtx.currentTime+delay);
+
+  gain.gain.setValueAtTime(0.0001,audioCtx.currentTime+delay);
+  gain.gain.exponentialRampToValueAtTime(
+   volume,
+   audioCtx.currentTime+delay+.01
+  );
+  gain.gain.exponentialRampToValueAtTime(
+   0.0001,
+   audioCtx.currentTime+delay+duration
+  );
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.start(audioCtx.currentTime+delay);
+  osc.stop(audioCtx.currentTime+delay+duration+.03);
+ }catch(e){}
+}
+
+function soundTap(){
+ tone(520,.06,"sine",.025);
+}
+
+function soundCorrect(){
+ tone(523,.09,"sine",.035);
+ tone(659,.12,"sine",.04,.08);
+ tone(784,.18,"sine",.045,.18);
+}
+
+function soundWrong(){
+ tone(220,.12,"triangle",.035);
+ tone(175,.18,"triangle",.03,.1);
+}
+
+function soundWin(){
+ tone(523,.12,"sine",.04);
+ tone(659,.12,"sine",.04,.12);
+ tone(784,.14,"sine",.045,.24);
+ tone(1046,.28,"sine",.05,.38);
+}
+
+function soundGuide(){
+ tone(392,.1,"sine",.025);
+ tone(523,.15,"sine",.03,.1);
+}
+
+function soundCollect(){
+ tone(620,.07,"sine",.03);
+ tone(820,.1,"sine",.035,.07);
+}
+
+function startAmbient(){
+ if(!soundOn||musicTimer)return;
+
+ const playAmbient=()=>{
+  if(!soundOn){
+   musicTimer=null;
+   return;
+  }
+
+  tone(261,.55,"sine",.008);
+  tone(329,.55,"sine",.006,.18);
+  tone(392,.7,"sine",.007,.36);
+
+  musicTimer=setTimeout(()=>{
+   musicTimer=null;
+   startAmbient();
+  },6500);
+ };
+
+ playAmbient();
+}
+
+function stopAmbient(){
+ if(musicTimer){
+  clearTimeout(musicTimer);
+  musicTimer=null;
+ }
+}
+
+function toggleSound(){
+ soundOn=!soundOn;
+ localStorage.setItem("wr_v1_sound",soundOn?"on":"off");
+
+ if(soundOn){
+  startAudio();
+  soundTap();
+  startAmbient();
+ }else{
+  stopAmbient();
+ }
+}
+
+function soundLabel(){
+ return soundOn?"🔊":"🔇";
+}
+
+function audioControl(s){
+ const hit=s.add.rectangle(500,55,58,50,0xffffff,0)
+  .setInteractive({useHandCursor:true});
+
+ const g=s.add.graphics();
+ g.fillStyle(0x183d29,.92);
+ g.fillRoundedRect(470,30,58,50,16);
+
+ const label=s.add.text(499,55,soundLabel(),{
+  fontFamily:"Arial",
+  fontSize:"24px"
+ }).setOrigin(.5);
+
+ hit.on("pointerdown",()=>{
+  toggleSound();
+  label.setText(soundLabel());
+ });
+
+ return {hit,g,label};
+}
+
+/* =========================================================
+   COLORS / TRANSLATIONS
+========================================================= */
+
 const outfitColors=[0x2c9b58,0xe5a52f,0x3d83c5,0xc75c4a];
 
 const L={
@@ -86,6 +238,7 @@ leoFact:"Here's a Ranger fact:",
 leoLearn:"Learning is part of being a great Ranger!",
 leoSafe:"Stay calm, watch wildlife from a safe distance, and follow Ranger rules."
 },
+
 fr:{
 title:"LES RANGERS",adventure:"SAUVAGES",tagline:"Explore. Apprends. Protège la nature.",
 welcome:"Bienvenue, petit Ranger !",start:"PARTONS EXPLORER !",footer:"Une aventure t'attend !",
@@ -154,10 +307,13 @@ leoHint7:"Regarde l'animal et choisis le bon mot.",
 leoHint8:"Un Ranger aide à garder le parc propre. Trouve les trois déchets.",
 leoHint9:"Regarde les traces. Quel animal pourrait les avoir laissées ?",
 leoHint10:"Un Ranger a besoin d'équipement. Trouve les trois objets !",
-leoGreat:"Excellent travail, Ranger ! Tu as réussi !",leoTry:"Ce n'est pas grave ! Regarde encore et essaie.",
-leoFact:"Voici un fait Ranger :",leoLearn:"Apprendre fait partie du travail d'un Ranger !",
+leoGreat:"Excellent travail, Ranger ! Tu as réussi !",
+leoTry:"Ce n'est pas grave ! Regarde encore et essaie.",
+leoFact:"Voici un fait Ranger :",
+leoLearn:"Apprendre fait partie du travail d'un Ranger !",
 leoSafe:"Reste calme, garde une distance sûre et respecte les règles."
 },
+
 es:{
 title:"GUARDIANES",adventure:"SALVAJES",tagline:"Explora. Aprende. Protege la naturaleza.",
 welcome:"¡Bienvenido, pequeño Ranger!",start:"¡VAMOS A EXPLORAR!",footer:"¡Una aventura te espera!",
@@ -228,7 +384,8 @@ leoHint9:"Mira las huellas. ¿Qué animal pudo dejarlas?",
 leoHint10:"Un Ranger necesita equipo. ¡Encuentra los tres objetos!",
 leoGreat:"¡Fantástico trabajo, Ranger! ¡Lo lograste!",
 leoTry:"¡No pasa nada! Mira otra vez e inténtalo.",
-leoFact:"Aquí tienes un dato Ranger:",leoLearn:"¡Aprender es parte de ser un buen Ranger!",
+leoFact:"Aquí tienes un dato Ranger:",
+leoLearn:"¡Aprender es parte de ser un buen Ranger!",
 leoSafe:"Mantén la calma, observa desde una distancia segura y sigue las reglas."
 }
 };
@@ -245,6 +402,10 @@ zara:"/assets/characters/Zara_Zebra.png",
 bongo:"/assets/characters/Bongo_Hippo.png",
 chase:"/assets/characters/Chase_Cheetah.png"
 };
+
+/* =========================================================
+   UI HELPERS
+========================================================= */
 
 function txt(s,x,y,str,size=23,color="#fff"){
  return s.add.text(x,y,str,{
@@ -263,146 +424,512 @@ function btn(s,x,y,w,h,label,color,fn,size=22){
  const sh=s.add.graphics();
  sh.fillStyle(0x49321f,.3);
  sh.fillRoundedRect(x-w/2+3,y-h/2+7,w,h,20);
+
  const wh=s.add.graphics();
  wh.fillStyle(0xffffff,1);
  wh.fillRoundedRect(x-w/2,y-h/2,w,h,20);
+
  const face=s.add.graphics();
  face.fillStyle(color,1);
  face.fillRoundedRect(x-w/2+5,y-h/2+5,w-10,h-12,16);
+
  const lt=txt(s,x,y-2,label,size);
- const hit=s.add.rectangle(x,y,w,h,0xffffff,0).setInteractive({useHandCursor:true});
- hit.on("pointerover",()=>s.tweens.add({targets:[face,lt],scale:1.03,duration:100}));
- hit.on("pointerout",()=>s.tweens.add({targets:[face,lt],scale:1,duration:100}));
- hit.on("pointerdown",()=>{s.tweens.add({targets:[face,lt],scale:.96,duration:70,yoyo:true});fn();});
+
+ const hit=s.add.rectangle(x,y,w,h,0xffffff,0)
+  .setInteractive({useHandCursor:true});
+
+ hit.on("pointerover",()=>{
+  s.tweens.add({targets:[face,lt],scale:1.03,duration:100});
+ });
+
+ hit.on("pointerout",()=>{
+  s.tweens.add({targets:[face,lt],scale:1,duration:100});
+ });
+
+ hit.on("pointerdown",()=>{
+  startAudio();
+  soundTap();
+  s.tweens.add({
+   targets:[face,lt],
+   scale:.96,
+   duration:70,
+   yoyo:true
+  });
+  fn();
+ });
+
  return hit;
 }
 
 function popIn(s,o,delay=0){
- o.setScale(.85);o.setAlpha(0);
- s.tweens.add({targets:o,scale:1,alpha:1,duration:350,delay,ease:"Back.Out"});
+ o.setScale(.85);
+ o.setAlpha(0);
+
+ s.tweens.add({
+  targets:o,
+  scale:1,
+  alpha:1,
+  duration:350,
+  delay,
+  ease:"Back.Out"
+ });
+
  return o;
 }
 
 function pulse(s,o){
- s.tweens.add({targets:o,scale:1.06,duration:180,yoyo:true,ease:"Sine.easeInOut"});
+ s.tweens.add({
+  targets:o,
+  scale:1.06,
+  duration:180,
+  yoyo:true,
+  ease:"Sine.easeInOut"
+ });
 }
 
 function fadeScene(s,next,data={}){
- const c=s.add.rectangle(W/2,H/2,W,H,0x183d29,0);
- s.tweens.add({targets:c,alpha:1,duration:220,onComplete:()=>s.scene.start(next,data)});
+ startAudio();
+
+ const c=s.add.rectangle(
+  W/2,H/2,W,H,
+  0x183d29,0
+ );
+
+ s.tweens.add({
+  targets:c,
+  alpha:1,
+  duration:220,
+  onComplete:()=>{
+   s.scene.start(next,data);
+  }
+ });
 }
 
 function savannah(s){
  const g=s.add.graphics();
- g.fillGradientStyle(0x65c9ed,0x65c9ed,0xb2e9f6,0xb2e9f6,1);
+
+ g.fillGradientStyle(
+  0x65c9ed,
+  0x65c9ed,
+  0xb2e9f6,
+  0xb2e9f6,
+  1
+ );
+
  g.fillRect(0,0,W,H);
- g.fillStyle(0xffe36b,1);g.fillCircle(440,140,48);
- g.fillStyle(0xa7d56c,1);g.fillEllipse(100,510,450,230);g.fillEllipse(450,500,480,260);
- g.fillStyle(0x82bd4d,1);g.fillRect(0,540,W,420);
- g.fillStyle(0x6eae42,1);g.fillEllipse(70,700,520,280);g.fillEllipse(480,740,480,300);
- g.fillStyle(0x9bd45a,1);g.fillEllipse(260,850,650,250);
- for(let i=0;i<14;i++){const x=20+i*42,y=900-(i%4)*35;g.lineStyle(3,0x4f9837,1);g.beginPath();g.moveTo(x,y);g.lineTo(x-5,y-18);g.moveTo(x,y);g.lineTo(x+6,y-22);g.strokePath();}
+
+ g.fillStyle(0xffe36b,1);
+ g.fillCircle(440,140,48);
+
+ g.fillStyle(0xa7d56c,1);
+ g.fillEllipse(100,510,450,230);
+ g.fillEllipse(450,500,480,260);
+
+ g.fillStyle(0x82bd4d,1);
+ g.fillRect(0,540,W,420);
+
+ g.fillStyle(0x6eae42,1);
+ g.fillEllipse(70,700,520,280);
+ g.fillEllipse(480,740,480,300);
+
+ g.fillStyle(0x9bd45a,1);
+ g.fillEllipse(260,850,650,250);
+
+ for(let i=0;i<14;i++){
+  const x=20+i*42;
+  const y=900-(i%4)*35;
+
+  g.lineStyle(3,0x4f9837,1);
+  g.beginPath();
+  g.moveTo(x,y);
+  g.lineTo(x-5,y-18);
+  g.moveTo(x,y);
+  g.lineTo(x+6,y-22);
+  g.strokePath();
+ }
 }
 
 function character(s,key,x,y,height=180){
  const im=s.add.image(x,y,key);
+
  im.setScale(height/im.height);
- s.tweens.add({targets:im,y:y-5,duration:1400+Math.random()*400,yoyo:true,repeat:-1,ease:"Sine.easeInOut"});
+
+ s.tweens.add({
+  targets:im,
+  y:y-5,
+  duration:1400+Math.random()*400,
+  yoyo:true,
+  repeat:-1,
+  ease:"Sine.easeInOut"
+ });
+
  return im;
 }
 
-/* LEO RANGER GUIDE */
+/* =========================================================
+   LEO RANGER GUIDE
+========================================================= */
 
 function leoGuide(s,message){
+ startAudio();
+ soundGuide();
+
+ const overlay=s.add.container(0,0);
+
  const box=s.add.graphics();
  box.fillStyle(0x183d29,.98);
  box.fillRoundedRect(25,250,490,390,28);
 
  const portrait=character(s,"leo",105,350,145);
 
- txt(s,270,285,t("leoGuide"),24,"#ffdf65");
- txt(s,295,400,message,20,"#fff6c7");
+ const title=txt(
+  s,
+  270,
+  285,
+  t("leoGuide"),
+  24,
+  "#ffdf65"
+ );
 
- btn(s,270,555,190,58,t("gotIt"),0x35a85b,()=>{
-  box.destroy();
-  portrait.destroy();
-  s.children.list.filter(o=>o.type==="Text"&&o!==box&&o.y>=275&&o.y<=500).forEach(o=>{
-   if(o!==message)o.destroy();
-  });
- },18);
+ const body=txt(
+  s,
+  295,
+  400,
+  message,
+  20,
+  "#fff6c7"
+ );
 
- return box;
+ overlay.add([
+  box,
+  portrait,
+  title,
+  body
+ ]);
+
+ const ok=btn(
+  s,
+  270,
+  555,
+  190,
+  58,
+  t("gotIt"),
+  0x35a85b,
+  ()=>{
+   overlay.destroy(true);
+   ok.destroy();
+
+   if(s.soundGuideActive){
+    s.soundGuideActive=false;
+   }
+  },
+  18
+ );
+
+ overlay.setDepth(100);
+ ok.setDepth(101);
+
+ s.soundGuideActive=true;
+
+ return overlay;
 }
 
 function guideButton(s,x,y,message){
- return btn(s,x,y,170,52,"🤖 "+t("askLeo"),0x6d5acb,()=>leoGuide(s,message),16);
+ return btn(
+  s,
+  x,
+  y,
+  170,
+  52,
+  "🤖 "+t("askLeo"),
+  0x6d5acb,
+  ()=>leoGuide(s,message),
+  16
+ );
 }
+
+/* =========================================================
+   BASE SCENE
+========================================================= */
 
 class BaseScene extends Phaser.Scene{
  preload(){
-  Object.entries(CHARACTERS).forEach(([k,p])=>this.load.image(k,p));
+  Object.entries(CHARACTERS).forEach(([k,p])=>{
+   this.load.image(k,p);
+  });
+ }
+
+ audio(){
+  audioControl(this);
+  startAmbient();
  }
 }
+
+/* =========================================================
+   HOME
+========================================================= */
 
 class Home extends BaseScene{
  constructor(){super("Home");}
+
  create(){
+  startAudio();
+  this.audio();
+
   savannah(this);
+
   txt(this,270,70,t("title"),37,"#fff6c7");
   txt(this,270,115,t("adventure"),29,"#ffdf65");
   txt(this,270,195,t("tagline"),18);
+
   const r=character(this,"leo",270,450,360);
-  this.tweens.add({targets:r,y:444,duration:1200,yoyo:true,repeat:-1});
+
+  this.tweens.add({
+   targets:r,
+   y:444,
+   duration:1200,
+   yoyo:true,
+   repeat:-1
+  });
+
   txt(this,270,625,t("welcome"),24,"#fff6c7");
-  btn(this,270,755,420,78,t("start"),0x35a85b,()=>fadeScene(this,"Ranger"),24);
+
+  btn(
+   this,
+   270,
+   755,
+   420,
+   78,
+   t("start"),
+   0x35a85b,
+   ()=>{
+    startAudio();
+    startAmbient();
+    fadeScene(this,"Ranger");
+   },
+   24
+  );
+
   txt(this,270,825,t("footer"),18);
-  ["en","fr","es"].forEach((l,i)=>btn(this,170+i*100,900,82,48,l.toUpperCase(),lang===l?0xe5a52f:0x3d83c5,()=>{lang=l;localStorage.setItem("wr_v1_lang",l);this.scene.restart();},17));
+
+  ["en","fr","es"].forEach((l,i)=>{
+   btn(
+    this,
+    170+i*100,
+    900,
+    82,
+    48,
+    l.toUpperCase(),
+    lang===l?0xe5a52f:0x3d83c5,
+    ()=>{
+     lang=l;
+     localStorage.setItem("wr_v1_lang",l);
+     this.scene.restart();
+    },
+    17
+   );
+  });
  }
 }
+
+/* =========================================================
+   RANGER CREATION
+========================================================= */
 
 class Ranger extends BaseScene{
  constructor(){super("Ranger");}
+
  create(){
-  savannah(this);txt(this,270,75,t("create"),30);txt(this,270,125,t("choose"),21);
+  this.audio();
+
+  savannah(this);
+
+  txt(this,270,75,t("create"),30);
+  txt(this,270,125,t("choose"),21);
+
   let chosen=Number(localStorage.getItem("wr_v1_outfit"))||0;
+
   character(this,"leo",270,430,360);
+
   outfitColors.forEach((col,i)=>{
-   const x=90+i*120,g=this.add.graphics();
-   g.fillStyle(0xffffff,1);g.fillRoundedRect(x-39,635,78,78,16);
-   g.fillStyle(col,1);g.fillRoundedRect(x-32,642,64,64,13);
-   if(i===chosen){g.lineStyle(5,0xffe05d,1);g.strokeRoundedRect(x-39,635,78,78,16);}
-   this.add.rectangle(x,674,85,90,0xffffff,0).setInteractive().on("pointerdown",()=>{chosen=i;localStorage.setItem("wr_v1_outfit",i);this.scene.restart();});
+   const x=90+i*120;
+   const g=this.add.graphics();
+
+   g.fillStyle(0xffffff,1);
+   g.fillRoundedRect(x-39,635,78,78,16);
+
+   g.fillStyle(col,1);
+   g.fillRoundedRect(x-32,642,64,64,13);
+
+   if(i===chosen){
+    g.lineStyle(5,0xffe05d,1);
+    g.strokeRoundedRect(x-39,635,78,78,16);
+   }
+
+   this.add.rectangle(
+    x,674,85,90,0xffffff,0
+   )
+   .setInteractive()
+   .on("pointerdown",()=>{
+    startAudio();
+    soundTap();
+
+    chosen=i;
+    localStorage.setItem("wr_v1_outfit",i);
+    this.scene.restart();
+   });
   });
+
   txt(this,270,755,t("outfit"),21);
-  btn(this,270,835,370,72,t("go"),0x35a85b,()=>fadeScene(this,"Park"),25);
-  btn(this,100,920,150,52,t("back"),0x3d83c5,()=>fadeScene(this,"Home"),19);
+
+  btn(
+   this,
+   270,
+   835,
+   370,
+   72,
+   t("go"),
+   0x35a85b,
+   ()=>fadeScene(this,"Park"),
+   25
+  );
+
+  btn(
+   this,
+   100,
+   920,
+   150,
+   52,
+   t("back"),
+   0x3d83c5,
+   ()=>fadeScene(this,"Home"),
+   19
+  );
  }
 }
+
+/* =========================================================
+   PARK
+========================================================= */
 
 class Park extends BaseScene{
  constructor(){super("Park");}
+
  create(){
+  this.audio();
+
   savannah(this);
-  txt(this,270,55,t("hub"),31);txt(this,270,100,t("hubWelcome"),20);
+
+  txt(this,270,55,t("hub"),31);
+  txt(this,270,100,t("hubWelcome"),20);
+
   character(this,"leo",270,315,220);
-  txt(this,270,455,`⭐ ${t("stars")}: ${stars}`,23);
-  btn(this,145,555,220,82,"🌟 "+t("missions"),0x35a85b,()=>fadeScene(this,"Missions"),19);
-  btn(this,395,555,220,82,"🦓 "+t("animals"),0xe5a52f,()=>fadeScene(this,"Wildlife"),19);
-  btn(this,145,670,220,82,"📚 "+t("learn"),0x3d83c5,()=>fadeScene(this,"Learning"),19);
-  btn(this,395,670,220,82,"🏅 "+t("badges"),0xb86ac9,()=>fadeScene(this,"Badges"),18);
-  guideButton(this,145,785,t("leoPark"));
-  btn(this,395,785,220,68,"⭐ "+t("premium"),0xd89b28,()=>fadeScene(this,"Premium"),16);
-  btn(this,270,895,220,55,t("back"),0x3d83c5,()=>fadeScene(this,"Home"),19);
+
+  txt(
+   this,
+   270,
+   455,
+   `⭐ ${t("stars")}: ${stars}`,
+   23
+  );
+
+  btn(
+   this,
+   145,
+   555,
+   220,
+   82,
+   "🌟 "+t("missions"),
+   0x35a85b,
+   ()=>fadeScene(this,"Missions"),
+   19
+  );
+
+  btn(
+   this,
+   395,
+   555,
+   220,
+   82,
+   "🦓 "+t("animals"),
+   0xe5a52f,
+   ()=>fadeScene(this,"Wildlife"),
+   19
+  );
+
+  btn(
+   this,
+   145,
+   670,
+   220,
+   82,
+   "📚 "+t("learn"),
+   0x3d83c5,
+   ()=>fadeScene(this,"Learning"),
+   19
+  );
+
+  btn(
+   this,
+   395,
+   670,
+   220,
+   82,
+   "🏅 "+t("badges"),
+   0xb86ac9,
+   ()=>fadeScene(this,"Badges"),
+   18
+  );
+
+  guideButton(
+   this,
+   145,
+   785,
+   t("leoPark")
+  );
+
+  btn(
+   this,
+   395,
+   785,
+   220,
+   68,
+   "⭐ "+t("premium"),
+   0xd89b28,
+   ()=>fadeScene(this,"Premium"),
+   16
+  );
+
+  btn(
+   this,
+   270,
+   895,
+   220,
+   55,
+   t("back"),
+   0x3d83c5,
+   ()=>fadeScene(this,"Home"),
+   19
+  );
  }
 }
 
+/* =========================================================
+   WILDLIFE
+========================================================= */
+
 class Wildlife extends BaseScene{
  constructor(){super("Wildlife");}
+
  create(){
+  this.audio();
+
   savannah(this);
+
   txt(this,270,50,t("wildlife"),31,"#fff6c7");
   txt(this,270,95,t("animalFriends"),20);
   txt(this,270,130,t("tapAnimal"),15,"#fff6c7");
+
   const animals=[
    ["mimi","🐒",t("monkey"),t("factMonkey")],
    ["kimba","🦁",t("lionCub"),t("factLion")],
@@ -412,65 +939,222 @@ class Wildlife extends BaseScene{
    ["bongo","🦛",t("hippo"),t("factHippo")],
    ["chase","🐆",t("cheetah"),t("factCheetah")]
   ];
+
   animals.forEach((a,i)=>{
-   const col=i%2,row=Math.floor(i/2),x=145+col*250,y=245+row*150;
-   const card=this.add.graphics();card.fillStyle(0xffffff,.96);card.fillRoundedRect(x-105,y-60,210,120,22);
-   popIn(this,character(this,a[0],x-45,y,100),i*60);
-   popIn(this,txt(this,x+50,y,a[2],13,"#315b35"),i*60);
-   this.add.rectangle(x,y,210,120,0xffffff,0).setInteractive({useHandCursor:true}).on("pointerdown",()=>this.showAnimal(a));
+   const col=i%2;
+   const row=Math.floor(i/2);
+   const x=145+col*250;
+   const y=245+row*150;
+
+   const card=this.add.graphics();
+
+   card.fillStyle(0xffffff,.96);
+   card.fillRoundedRect(x-105,y-60,210,120,22);
+
+   popIn(
+    this,
+    character(this,a[0],x-45,y,100),
+    i*60
+   );
+
+   popIn(
+    this,
+    txt(this,x+50,y,a[2],13,"#315b35"),
+    i*60
+   );
+
+   this.add.rectangle(
+    x,y,210,120,0xffffff,0
+   )
+   .setInteractive({useHandCursor:true})
+   .on("pointerdown",()=>{
+    startAudio();
+    soundTap();
+    this.showAnimal(a);
+   });
   });
-  btn(this,270,875,230,58,t("back"),0x3d83c5,()=>fadeScene(this,"Park"),20);
+
+  btn(
+   this,
+   270,
+   875,
+   230,
+   58,
+   t("back"),
+   0x3d83c5,
+   ()=>fadeScene(this,"Park"),
+   20
+  );
  }
+
  showAnimal(a){
-  const o=this.add.graphics();o.fillStyle(0x183d29,.98);o.fillRoundedRect(30,160,480,590,28);
+  const o=this.add.graphics();
+
+  o.fillStyle(0x183d29,.98);
+  o.fillRoundedRect(30,160,480,590,28);
+
   character(this,a[0],270,350,230);
+
   txt(this,270,505,a[2],25,"#fff6c7");
   txt(this,270,555,a[1],42);
   txt(this,270,615,"🤖 "+t("leoFact"),17,"#ffdf65");
   txt(this,270,670,a[3],17,"#fff");
-  btn(this,270,725,140,50,t("close"),0x35a85b,()=>this.scene.restart(),18);
+
+  btn(
+   this,
+   270,
+   725,
+   140,
+   50,
+   t("close"),
+   0x35a85b,
+   ()=>this.scene.restart(),
+   18
+  );
  }
 }
+
+/* =========================================================
+   LEARNING
+========================================================= */
 
 class Learning extends BaseScene{
  constructor(){super("Learning");}
+
  create(){
+  this.audio();
+
   savannah(this);
+
   txt(this,270,55,t("learningTitle"),25,"#fff6c7");
   txt(this,270,105,t("learningWelcome"),17);
-  btn(this,270,200,390,82,"🦁 "+t("learnWildlife"),0x35a85b,()=>this.showLesson("wildlife"),20);
-  btn(this,270,320,390,82,"🌱 "+t("learnNature"),0x3d83c5,()=>this.showLesson("nature"),20);
-  btn(this,270,440,390,82,"🛡️ "+t("learnSafety"),0xe5a52f,()=>this.showLesson("safety"),20);
+
+  btn(
+   this,
+   270,
+   200,
+   390,
+   82,
+   "🦁 "+t("learnWildlife"),
+   0x35a85b,
+   ()=>this.showLesson("wildlife"),
+   20
+  );
+
+  btn(
+   this,
+   270,
+   320,
+   390,
+   82,
+   "🌱 "+t("learnNature"),
+   0x3d83c5,
+   ()=>this.showLesson("nature"),
+   20
+  );
+
+  btn(
+   this,
+   270,
+   440,
+   390,
+   82,
+   "🛡️ "+t("learnSafety"),
+   0xe5a52f,
+   ()=>this.showLesson("safety"),
+   20
+  );
+
   character(this,"leo",270,675,230);
+
   txt(this,270,820,t("learningTip"),18,"#fff6c7");
-  guideButton(this,270,875,t("leoLearn"));
-  btn(this,270,935,170,42,t("back"),0x3d83c5,()=>fadeScene(this,"Park"),16);
+
+  guideButton(
+   this,
+   270,
+   875,
+   t("leoLearn")
+  );
+
+  btn(
+   this,
+   270,
+   935,
+   170,
+   42,
+   t("back"),
+   0x3d83c5,
+   ()=>fadeScene(this,"Park"),
+   16
+  );
  }
+
  showLesson(type){
-  let title="",fact="";
+  let title="";
+  let fact="";
+
   if(type==="wildlife"){
    title=t("learnWildlife");
+
    fact=Phaser.Utils.Array.GetRandom([
-    "🐒 "+t("factMonkey"),"🦁 "+t("factLion"),"🐘 "+t("factElephant"),
-    "🦒 "+t("factGiraffe"),"🦓 "+t("factZebra"),"🦛 "+t("factHippo"),"🐆 "+t("factCheetah")
+    "🐒 "+t("factMonkey"),
+    "🦁 "+t("factLion"),
+    "🐘 "+t("factElephant"),
+    "🦒 "+t("factGiraffe"),
+    "🦓 "+t("factZebra"),
+    "🦛 "+t("factHippo"),
+    "🐆 "+t("factCheetah")
    ]);
   }
-  if(type==="nature"){title=t("learnNature");fact="🌿 "+t("natureFact");}
-  if(type==="safety"){title=t("learnSafety");fact="🛡️ "+t("safetyFact");}
-  const o=this.add.graphics();o.fillStyle(0x183d29,.98);o.fillRoundedRect(30,225,480,430,28);
+
+  if(type==="nature"){
+   title=t("learnNature");
+   fact="🌿 "+t("natureFact");
+  }
+
+  if(type==="safety"){
+   title=t("learnSafety");
+   fact="🛡️ "+t("safetyFact");
+  }
+
+  const o=this.add.graphics();
+
+  o.fillStyle(0x183d29,.98);
+  o.fillRoundedRect(30,225,480,430,28);
+
   txt(this,270,290,title,27,"#fff6c7");
   txt(this,270,435,fact,21,"#fff");
   txt(this,270,535,"🤖 "+t("leoLearn"),17,"#ffdf65");
-  btn(this,270,600,150,55,t("close"),0x35a85b,()=>this.scene.restart(),19);
+
+  btn(
+   this,
+   270,
+   600,
+   150,
+   55,
+   t("close"),
+   0x35a85b,
+   ()=>this.scene.restart(),
+   19
+  );
  }
 }
 
+/* =========================================================
+   BADGES
+========================================================= */
+
 class Badges extends BaseScene{
  constructor(){super("Badges");}
+
  create(){
+  this.audio();
+
   savannah(this);
+
   txt(this,270,55,t("badgeTitle"),29,"#fff6c7");
   txt(this,270,100,t("badgeWelcome"),17);
+
   const data=[
    ["🌱",t("badge1"),1,t("badgeNeed1")],
    ["🐾",t("badge2"),3,t("badgeNeed3")],
@@ -478,243 +1162,1406 @@ class Badges extends BaseScene{
    ["🌍",t("badge4"),8,t("badgeNeed8")],
    ["🏆",t("badge5"),10,t("badgeNeed10")]
   ];
+
   data.forEach((b,i)=>{
-   const y=180+i*125,earned=completed.length>=b[2],c=this.add.graphics();
-   c.fillStyle(earned?0xfff4c2:0xffffff,.97);c.fillRoundedRect(55,y-42,430,92,20);
-   popIn(this,txt(this,105,y,b[0],42),i*80);
-   txt(this,290,y-12,b[1],19,"#315b35");
-   txt(this,290,y+20,earned?t("earned"):b[3],14,earned?"#d08b16":"#777");
+   const y=180+i*125;
+   const earned=completed.length>=b[2];
+
+   const c=this.add.graphics();
+
+   c.fillStyle(
+    earned?0xfff4c2:0xffffff,
+    .97
+   );
+
+   c.fillRoundedRect(55,y-42,430,92,20);
+
+   popIn(
+    this,
+    txt(this,105,y,b[0],42),
+    i*80
+   );
+
+   txt(
+    this,
+    290,
+    y-12,
+    b[1],
+    19,
+    "#315b35"
+   );
+
+   txt(
+    this,
+    290,
+    y+20,
+    earned?t("earned"):b[3],
+    14,
+    earned?"#d08b16":"#777"
+   );
   });
-  txt(this,270,820,`${t("progress")}: ${completed.length} / 10`,21);
-  btn(this,270,895,210,55,t("back"),0x3d83c5,()=>fadeScene(this,"Park"),19);
+
+  txt(
+   this,
+   270,
+   820,
+   `${t("progress")}: ${completed.length} / 10`,
+   21
+  );
+
+  btn(
+   this,
+   270,
+   895,
+   210,
+   55,
+   t("back"),
+   0x3d83c5,
+   ()=>fadeScene(this,"Park"),
+   19
+  );
  }
 }
+
+/* =========================================================
+   PARENT LOGIN
+========================================================= */
 
 class ParentLogin extends BaseScene{
  constructor(){super("ParentLogin");}
+
  create(){
-  savannah(this);txt(this,270,180,"🔒",70);txt(this,270,285,t("parent"),30,"#fff6c7");
-  txt(this,270,335,t("parentPin"),20);this.pin="";
-  this.display=txt(this,270,415,"----",32,"#fff6c7");
+  this.audio();
+
+  savannah(this);
+
+  txt(this,270,180,"🔒",70);
+  txt(this,270,285,t("parent"),30,"#fff6c7");
+  txt(this,270,335,t("parentPin"),20);
+
+  this.pin="";
+
+  this.display=txt(
+   this,
+   270,
+   415,
+   "----",
+   32,
+   "#fff6c7"
+  );
+
   [1,2,3,4,5,6,7,8,9,0].forEach((num,i)=>{
-   const x=i===9?270:135+(i%3)*135,y=i===9?785:545+Math.floor(i/3)*80;
-   btn(this,x,y,105,60,String(num),0x3d83c5,()=>{
-    if(this.pin.length>=4)return;
-    this.pin+=String(num);this.display.setText("•".repeat(this.pin.length));
-    if(this.pin.length===4){
-     if(this.pin===parentPin)fadeScene(this,"ParentDashboard");
-     else{this.display.setText(t("wrongPin"));this.time.delayedCall(900,()=>{this.pin="";this.display.setText("----");});}
-    }
-   },24);
+   const x=i===9?270:135+(i%3)*135;
+   const y=i===9?785:545+Math.floor(i/3)*80;
+
+   btn(
+    this,
+    x,
+    y,
+    105,
+    60,
+    String(num),
+    0x3d83c5,
+    ()=>{
+     if(this.pin.length>=4)return;
+
+     this.pin+=String(num);
+
+     this.display.setText(
+      "•".repeat(this.pin.length)
+     );
+
+     if(this.pin.length===4){
+      if(this.pin===parentPin){
+       fadeScene(this,"ParentDashboard");
+      }else{
+       soundWrong();
+
+       this.display.setText(
+        t("wrongPin")
+       );
+
+       this.time.delayedCall(
+        900,
+        ()=>{
+         this.pin="";
+         this.display.setText("----");
+        }
+       );
+      }
+     }
+    },
+    24
+   );
   });
-  btn(this,270,875,180,55,t("back"),0x3d83c5,()=>fadeScene(this,"Park"),19);
+
+  btn(
+   this,
+   270,
+   875,
+   180,
+   55,
+   t("back"),
+   0x3d83c5,
+   ()=>fadeScene(this,"Park"),
+   19
+  );
  }
 }
 
+/* =========================================================
+   PARENT DASHBOARD
+========================================================= */
+
 class ParentDashboard extends BaseScene{
  constructor(){super("ParentDashboard");}
+
  create(){
-  savannah(this);txt(this,270,55,t("parentDashboard"),27,"#fff6c7");txt(this,270,105,t("parentStats"),19);
-  const p=this.add.graphics();p.fillStyle(0xffffff,.96);p.fillRoundedRect(45,145,450,300,25);
+  this.audio();
+
+  savannah(this);
+
+  txt(this,270,55,t("parentDashboard"),27,"#fff6c7");
+  txt(this,270,105,t("parentStats"),19);
+
+  const p=this.add.graphics();
+
+  p.fillStyle(0xffffff,.96);
+  p.fillRoundedRect(45,145,450,300,25);
+
   txt(this,270,190,`⭐ ${t("totalStars")}: ${stars}`,22,"#315b35");
   txt(this,270,245,`🎯 ${t("completedMissions")}: ${completed.length} / 10`,20,"#315b35");
   txt(this,270,300,`🌍 ${t("language")}: ${lang.toUpperCase()}`,20,"#315b35");
   txt(this,270,355,`🎒 ${t("currentOutfit")}: ${Number(localStorage.getItem("wr_v1_outfit"))+1}`,19,"#315b35");
-  txt(this,270,400,completed.length===10?"🏆 "+t("badge5"):`${t("missionsDone")}: ${completed.length}`,19,"#315b35");
-  btn(this,155,525,210,65,"🔑 "+t("changePin"),0x6d5acb,()=>this.changePin(),17);
-  btn(this,385,525,210,65,"🌐 "+t("language"),0x3d83c5,()=>this.changeLanguage(),17);
-  btn(this,270,635,300,65,"ℹ️ "+t("parentInfo"),0x35a85b,()=>this.showInfo(),17);
-  btn(this,270,735,300,65,"⚠️ "+t("resetProgress"),0xc75c4a,()=>this.resetProgress(),17);
-  btn(this,270,875,210,55,t("back"),0x3d83c5,()=>fadeScene(this,"Park"),19);
+
+  txt(
+   this,
+   270,
+   400,
+   completed.length===10
+    ?"🏆 "+t("badge5")
+    :`${t("missionsDone")}: ${completed.length}`,
+   19,
+   "#315b35"
+  );
+
+  btn(
+   this,
+   155,
+   525,
+   210,
+   65,
+   "🔑 "+t("changePin"),
+   0x6d5acb,
+   ()=>this.changePin(),
+   17
+  );
+
+  btn(
+   this,
+   385,
+   525,
+   210,
+   65,
+   "🌐 "+t("language"),
+   0x3d83c5,
+   ()=>this.changeLanguage(),
+   17
+  );
+
+  btn(
+   this,
+   270,
+   635,
+   300,
+   65,
+   "ℹ️ "+t("parentInfo"),
+   0x35a85b,
+   ()=>this.showInfo(),
+   17
+  );
+
+  btn(
+   this,
+   270,
+   735,
+   300,
+   65,
+   "⚠️ "+t("resetProgress"),
+   0xc75c4a,
+   ()=>this.resetProgress(),
+   17
+  );
+
+  btn(
+   this,
+   270,
+   875,
+   210,
+   55,
+   t("back"),
+   0x3d83c5,
+   ()=>fadeScene(this,"Park"),
+   19
+  );
  }
+
  changePin(){
-  const o=this.add.graphics();o.fillStyle(0x183d29,.98);o.fillRoundedRect(35,270,470,330,25);
-  txt(this,270,330,t("changePin"),25,"#fff6c7");let value="";
-  const d=txt(this,270,390,"----",30);
+  const o=this.add.graphics();
+
+  o.fillStyle(0x183d29,.98);
+  o.fillRoundedRect(35,270,470,330,25);
+
+  txt(this,270,330,t("changePin"),25,"#fff6c7");
+
+  let value="";
+
+  const d=txt(
+   this,
+   270,
+   390,
+   "----",
+   30
+  );
+
   [1,2,3,4,5,6,7,8,9,0].forEach((n,i)=>{
-   const x=i===9?270:150+(i%3)*120,y=i===9?545:450+Math.floor(i/3)*55;
-   btn(this,x,y,80,45,String(n),0x3d83c5,()=>{if(value.length<4){value+=String(n);d.setText("•".repeat(value.length));}},18);
+   const x=i===9?270:150+(i%3)*120;
+   const y=i===9?545:450+Math.floor(i/3)*55;
+
+   btn(
+    this,
+    x,
+    y,
+    80,
+    45,
+    String(n),
+    0x3d83c5,
+    ()=>{
+     if(value.length<4){
+      value+=String(n);
+      d.setText("•".repeat(value.length));
+     }
+    },
+    18
+   );
   });
-  btn(this,270,590,150,48,t("savePin"),0x35a85b,()=>{if(value.length===4){parentPin=value;localStorage.setItem("wr_v1_parent_pin",value);this.scene.restart();}},17);
+
+  btn(
+   this,
+   270,
+   590,
+   150,
+   48,
+   t("savePin"),
+   0x35a85b,
+   ()=>{
+    if(value.length===4){
+     parentPin=value;
+     localStorage.setItem(
+      "wr_v1_parent_pin",
+      value
+     );
+     this.scene.restart();
+    }
+   },
+   17
+  );
  }
+
  changeLanguage(){
-  lang=lang==="en"?"fr":lang==="fr"?"es":"en";
-  localStorage.setItem("wr_v1_lang",lang);this.scene.restart();
+  lang=lang==="en"
+   ?"fr"
+   :lang==="fr"
+    ?"es"
+    :"en";
+
+  localStorage.setItem(
+   "wr_v1_lang",
+   lang
+  );
+
+  this.scene.restart();
  }
+
  showInfo(){
-  const o=this.add.graphics();o.fillStyle(0x183d29,.98);o.fillRoundedRect(35,300,470,320,25);
-  txt(this,270,360,t("parentInfo"),25,"#fff6c7");txt(this,270,470,t("parentText"),20);
-  btn(this,270,560,140,50,t("close"),0x35a85b,()=>this.scene.restart(),18);
+  const o=this.add.graphics();
+
+  o.fillStyle(0x183d29,.98);
+  o.fillRoundedRect(35,300,470,320,25);
+
+  txt(
+   this,
+   270,
+   360,
+   t("parentInfo"),
+   25,
+   "#fff6c7"
+  );
+
+  txt(
+   this,
+   270,
+   470,
+   t("parentText"),
+   20
+  );
+
+  btn(
+   this,
+   270,
+   560,
+   140,
+   50,
+   t("close"),
+   0x35a85b,
+   ()=>this.scene.restart(),
+   18
+  );
  }
+
  resetProgress(){
-  const o=this.add.graphics();o.fillStyle(0x4b1f1f,.98);o.fillRoundedRect(45,330,450,250,25);
-  txt(this,270,390,t("resetConfirm"),21);
-  btn(this,175,500,150,55,t("yes"),0xc75c4a,()=>{stars=0;completed=[];localStorage.setItem("wr_v1_stars","0");localStorage.setItem("wr_v1_completed","[]");this.scene.restart();},19);
-  btn(this,365,500,150,55,t("no"),0x35a85b,()=>this.scene.restart(),19);
+  const o=this.add.graphics();
+
+  o.fillStyle(0x4b1f1f,.98);
+  o.fillRoundedRect(45,330,450,250,25);
+
+  txt(
+   this,
+   270,
+   390,
+   t("resetConfirm"),
+   21
+  );
+
+  btn(
+   this,
+   175,
+   500,
+   150,
+   55,
+   t("yes"),
+   0xc75c4a,
+   ()=>{
+    stars=0;
+    completed=[];
+
+    localStorage.setItem(
+     "wr_v1_stars",
+     "0"
+    );
+
+    localStorage.setItem(
+     "wr_v1_completed",
+     "[]"
+    );
+
+    this.scene.restart();
+   },
+   19
+  );
+
+  btn(
+   this,
+   365,
+   500,
+   150,
+   55,
+   t("no"),
+   0x35a85b,
+   ()=>this.scene.restart(),
+   19
+  );
  }
 }
+
+/* =========================================================
+   PREMIUM
+========================================================= */
 
 class Premium extends BaseScene{
  constructor(){super("Premium");}
+
  create(){
-  savannah(this);txt(this,270,65,"⭐ "+t("premium"),29,"#fff6c7");txt(this,270,135,t("premiumTitle"),25);
-  character(this,"leo",270,310,210);txt(this,270,465,t("premiumText"),19);
-  btn(this,270,570,370,75,"🌟 "+t("monthly")+" — "+t("monthlyPrice"),0xe5a52f,()=>this.premiumMessage(),18);
-  btn(this,270,675,370,75,"🏆 "+t("yearly")+" — "+t("yearlyPrice"),0xd89b28,()=>this.premiumMessage(),18);
+  this.audio();
+
+  savannah(this);
+
+  txt(this,270,65,"⭐ "+t("premium"),29,"#fff6c7");
+  txt(this,270,135,t("premiumTitle"),25);
+
+  character(this,"leo",270,310,210);
+
+  txt(this,270,465,t("premiumText"),19);
+
+  btn(
+   this,
+   270,
+   570,
+   370,
+   75,
+   "🌟 "+t("monthly")+" — "+t("monthlyPrice"),
+   0xe5a52f,
+   ()=>this.premiumMessage(),
+   18
+  );
+
+  btn(
+   this,
+   270,
+   675,
+   370,
+   75,
+   "🏆 "+t("yearly")+" — "+t("yearlyPrice"),
+   0xd89b28,
+   ()=>this.premiumMessage(),
+   18
+  );
+
   txt(this,270,770,t("freePlan"),18,"#fff6c7");
-  btn(this,270,875,210,55,t("back"),0x3d83c5,()=>fadeScene(this,"Park"),19);
+
+  btn(
+   this,
+   270,
+   875,
+   210,
+   55,
+   t("back"),
+   0x3d83c5,
+   ()=>fadeScene(this,"Park"),
+   19
+  );
  }
+
  premiumMessage(){
-  const o=this.add.graphics();o.fillStyle(0x183d29,.98);o.fillRoundedRect(35,335,470,250,25);
-  txt(this,270,410,"⭐ "+t("premium"),25,"#fff6c7");txt(this,270,480,t("premiumSoon"),19);
-  btn(this,270,545,130,48,t("ok"),0x35a85b,()=>this.scene.restart(),18);
+  const o=this.add.graphics();
+
+  o.fillStyle(0x183d29,.98);
+  o.fillRoundedRect(35,335,470,250,25);
+
+  txt(
+   this,
+   270,
+   410,
+   "⭐ "+t("premium"),
+   25,
+   "#fff6c7"
+  );
+
+  txt(
+   this,
+   270,
+   480,
+   t("premiumSoon"),
+   19
+  );
+
+  btn(
+   this,
+   270,
+   545,
+   130,
+   48,
+   t("ok"),
+   0x35a85b,
+   ()=>this.scene.restart(),
+   18
+  );
  }
 }
+
+/* =========================================================
+   MISSIONS
+========================================================= */
 
 class Missions extends BaseScene{
  constructor(){super("Missions");}
+
  create(){
-  savannah(this);txt(this,270,50,t("map"),28);txt(this,270,95,`⭐ ${stars} ${t("stars")}`,20);
+  this.audio();
+
+  savannah(this);
+
+  txt(this,270,50,t("map"),28);
+
+  txt(
+   this,
+   270,
+   95,
+   `⭐ ${stars} ${t("stars")}`,
+   20
+  );
+
   for(let i=0;i<10;i++){
-   const unlocked=i===0||completed.includes(i-1),done=completed.includes(i);
-   const x=145+(i%2)*250,y=190+Math.floor(i/2)*125;
-   btn(this,x,y,220,96,`${done?"✅":unlocked?"🌟":"🔒"} ${i+1}. ${t("m"+(i+1))}`,
-    done?0x65a84b:unlocked?0xe5a52f:0x78909c,
-    ()=>{if(!unlocked){this.popup(t("locked"));return;}fadeScene(this,"MissionPlay",{idx:i});},15);
+   const unlocked=
+    i===0||completed.includes(i-1);
+
+   const done=
+    completed.includes(i);
+
+   const x=145+(i%2)*250;
+   const y=190+Math.floor(i/2)*125;
+
+   btn(
+    this,
+    x,
+    y,
+    220,
+    96,
+    `${done?"✅":unlocked?"🌟":"🔒"} ${i+1}. ${t("m"+(i+1))}`,
+    done
+     ?0x65a84b
+     :unlocked
+      ?0xe5a52f
+      :0x78909c,
+    ()=>{
+     if(!unlocked){
+      this.popup(t("locked"));
+      return;
+     }
+
+     fadeScene(
+      this,
+      "MissionPlay",
+      {idx:i}
+     );
+    },
+    15
+   );
   }
-  btn(this,270,875,230,58,t("back"),0x3d83c5,()=>fadeScene(this,"Park"),20);
+
+  btn(
+   this,
+   270,
+   875,
+   230,
+   58,
+   t("back"),
+   0x3d83c5,
+   ()=>fadeScene(this,"Park"),
+   20
+  );
  }
+
  popup(message){
-  const g=this.add.graphics();g.fillStyle(0x315b35,.97);g.fillRoundedRect(45,390,450,155,22);
+  const g=this.add.graphics();
+
+  g.fillStyle(0x315b35,.97);
+  g.fillRoundedRect(45,390,450,155,22);
+
   txt(this,270,440,message,22);
-  btn(this,270,500,130,48,t("ok"),0x35a85b,()=>this.scene.restart(),19);
+
+  btn(
+   this,
+   270,
+   500,
+   130,
+   48,
+   t("ok"),
+   0x35a85b,
+   ()=>this.scene.restart(),
+   19
+  );
  }
 }
 
+/* =========================================================
+   MISSION PLAY
+========================================================= */
+
 class MissionPlay extends BaseScene{
  constructor(){super("MissionPlay");}
- init(data){this.idx=data.idx||0;}
+
+ init(data){
+  this.idx=data.idx||0;
+ }
+
  create(){
+  this.audio();
+
   savannah(this);
+
   const n=this.idx+1;
-  txt(this,270,48,t("m"+n),27);
-  character(this,"leo",95,205,145);
-  txt(this,270,310,t("task"+n),21,"#fff6c7");
-  guideButton(this,420,205,t("leoHint"+n));
-  this.feedback=txt(this,270,835,"",20,"#fff6c7");
-  this.count=0;this.finished=false;
+
+  txt(
+   this,
+   270,
+   48,
+   t("m"+n),
+   27
+  );
+
+  character(
+   this,
+   "leo",
+   95,
+   205,
+   145
+  );
+
+  txt(
+   this,
+   270,
+   310,
+   t("task"+n),
+   21,
+   "#fff6c7"
+  );
+
+  guideButton(
+   this,
+   420,
+   205,
+   t("leoHint"+n)
+  );
+
+  this.feedback=txt(
+   this,
+   270,
+   835,
+   "",
+   20,
+   "#fff6c7"
+  );
+
+  this.count=0;
+  this.finished=false;
+
   if(n===3)this.makeCountQuiz();
   else if(n===5)this.makeOrderGame();
   else if(n===7)this.makeAnimalWords();
   else if(n===9)this.makeTracksQuiz();
   else this.makeTapGame(n);
-  btn(this,270,920,220,52,t("back"),0x3d83c5,()=>fadeScene(this,"Missions"),19);
+
+  btn(
+   this,
+   270,
+   920,
+   220,
+   52,
+   t("back"),
+   0x3d83c5,
+   ()=>fadeScene(this,"Missions"),
+   19
+  );
  }
+
  makeTapGame(n){
   let items=[];
-  if(n===1)items=[["🧢",t("hat")],["🗺️",t("mapItem")],["🏅",t("badge")]];
-  if(n===2){items=[["🍌",t("banana")],["🍌",t("banana")],["🍌",t("banana")]];character(this,"mimi",400,450,190);}
-  if(n===4){items=[["🐾",t("lionClue")],["🟡",t("lionClue")],["🌳",t("lionClue")]];character(this,"kimba",400,450,180);}
-  if(n===6){items=[["💧",t("water")],["💧",t("water")],["💧",t("water")]];character(this,"tembo",400,450,190);}
-  if(n===8){items=[["🥫",t("rubbish")],["🧴",t("rubbish")],["🗑️",t("rubbish")]];character(this,"bongo",400,450,180);}
-  if(n===10)items=[["🧢",t("rangerItem")],["🗺️",t("rangerItem")],["🏅",t("rangerItem")]];
-  const spots=[{x:105,y:560},{x:270,y:650},{x:435,y:560}];
-  this.status=txt(this,270,770,`${t("collected")}: 0 / 3`,22);
+
+  if(n===1){
+   items=[
+    ["🧢",t("hat")],
+    ["🗺️",t("mapItem")],
+    ["🏅",t("badge")]
+   ];
+  }
+
+  if(n===2){
+   items=[
+    ["🍌",t("banana")],
+    ["🍌",t("banana")],
+    ["🍌",t("banana")]
+   ];
+
+   character(
+    this,
+    "mimi",
+    400,
+    450,
+    190
+   );
+  }
+
+  if(n===4){
+   items=[
+    ["🐾",t("lionClue")],
+    ["🟡",t("lionClue")],
+    ["🌳",t("lionClue")]
+   ];
+
+   character(
+    this,
+    "kimba",
+    400,
+    450,
+    180
+   );
+  }
+
+  if(n===6){
+   items=[
+    ["💧",t("water")],
+    ["💧",t("water")],
+    ["💧",t("water")]
+   ];
+
+   character(
+    this,
+    "tembo",
+    400,
+    450,
+    190
+   );
+  }
+
+  if(n===8){
+   items=[
+    ["🥫",t("rubbish")],
+    ["🧴",t("rubbish")],
+    ["🗑️",t("rubbish")]
+   ];
+
+   character(
+    this,
+    "bongo",
+    400,
+    450,
+    180
+   );
+  }
+
+  if(n===10){
+   items=[
+    ["🧢",t("rangerItem")],
+    ["🗺️",t("rangerItem")],
+    ["🏅",t("rangerItem")]
+   ];
+  }
+
+  const spots=[
+   {x:105,y:560},
+   {x:270,y:650},
+   {x:435,y:560}
+  ];
+
+  this.status=txt(
+   this,
+   270,
+   770,
+   `${t("collected")}: 0 / 3`,
+   22
+  );
+
   items.forEach((item,i)=>{
-   const p=spots[i],g=this.add.graphics();
-   g.fillStyle(0xffffff,1);g.fillRoundedRect(p.x-55,p.y-55,110,110,18);
-   txt(this,p.x,p.y-8,item[0],42);txt(this,p.x,p.y+35,item[1],13,"#315b35");
-   this.add.rectangle(p.x,p.y,110,110,0xffffff,0).setInteractive({useHandCursor:true}).on("pointerdown",()=>{
+   const p=spots[i];
+
+   const g=this.add.graphics();
+
+   g.fillStyle(0xffffff,1);
+   g.fillRoundedRect(
+    p.x-55,
+    p.y-55,
+    110,
+    110,
+    18
+   );
+
+   txt(
+    this,
+    p.x,
+    p.y-8,
+    item[0],
+    42
+   );
+
+   txt(
+    this,
+    p.x,
+    p.y+35,
+    item[1],
+    13,
+    "#315b35"
+   );
+
+   this.add.rectangle(
+    p.x,
+    p.y,
+    110,
+    110,
+    0xffffff,
+    0
+   )
+   .setInteractive({useHandCursor:true})
+   .on("pointerdown",()=>{
     if(g.getData("found")||this.finished)return;
-    g.setData("found",true);g.clear();g.fillStyle(0x65a84b,1);g.fillRoundedRect(p.x-55,p.y-55,110,110,18);
-    txt(this,p.x,p.y,"✅",42);this.count++;this.status.setText(`${t("collected")}: ${this.count} / 3`);
-    this.feedback.setText(t("great"));pulse(this,this.feedback);if(this.count===3)this.win();
+
+    startAudio();
+    soundCollect();
+
+    g.setData("found",true);
+
+    g.clear();
+
+    g.fillStyle(0x65a84b,1);
+
+    g.fillRoundedRect(
+     p.x-55,
+     p.y-55,
+     110,
+     110,
+     18
+    );
+
+    txt(
+     this,
+     p.x,
+     p.y,
+     "✅",
+     42
+    );
+
+    this.count++;
+
+    this.status.setText(
+     `${t("collected")}: ${this.count} / 3`
+    );
+
+    this.feedback.setText(
+     t("great")
+    );
+
+    pulse(
+     this,
+     this.feedback
+    );
+
+    if(this.count===3){
+     this.win();
+    }
    });
   });
  }
+
  makeCountQuiz(){
-  character(this,"zara",270,445,230);txt(this,270,580,"🦓  🦓  🦓  🦓  🦓",38);
-  Phaser.Utils.Array.Shuffle([3,4,5,6]).forEach((a,i)=>btn(this,145+(i%2)*250,680+Math.floor(i/2)*90,180,65,String(a),0xe5a52f,()=>{
-   if(this.finished)return;
-   if(a===5){this.feedback.setText("⭐ "+t("correct"));pulse(this,this.feedback);this.win();}
-   else{this.feedback.setText("💡 "+t("wrong"));leoGuide(this,t("leoTry"));}
-  },28));
+  character(
+   this,
+   "zara",
+   270,
+   445,
+   230
+  );
+
+  txt(
+   this,
+   270,
+   580,
+   "🦓  🦓  🦓  🦓  🦓",
+   38
+  );
+
+  Phaser.Utils.Array.Shuffle(
+   [3,4,5,6]
+  ).forEach((a,i)=>{
+   btn(
+    this,
+    145+(i%2)*250,
+    680+Math.floor(i/2)*90,
+    180,
+    65,
+    String(a),
+    0xe5a52f,
+    ()=>{
+     if(this.finished)return;
+
+     if(a===5){
+      soundCorrect();
+
+      this.feedback.setText(
+       "⭐ "+t("correct")
+      );
+
+      pulse(
+       this,
+       this.feedback
+      );
+
+      this.win();
+     }else{
+      soundWrong();
+
+      this.feedback.setText(
+       "💡 "+t("wrong")
+      );
+
+      leoGuide(
+       this,
+       t("leoTry")
+      );
+     }
+    },
+    28
+   );
+  });
  }
+
  makeOrderGame(){
-  character(this,"tembo",270,270,170);let stones=[1,2,3,4];Phaser.Utils.Array.Shuffle(stones);this.order=1;
-  this.status=txt(this,270,800,"0 / 4",22);
+  character(
+   this,
+   "tembo",
+   270,
+   270,
+   170
+  );
+
+  let stones=[1,2,3,4];
+
+  Phaser.Utils.Array.Shuffle(
+   stones
+  );
+
+  this.order=1;
+
+  this.status=txt(
+   this,
+   270,
+   800,
+   "0 / 4",
+   22
+  );
+
   stones.forEach((num,i)=>{
-   const x=90+(i%2)*350,y=475+Math.floor(i/2)*150,g=this.add.graphics();
-   g.fillStyle(0xc2d0d0,1);g.fillEllipse(x,y,115,80);txt(this,x,y,String(num),28,"#315b35");
-   this.add.rectangle(x,y,120,90,0xffffff,0).setInteractive().on("pointerdown",()=>{
+   const x=90+(i%2)*350;
+   const y=475+Math.floor(i/2)*150;
+
+   const g=this.add.graphics();
+
+   g.fillStyle(0xc2d0d0,1);
+   g.fillEllipse(x,y,115,80);
+
+   txt(
+    this,
+    x,
+    y,
+    String(num),
+    28,
+    "#315b35"
+   );
+
+   this.add.rectangle(
+    x,
+    y,
+    120,
+    90,
+    0xffffff,
+    0
+   )
+   .setInteractive()
+   .on("pointerdown",()=>{
     if(this.finished)return;
-    if(num===this.order){this.order++;txt(this,x,y,"✓",25,"#315b35");this.status.setText(`${this.order-1} / 4`);this.feedback.setText("⭐ "+t("great"));if(this.order===5)this.win();}
-    else{this.feedback.setText("💡 "+t("wrong"));leoGuide(this,t("leoHint5"));}
+
+    startAudio();
+
+    if(num===this.order){
+     soundCorrect();
+
+     this.order++;
+
+     txt(
+      this,
+      x,
+      y,
+      "✓",
+      25,
+      "#315b35"
+     );
+
+     this.status.setText(
+      `${this.order-1} / 4`
+     );
+
+     this.feedback.setText(
+      "⭐ "+t("great")
+     );
+
+     if(this.order===5){
+      this.win();
+     }
+    }else{
+     soundWrong();
+
+     this.feedback.setText(
+      "💡 "+t("wrong")
+     );
+
+     leoGuide(
+      this,
+      t("leoHint5")
+     );
+    }
    });
   });
  }
+
  makeAnimalWords(){
-  character(this,"zara",270,400,180);txt(this,270,520,t("animalsWord"),22);
-  Phaser.Utils.Array.Shuffle([{e:"🦓",name:t("zebra"),ok:true},{e:"🦁",name:t("lion"),ok:false},{e:"🐘",name:t("elephant"),ok:false}]).forEach((o,i)=>{
-   btn(this,270,610+i*90,300,70,`${o.e} ${o.name}`,0xe5a52f,()=>{
-    if(this.finished)return;
-    if(o.ok){this.feedback.setText("⭐ "+t("correct"));this.win();}
-    else{this.feedback.setText("💡 "+t("wrong"));leoGuide(this,t("leoHint7"));}
-   },22);
+  character(
+   this,
+   "zara",
+   270,
+   400,
+   180
+  );
+
+  txt(
+   this,
+   270,
+   520,
+   t("animalsWord"),
+   22
+  );
+
+  Phaser.Utils.Array.Shuffle([
+   {
+    e:"🦓",
+    name:t("zebra"),
+    ok:true
+   },
+   {
+    e:"🦁",
+    name:t("lion"),
+    ok:false
+   },
+   {
+    e:"🐘",
+    name:t("elephant"),
+    ok:false
+   }
+  ]).forEach((o,i)=>{
+   btn(
+    this,
+    270,
+    610+i*90,
+    300,
+    70,
+    `${o.e} ${o.name}`,
+    0xe5a52f,
+    ()=>{
+     if(this.finished)return;
+
+     if(o.ok){
+      soundCorrect();
+
+      this.feedback.setText(
+       "⭐ "+t("correct")
+      );
+
+      this.win();
+     }else{
+      soundWrong();
+
+      this.feedback.setText(
+       "💡 "+t("wrong")
+      );
+
+      leoGuide(
+       this,
+       t("leoHint7")
+      );
+     }
+    },
+    22
+   );
   });
  }
+
  makeTracksQuiz(){
-  character(this,"kimba",270,385,170);txt(this,270,515,"🐾 🐾 🐾",42);txt(this,270,570,t("trackQuestion"),21);
-  Phaser.Utils.Array.Shuffle([{e:"🦁",name:t("lion"),ok:true},{e:"🦓",name:t("zebra"),ok:false},{e:"🐘",name:t("elephant"),ok:false}]).forEach((o,i)=>{
-   btn(this,270,650+i*75,300,60,`${o.e} ${o.name}`,0xe5a52f,()=>{
-    if(this.finished)return;
-    if(o.ok){this.feedback.setText("⭐ "+t("correct"));this.win();}
-    else{this.feedback.setText("💡 "+t("wrong"));leoGuide(this,t("leoHint9"));}
-   },22);
+  character(
+   this,
+   "kimba",
+   270,
+   385,
+   170
+  );
+
+  txt(
+   this,
+   270,
+   515,
+   "🐾 🐾 🐾",
+   42
+  );
+
+  txt(
+   this,
+   270,
+   570,
+   t("trackQuestion"),
+   21
+  );
+
+  Phaser.Utils.Array.Shuffle([
+   {
+    e:"🦁",
+    name:t("lion"),
+    ok:true
+   },
+   {
+    e:"🦓",
+    name:t("zebra"),
+    ok:false
+   },
+   {
+    e:"🐘",
+    name:t("elephant"),
+    ok:false
+   }
+  ]).forEach((o,i)=>{
+   btn(
+    this,
+    270,
+    650+i*75,
+    300,
+    60,
+    `${o.e} ${o.name}`,
+    0xe5a52f,
+    ()=>{
+     if(this.finished)return;
+
+     if(o.ok){
+      soundCorrect();
+
+      this.feedback.setText(
+       "⭐ "+t("correct")
+      );
+
+      this.win();
+     }else{
+      soundWrong();
+
+      this.feedback.setText(
+       "💡 "+t("wrong")
+      );
+
+      leoGuide(
+       this,
+       t("leoHint9")
+      );
+     }
+    },
+    22
+   );
   });
  }
+
  win(){
   if(this.finished)return;
+
   this.finished=true;
-  this.feedback.setText("🎉 "+t("success")+" ⭐");pulse(this,this.feedback);
-  leoGuide(this,t("leoGreat"));
-  this.time.delayedCall(1600,()=>fadeScene(this,"Complete",{mission:this.idx}));
+
+  soundWin();
+
+  this.feedback.setText(
+   "🎉 "+t("success")+" ⭐"
+  );
+
+  pulse(
+   this,
+   this.feedback
+  );
+
+  leoGuide(
+   this,
+   t("leoGreat")
+  );
+
+  this.time.delayedCall(
+   1600,
+   ()=>{
+    fadeScene(
+     this,
+     "Complete",
+     {mission:this.idx}
+    );
+   }
+  );
  }
 }
+
+/* =========================================================
+   MISSION COMPLETE
+========================================================= */
 
 class Complete extends BaseScene{
  constructor(){super("Complete");}
- init(data){this.mission=data.mission??0;}
- create(){
-  savannah(this);
-  if(!completed.includes(this.mission)){
-   completed.push(this.mission);stars++;
-   localStorage.setItem("wr_v1_completed",JSON.stringify(completed));
-   localStorage.setItem("wr_v1_stars",String(stars));
-  }
-  txt(this,270,170,t("finish"),30,"#fff6c7");
-  const trophy=txt(this,270,285,"🏆",100);
-  this.tweens.add({targets:trophy,scale:1.15,duration:500,yoyo:true,repeat:-1,ease:"Sine.easeInOut"});
-  this.celebrate();
-  txt(this,270,405,t("m"+(this.mission+1)),25);
-  txt(this,270,480,t("reward"),23);
-  const st=txt(this,270,540,`⭐ ${t("stars")}: ${stars}`,23);
-  this.tweens.add({targets:st,scale:1.08,duration:600,yoyo:true,repeat:-1});
-  character(this,"leo",270,655,210);
-  btn(this,270,775,340,70,t("continue"),0x35a85b,()=>fadeScene(this,"Missions"),23);
-  btn(this,270,865,250,58,t("hub"),0x3d83c5,()=>fadeScene(this,"Park"),20);
+
+ init(data){
+  this.mission=data.mission??0;
  }
+
+ create(){
+  this.audio();
+
+  savannah(this);
+
+  if(!completed.includes(this.mission)){
+   completed.push(this.mission);
+   stars++;
+
+   localStorage.setItem(
+    "wr_v1_completed",
+    JSON.stringify(completed)
+   );
+
+   localStorage.setItem(
+    "wr_v1_stars",
+    String(stars)
+   );
+  }
+
+  soundWin();
+
+  txt(
+   this,
+   270,
+   170,
+   t("finish"),
+   30,
+   "#fff6c7"
+  );
+
+  const trophy=txt(
+   this,
+   270,
+   285,
+   "🏆",
+   100
+  );
+
+  this.tweens.add({
+   targets:trophy,
+   scale:1.15,
+   duration:500,
+   yoyo:true,
+   repeat:-1,
+   ease:"Sine.easeInOut"
+  });
+
+  this.celebrate();
+
+  txt(
+   this,
+   270,
+   405,
+   t("m"+(this.mission+1)),
+   25
+  );
+
+  txt(
+   this,
+   270,
+   480,
+   t("reward"),
+   23
+  );
+
+  const st=txt(
+   this,
+   270,
+   540,
+   `⭐ ${t("stars")}: ${stars}`,
+   23
+  );
+
+  this.tweens.add({
+   targets:st,
+   scale:1.08,
+   duration:600,
+   yoyo:true,
+   repeat:-1
+  });
+
+  character(
+   this,
+   "leo",
+   270,
+   655,
+   210
+  );
+
+  btn(
+   this,
+   270,
+   775,
+   340,
+   70,
+   t("continue"),
+   0x35a85b,
+   ()=>fadeScene(this,"Missions"),
+   23
+  );
+
+  btn(
+   this,
+   270,
+   865,
+   250,
+   58,
+   t("hub"),
+   0x3d83c5,
+   ()=>fadeScene(this,"Park"),
+   20
+  );
+ }
+
  celebrate(){
-  ["⭐","✨","🎉","🏆","⭐","✨","🎊","🌟","⭐","🎉"].forEach((e,i)=>{
-   const x=35+Math.random()*470,y=170+Math.random()*600;
-   const a=txt(this,x,y,e,25);a.setAlpha(0);
-   this.tweens.add({targets:a,alpha:1,y:y-100,duration:900,delay:i*80,yoyo:true,ease:"Sine.easeOut",onComplete:()=>a.destroy()});
+  [
+   "⭐","✨","🎉","🏆","⭐",
+   "✨","🎊","🌟","⭐","🎉"
+  ].forEach((e,i)=>{
+   const x=35+Math.random()*470;
+   const y=170+Math.random()*600;
+
+   const a=txt(
+    this,
+    x,
+    y,
+    e,
+    25
+   );
+
+   a.setAlpha(0);
+
+   this.tweens.add({
+    targets:a,
+    alpha:1,
+    y:y-100,
+    duration:900,
+    delay:i*80,
+    yoyo:true,
+    ease:"Sine.easeOut",
+    onComplete:()=>a.destroy()
+   });
   });
  }
 }
 
+/* =========================================================
+   START GAME
+========================================================= */
+
 new Phaser.Game({
- type:Phaser.AUTO,width:W,height:H,parent:"game",backgroundColor:"#65c9ed",
- scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH},
- scene:[Home,Ranger,Park,Wildlife,Learning,Badges,ParentLogin,ParentDashboard,Premium,Missions,MissionPlay,Complete]
+ type:Phaser.AUTO,
+ width:W,
+ height:H,
+ parent:"game",
+ backgroundColor:"#65c9ed",
+
+ scale:{
+  mode:Phaser.Scale.FIT,
+  autoCenter:Phaser.Scale.CENTER_BOTH
+ },
+
+ scene:[
+  Home,
+  Ranger,
+  Park,
+  Wildlife,
+  Learning,
+  Badges,
+  ParentLogin,
+  ParentDashboard,
+  Premium,
+  Missions,
+  MissionPlay,
+  Complete
+ ]
 });

@@ -19,7 +19,10 @@ en:{
  missions:"MISSIONS",animals:"ANIMALS",learn:"LEARNING",
  badges:"MY BADGES",outfit:"Choose your outfit!",
  map:"CHOOSE A MISSION",soon:"Coming soon!",ok:"OK!",
- stars:"Stars",m1:"Become a Junior Ranger",m2:"Meet Mimi",
+ wildlife:"WILDLIFE BOOK",animalFriends:"MEET THE ANIMALS",
+ tapAnimal:"Tap an animal to learn more!",
+ stars:"Stars",
+ m1:"Become a Junior Ranger",m2:"Meet Mimi",
  m3:"Count the Zebra Herd",m4:"Find the Lost Lion Cub",
  m5:"Cross the River",m6:"Help Tembo Find Water",
  m7:"Animal Words",m8:"Clean Up the Park",
@@ -39,14 +42,16 @@ en:{
  task8:"Tap all 3 pieces of rubbish to clean the park!",
  task9:"Which animal made these tracks?",
  task10:"Complete the final ranger challenge!",
- correct:"That's right! Great job!",
- wrong:"Try again!",
+ correct:"That's right! Great job!",wrong:"Try again!",
  success:"Amazing ranger work!",
  animalsWord:"Which animal is this?",
  clean:"Park cleaned!",
  trackQuestion:"Who left these tracks?",
  finalTask:"Tap all 3 ranger supplies!",
  zebra:"Zebra",lion:"Lion",elephant:"Elephant",
+ monkey:"Mimi the Monkey",lionCub:"Kimba the Lion Cub",
+ giraffe:"Zuri the Giraffe",hippo:"Bongo the Hippo",
+ cheetah:"Chase the Cheetah",
  banana:"Banana",water:"Water",rubbish:"Rubbish",
  lionClue:"Lion clue",rangerItem:"Ranger supply"
 },
@@ -60,6 +65,8 @@ fr:{
  missions:"MISSIONS",animals:"ANIMAUX",learn:"APPRENDRE",
  badges:"MES BADGES",outfit:"Choisis ta tenue !",
  map:"CHOISIS UNE MISSION",soon:"Bientôt disponible !",ok:"OK !",
+ wildlife:"LIVRE DES ANIMAUX",animalFriends:"RENCONTRE LES ANIMAUX",
+ tapAnimal:"Touche un animal pour en savoir plus !",
  stars:"Étoiles",m1:"Devenir jeune Ranger",m2:"Rencontre Mimi",
  m3:"Compter les zèbres",m4:"Retrouver le lionceau",
  m5:"Traverser la rivière",m6:"Aider Tembo à trouver de l'eau",
@@ -87,6 +94,9 @@ fr:{
  trackQuestion:"Qui a laissé ces traces ?",
  finalTask:"Touche les 3 équipements du Ranger !",
  zebra:"Zèbre",lion:"Lion",elephant:"Éléphant",
+ monkey:"Mimi le singe",lionCub:"Kimba le lionceau",
+ giraffe:"Zuri la girafe",hippo:"Bongo l'hippopotame",
+ cheetah:"Chase le guépard",
  banana:"Banane",water:"Eau",rubbish:"Déchet",
  lionClue:"Indice du lion",rangerItem:"Équipement Ranger"
 },
@@ -101,7 +111,10 @@ es:{
  missions:"MISIONES",animals:"ANIMALES",learn:"APRENDER",
  badges:"MIS MEDALLAS",outfit:"¡Elige tu uniforme!",
  map:"ELIGE UNA MISIÓN",soon:"¡Muy pronto!",ok:"¡OK!",
- stars:"Estrellas",m1:"Ser un Ranger Junior",m2:"Conoce a Mimi",
+ wildlife:"LIBRO DE ANIMALES",animalFriends:"CONOCE A LOS ANIMALES",
+ tapAnimal:"¡Toca un animal para aprender más!",
+ stars:"Estrellas",
+ m1:"Ser un Ranger Junior",m2:"Conoce a Mimi",
  m3:"Cuenta las cebras",m4:"Encuentra al cachorro de león",
  m5:"Cruza el río",m6:"Ayuda a Tembo a encontrar agua",
  m7:"Palabras de animales",m8:"Limpia el parque",
@@ -129,12 +142,26 @@ es:{
  trackQuestion:"¿Quién dejó estas huellas?",
  finalTask:"¡Toca los 3 objetos Ranger!",
  zebra:"Cebra",lion:"León",elephant:"Elefante",
+ monkey:"Mimi la mona",lionCub:"Kimba el cachorro de león",
+ giraffe:"Zuri la jirafa",hippo:"Bongo el hipopótamo",
+ cheetah:"Chase el guepardo",
  banana:"Banana",water:"Agua",rubbish:"Residuo",
  lionClue:"Pista del león",rangerItem:"Equipo Ranger"
 }
 };
 
 const t = k => L[lang]?.[k] || L.en[k] || k;
+
+const CHARACTERS = {
+ leo:"/assets/characters/Leo_Junior_Ranger.png",
+ mimi:"/assets/characters/Mimi_Monkey.png",
+ kimba:"/assets/characters/Kimba_Lion_Cub.png",
+ tembo:"/assets/characters/Tembo_Elephant.png",
+ zuri:"/assets/characters/Zuri_Giraffe.png",
+ zara:"/assets/characters/Zara_Zebra.png",
+ bongo:"/assets/characters/Bongo_Hippo.png",
+ chase:"/assets/characters/Chase_Cheetah.png"
+};
 
 function txt(s,x,y,str,size=23,color="#fff"){
  return s.add.text(x,y,str,{
@@ -168,10 +195,6 @@ function btn(s,x,y,w,h,label,color,fn,size=22){
   .on("pointerdown",fn);
 }
 
-/* -------------------------------------------------
-   BACKGROUND
-------------------------------------------------- */
-
 function savannah(s){
  const g=s.add.graphics();
 
@@ -200,132 +223,28 @@ function savannah(s){
  g.fillEllipse(260,850,650,250);
 }
 
-/* -------------------------------------------------
-   REAL CHARACTER ART
-------------------------------------------------- */
-
-const CHARACTER_KEYS = {
- leo:"leo",
- mimi:"mimi",
- kimba:"kimba",
- tembo:"tembo",
- zuri:"zuri",
- zara:"zara",
- bongo:"bongo",
- chase:"chase"
-};
-
 function character(s,key,x,y,height=180){
  const image=s.add.image(x,y,key);
-
  const scale=height/image.height;
  image.setScale(scale);
-
  return image;
 }
 
-/* -------------------------------------------------
-   OLD DRAWN RANGER
-   Kept for outfit-selection preview.
-------------------------------------------------- */
-
-function leo(s,x,y,sc=1,outfit=0x2c9b58){
- const c=s.add.container(x,y).setScale(sc);
-
- const g=s.add.graphics();
-
- g.fillStyle(0x6b442b,1);
- g.fillRoundedRect(-34,75,23,62,9);
- g.fillRoundedRect(11,75,23,62,9);
-
- g.fillStyle(outfit,1);
- g.fillRoundedRect(-47,-5,94,100,25);
-
- g.fillStyle(0xc9824a,1);
- g.fillCircle(0,-62,57);
-
- g.fillStyle(0xf4c18d,1);
- g.fillEllipse(0,-38,64,40);
-
- g.fillStyle(0xffffff,1);
- g.fillEllipse(-21,-68,20,27);
- g.fillEllipse(21,-68,20,27);
-
- g.fillStyle(0x382619,1);
- g.fillCircle(-20,-65,7);
- g.fillCircle(20,-65,7);
-
- g.fillStyle(0x9c682e,1);
- g.fillEllipse(0,-108,125,23);
-
- g.fillStyle(0xe8b653,1);
- g.fillRoundedRect(-42,-147,84,42,14);
-
- c.add(g);
-
- s.tweens.add({
-  targets:c,
-  y:y-6,
-  duration:1200,
-  yoyo:true,
-  repeat:-1
- });
-
- return c;
-}
-
-/* -------------------------------------------------
-   HOME
-------------------------------------------------- */
-
-class Home extends Phaser.Scene{
-
- constructor(){
-  super("Home");
- }
+class BaseScene extends Phaser.Scene{
 
  preload(){
-
-  this.load.image(
-   CHARACTER_KEYS.leo,
-   "/assets/characters/Leo_Junior_Ranger.png"
-  );
-
-  this.load.image(
-   CHARACTER_KEYS.mimi,
-   "/assets/characters/Mimi_Monkey.png"
-  );
-
-  this.load.image(
-   CHARACTER_KEYS.kimba,
-   "/assets/characters/Kimba_Lion_Cub.png"
-  );
-
-  this.load.image(
-   CHARACTER_KEYS.tembo,
-   "/assets/characters/Tembo_Elephant.png"
-  );
-
-  this.load.image(
-   CHARACTER_KEYS.zuri,
-   "/assets/characters/Zuri_Giraffe.png"
-  );
-
-  this.load.image(
-   CHARACTER_KEYS.zara,
-   "/assets/characters/Zara_Zebra.png"
-  );
-
-  this.load.image(
-   CHARACTER_KEYS.bongo,
-   "/assets/characters/Bongo_Hippo.png"
-  );
-
-  this.load.image(
-   CHARACTER_KEYS.chase,
-   "/assets/characters/Chase_Cheetah.png"
-  );
+  Object.entries(CHARACTERS).forEach(([key,path])=>{
+   this.load.image(key,path);
+  });
  }
+
+}
+
+/* HOME */
+
+class Home extends BaseScene{
+
+ constructor(){super("Home");}
 
  create(){
 
@@ -333,16 +252,10 @@ class Home extends Phaser.Scene{
 
   txt(this,270,70,t("title"),37,"#fff6c7");
   txt(this,270,115,t("adventure"),29,"#ffdf65");
-
   txt(this,270,195,t("tagline"),18);
 
-  /* REAL LEO */
   const ranger=character(
-   this,
-   CHARACTER_KEYS.leo,
-   270,
-   450,
-   360
+   this,"leo",270,450,360
   );
 
   this.tweens.add({
@@ -356,47 +269,33 @@ class Home extends Phaser.Scene{
   txt(this,270,625,t("welcome"),24,"#fff6c7");
 
   btn(
-   this,
-   270,755,420,78,
-   t("start"),
-   0x35a85b,
-   ()=>this.scene.start("Ranger"),
-   24
+   this,270,755,420,78,
+   t("start"),0x35a85b,
+   ()=>this.scene.start("Ranger"),24
   );
 
   txt(this,270,825,t("footer"),18);
 
   ["en","fr","es"].forEach((l,i)=>{
-
    btn(
-    this,
-    170+i*100,
-    900,
-    82,
-    48,
+    this,170+i*100,900,82,48,
     l.toUpperCase(),
     lang===l?0xe5a52f:0x3d83c5,
     ()=>{
      lang=l;
      localStorage.setItem("wr_v1_lang",l);
      this.scene.restart();
-    },
-    17
+    },17
    );
-
   });
  }
 }
 
-/* -------------------------------------------------
-   RANGER
-------------------------------------------------- */
+/* RANGER */
 
-class Ranger extends Phaser.Scene{
+class Ranger extends BaseScene{
 
- constructor(){
-  super("Ranger");
- }
+ constructor(){super("Ranger");}
 
  create(){
 
@@ -408,22 +307,11 @@ class Ranger extends Phaser.Scene{
   let chosen=
    Number(localStorage.getItem("wr_v1_outfit"))||0;
 
-  /*
-   Real Leo artwork.
-   The outfit selector remains available below.
-  */
-  character(
-   this,
-   CHARACTER_KEYS.leo,
-   270,
-   430,
-   360
-  );
+  character(this,"leo",270,430,360);
 
   outfitColors.forEach((col,i)=>{
 
    const x=90+i*120;
-
    const g=this.add.graphics();
 
    g.fillStyle(0xffffff,1);
@@ -439,59 +327,34 @@ class Ranger extends Phaser.Scene{
 
    this.add.rectangle(
     x,674,85,90,0xffffff,0
-   )
-   .setInteractive()
-   .on("pointerdown",()=>{
-
+   ).setInteractive().on("pointerdown",()=>{
     chosen=i;
-
-    localStorage.setItem(
-     "wr_v1_outfit",
-     i
-    );
-
+    localStorage.setItem("wr_v1_outfit",i);
     this.scene.restart();
-
    });
-
   });
 
-  txt(
-   this,
-   270,755,
-   t("outfit"),
-   21
+  txt(this,270,755,t("outfit"),21);
+
+  btn(
+   this,270,835,370,72,
+   t("go"),0x35a85b,
+   ()=>this.scene.start("Park"),25
   );
 
   btn(
-   this,
-   270,835,370,72,
-   t("go"),
-   0x35a85b,
-   ()=>this.scene.start("Park"),
-   25
-  );
-
-  btn(
-   this,
-   100,920,150,52,
-   t("back"),
-   0x3d83c5,
-   ()=>this.scene.start("Home"),
-   19
+   this,100,920,150,52,
+   t("back"),0x3d83c5,
+   ()=>this.scene.start("Home"),19
   );
  }
 }
 
-/* -------------------------------------------------
-   PARK HUB
-------------------------------------------------- */
+/* PARK */
 
-class Park extends Phaser.Scene{
+class Park extends BaseScene{
 
- constructor(){
-  super("Park");
- }
+ constructor(){super("Park");}
 
  create(){
 
@@ -500,103 +363,70 @@ class Park extends Phaser.Scene{
   txt(this,270,75,t("hub"),31);
   txt(this,270,120,t("hubWelcome"),20);
 
-  character(
-   this,
-   CHARACTER_KEYS.leo,
-   270,
-   330,
-   230
-  );
+  character(this,"leo",270,330,230);
 
-  txt(
-   this,
-   270,475,
-   `⭐ ${t("stars")}: ${stars}`,
-   23
-  );
+  txt(this,270,475,`⭐ ${t("stars")}: ${stars}`,23);
 
   btn(
-   this,
-   155,590,240,90,
+   this,155,590,240,90,
    "🌟 "+t("missions"),
    0x35a85b,
-   ()=>this.scene.start("Missions"),
-   21
+   ()=>this.scene.start("Missions"),21
   );
 
   btn(
-   this,
-   405,590,220,90,
+   this,405,590,220,90,
    "🦓 "+t("animals"),
    0xe5a52f,
-   ()=>this.notice(),
-   20
+   ()=>this.scene.start("Wildlife"),20
   );
 
   btn(
-   this,
-   155,715,240,90,
+   this,155,715,240,90,
    "📚 "+t("learn"),
    0x3d83c5,
-   ()=>this.notice(),
-   21
+   ()=>this.notice(),21
   );
 
   btn(
-   this,
-   405,715,220,90,
+   this,405,715,220,90,
    "🏅 "+t("badges"),
    0xb86ac9,
-   ()=>this.notice(),
-   19
+   ()=>this.notice(),19
   );
 
   btn(
-   this,
-   270,865,240,60,
-   t("back"),
-   0x3d83c5,
-   ()=>this.scene.start("Home"),
-   20
+   this,270,865,240,60,
+   t("back"),0x3d83c5,
+   ()=>this.scene.start("Home"),20
   );
  }
 
  notice(){
 
   const g=this.add.graphics();
-
   g.fillStyle(0x315b35,.97);
   g.fillRoundedRect(45,390,450,150,22);
 
-  const m=txt(
-   this,
-   270,440,
-   t("soon"),
-   23
-  );
+  const m=txt(this,270,440,t("soon"),23);
 
   btn(
-   this,
-   270,500,130,48,
-   t("ok"),
-   0x35a85b,
+   this,270,500,130,48,
+   t("ok"),0x35a85b,
    ()=>{
     g.destroy();
     m.destroy();
-   },
-   19
+   },19
   );
  }
 }
 
-/* -------------------------------------------------
-   MISSIONS MAP
-------------------------------------------------- */
+/* WILDLIFE BOOK */
 
-class Missions extends Phaser.Scene{
+class Wildlife extends BaseScene{
 
  constructor(){
-  super("Missions");
+  super("Wildlife");
  }
 
  create(){
@@ -605,37 +435,174 @@ class Missions extends Phaser.Scene{
 
   txt(
    this,
-   270,50,
-   t("map"),
-   28
+   270,55,
+   t("wildlife"),
+   31,
+   "#fff6c7"
   );
 
   txt(
    this,
-   270,95,
-   `⭐ ${stars} ${t("stars")}`,
+   270,100,
+   t("animalFriends"),
    20
   );
+
+  txt(
+   this,
+   270,135,
+   t("tapAnimal"),
+   16,
+   "#fff6c7"
+  );
+
+  const animals=[
+   ["mimi","🐒",t("monkey")],
+   ["kimba","🦁",t("lionCub")],
+   ["tembo","🐘",t("elephant")],
+   ["zuri","🦒",t("giraffe")],
+   ["zara","🦓",t("zebra")],
+   ["bongo","🦛",t("hippo")],
+   ["chase","🐆",t("cheetah")]
+  ];
+
+  animals.forEach((a,i)=>{
+
+   const col=i%2;
+   const row=Math.floor(i/2);
+
+   const x=145+col*250;
+   const y=245+row*150;
+
+   const card=this.add.graphics();
+
+   card.fillStyle(0xffffff,.96);
+   card.fillRoundedRect(
+    x-105,y-60,
+    210,120,
+    22
+   );
+
+   const animalImage=character(
+    this,
+    a[0],
+    x-40,
+    y,
+    105
+   );
+
+   txt(
+    this,
+    x+50,
+    y,
+    a[2],
+    14,
+    "#315b35"
+   );
+
+   this.add.rectangle(
+    x,y,
+    210,120,
+    0xffffff,0
+   ).setInteractive({
+    useHandCursor:true
+   }).on("pointerdown",()=>{
+
+    this.showAnimal(
+     a[0],
+     a[1],
+     a[2]
+    );
+
+   });
+  });
+
+  btn(
+   this,
+   270,875,
+   230,58,
+   t("back"),
+   0x3d83c5,
+   ()=>this.scene.start("Park"),
+   20
+  );
+ }
+
+ showAnimal(key,emoji,name){
+
+  const overlay=this.add.graphics();
+
+  overlay.fillStyle(0x183d29,.96);
+  overlay.fillRoundedRect(
+   35,210,470,500,28
+  );
+
+  const animal=character(
+   this,
+   key,
+   270,400,
+   270
+  );
+
+  txt(
+   this,
+   270,570,
+   name,
+   25,
+   "#fff6c7"
+  );
+
+  txt(
+   this,
+   270,620,
+   emoji,
+   42
+  );
+
+  btn(
+   this,
+   270,670,
+   140,55,
+   t("back"),
+   0x35a85b,
+   ()=>{
+    overlay.destroy();
+    animal.destroy();
+    this.children.list
+     .filter(o=>o.type==="Text" && o.y>=550 && o.y<=650)
+     .forEach(o=>o.destroy());
+   },
+   19
+  );
+ }
+}
+
+/* MISSIONS */
+
+class Missions extends BaseScene{
+
+ constructor(){super("Missions");}
+
+ create(){
+
+  savannah(this);
+
+  txt(this,270,50,t("map"),28);
+  txt(this,270,95,`⭐ ${stars} ${t("stars")}`,20);
 
   for(let i=0;i<10;i++){
 
    const unlocked=
-    i===0 ||
-    completed.includes(i-1);
+    i===0||completed.includes(i-1);
 
    const done=
     completed.includes(i);
 
-   const x=
-    145+(i%2)*250;
-
-   const y=
-    190+Math.floor(i/2)*125;
+   const x=145+(i%2)*250;
+   const y=190+Math.floor(i/2)*125;
 
    btn(
-    this,
-    x,y,
-    220,96,
+    this,x,y,220,96,
     `${done?"✅":unlocked?"🌟":"🔒"} ${i+1}. ${t("m"+(i+1))}`,
     done?0x65a84b:
     unlocked?0xe5a52f:
@@ -651,19 +618,15 @@ class Missions extends Phaser.Scene{
       "MissionPlay",
       {idx:i}
      );
-
     },
     15
    );
   }
 
   btn(
-   this,
-   270,875,230,58,
-   t("back"),
-   0x3d83c5,
-   ()=>this.scene.start("Park"),
-   20
+   this,270,875,230,58,
+   t("back"),0x3d83c5,
+   ()=>this.scene.start("Park"),20
   );
  }
 
@@ -674,36 +637,24 @@ class Missions extends Phaser.Scene{
   g.fillStyle(0x315b35,.97);
   g.fillRoundedRect(45,390,450,155,22);
 
-  const m=txt(
-   this,
-   270,440,
-   message,
-   22
-  );
+  const m=txt(this,270,440,message,22);
 
   btn(
-   this,
-   270,500,130,48,
-   t("ok"),
-   0x35a85b,
+   this,270,500,130,48,
+   t("ok"),0x35a85b,
    ()=>{
     g.destroy();
     m.destroy();
-   },
-   19
+   },19
   );
  }
 }
 
-/* -------------------------------------------------
-   MISSION PLAY
-------------------------------------------------- */
+/* MISSION PLAY */
 
-class MissionPlay extends Phaser.Scene{
+class MissionPlay extends BaseScene{
 
- constructor(){
-  super("MissionPlay");
- }
+ constructor(){super("MissionPlay");}
 
  init(data){
   this.idx=data.idx||0;
@@ -715,38 +666,21 @@ class MissionPlay extends Phaser.Scene{
 
   const n=this.idx+1;
 
-  txt(
-   this,
-   270,48,
-   t("m"+n),
-   27
-  );
+  txt(this,270,48,t("m"+n),27);
 
-  /* Small real Leo */
   character(
-   this,
-   CHARACTER_KEYS.leo,
-   95,
-   205,
-   145
+   this,"leo",95,205,145
   );
 
   txt(
-   this,
-   270,310,
+   this,270,310,
    t("task"+n),
    21,
    "#fff6c7"
   );
 
   this.feedback=
-   txt(
-    this,
-    270,835,
-    "",
-    20,
-    "#fff6c7"
-   );
+   txt(this,270,835,"",20,"#fff6c7");
 
   this.count=0;
   this.finished=false;
@@ -758,108 +692,63 @@ class MissionPlay extends Phaser.Scene{
   else this.makeTapGame(n);
 
   btn(
-   this,
-   270,920,220,52,
-   t("back"),
-   0x3d83c5,
-   ()=>this.scene.start("Missions"),
-   19
+   this,270,920,220,52,
+   t("back"),0x3d83c5,
+   ()=>this.scene.start("Missions"),19
   );
  }
-
- /* -------------------------------------------------
-    MISSIONS 1,2,4,6,8,10
- ------------------------------------------------- */
 
  makeTapGame(n){
 
   let items;
 
-  if(n===1)
-   items=[
-    ["🧢",t("hat")],
-    ["🗺️",t("mapItem")],
-    ["🏅",t("badge")]
-   ];
+  if(n===1)items=[
+   ["🧢",t("hat")],
+   ["🗺️",t("mapItem")],
+   ["🏅",t("badge")]
+  ];
 
-  if(n===2)
+  if(n===2){
    items=[
     ["🍌",t("banana")],
     ["🍌",t("banana")],
     ["🍌",t("banana")]
    ];
+   character(this,"mimi",400,450,190);
+  }
 
-  if(n===4)
+  if(n===4){
    items=[
     ["🐾",t("lionClue")],
     ["🟡",t("lionClue")],
     ["🌳",t("lionClue")]
    ];
+   character(this,"kimba",400,450,180);
+  }
 
-  if(n===6)
+  if(n===6){
    items=[
     ["💧",t("water")],
     ["💧",t("water")],
     ["💧",t("water")]
    ];
+   character(this,"tembo",400,450,190);
+  }
 
-  if(n===8)
+  if(n===8){
    items=[
     ["🥫",t("rubbish")],
     ["🧴",t("rubbish")],
     ["🗑️",t("rubbish")]
    ];
-
-  if(n===10)
-   items=[
-    ["🧢",t("rangerItem")],
-    ["🗺️",t("rangerItem")],
-    ["🏅",t("rangerItem")]
-   ];
-
-  /*
-   Add the appropriate animal to the mission.
-  */
-
-  if(n===2){
-   character(
-    this,
-    CHARACTER_KEYS.mimi,
-    400,
-    450,
-    190
-   );
+   character(this,"bongo",400,450,180);
   }
 
-  if(n===4){
-   character(
-    this,
-    CHARACTER_KEYS.kimba,
-    400,
-    450,
-    180
-   );
-  }
-
-  if(n===6){
-   character(
-    this,
-    CHARACTER_KEYS.tembo,
-    400,
-    450,
-    190
-   );
-  }
-
-  if(n===8){
-   character(
-    this,
-    CHARACTER_KEYS.tembo,
-    400,
-    450,
-    180
-   );
-  }
+  if(n===10)items=[
+   ["🧢",t("rangerItem")],
+   ["🗺️",t("rangerItem")],
+   ["🏅",t("rangerItem")]
+  ];
 
   const spots=[
    {x:105,y:560},
@@ -868,80 +757,39 @@ class MissionPlay extends Phaser.Scene{
   ];
 
   this.status=
-   txt(
-    this,
-    270,770,
-    `${t("collected")}: 0 / 3`,
-    22
-   );
+   txt(this,270,770,
+   `${t("collected")}: 0 / 3`,22);
 
   items.forEach((item,i)=>{
 
    const p=spots[i];
-
    const g=this.add.graphics();
 
    g.fillStyle(0xffffff,1);
    g.fillRoundedRect(
-    p.x-55,
-    p.y-55,
-    110,
-    110,
-    18
+    p.x-55,p.y-55,110,110,18
    );
 
-   txt(
-    this,
-    p.x,
-    p.y-8,
-    item[0],
-    42
-   );
+   txt(this,p.x,p.y-8,item[0],42);
+   txt(this,p.x,p.y+35,item[1],13,"#315b35");
 
-   txt(
-    this,
-    p.x,
-    p.y+35,
-    item[1],
-    13,
-    "#315b35"
-   );
-
-   const hit=
-    this.add.rectangle(
-     p.x,p.y,
-     110,110,
-     0xffffff,0
-    )
-    .setInteractive({
-     useHandCursor:true
-    });
+   const hit=this.add.rectangle(
+    p.x,p.y,110,110,0xffffff,0
+   ).setInteractive({useHandCursor:true});
 
    hit.on("pointerdown",()=>{
 
-    if(g.getData("found")||this.finished)
-     return;
+    if(g.getData("found")||this.finished)return;
 
     g.setData("found",true);
-
     g.clear();
 
     g.fillStyle(0x65a84b,1);
-
     g.fillRoundedRect(
-     p.x-55,
-     p.y-55,
-     110,
-     110,
-     18
+     p.x-55,p.y-55,110,110,18
     );
 
-    txt(
-     this,
-     p.x,p.y,
-     "✅",
-     42
-    );
+    txt(this,p.x,p.y,"✅",42);
 
     this.count++;
 
@@ -949,42 +797,25 @@ class MissionPlay extends Phaser.Scene{
      `${t("collected")}: ${this.count} / 3`
     );
 
-    this.feedback.setText(
-     t("great")
-    );
+    this.feedback.setText(t("great"));
 
-    if(this.count===3)
-     this.win();
-
+    if(this.count===3)this.win();
    });
   });
  }
 
- /* -------------------------------------------------
-    MISSION 3
- ------------------------------------------------- */
-
  makeCountQuiz(){
 
-  character(
-   this,
-   CHARACTER_KEYS.zara,
-   270,
-   445,
-   230
-  );
+  character(this,"zara",270,445,230);
 
   txt(
-   this,
-   270,580,
+   this,270,580,
    "🦓  🦓  🦓  🦓  🦓",
    38
   );
 
   const answers=
-   Phaser.Utils.Array.Shuffle(
-    [3,4,5,6]
-   );
+   Phaser.Utils.Array.Shuffle([3,4,5,6]);
 
   answers.forEach((a,i)=>{
 
@@ -996,44 +827,23 @@ class MissionPlay extends Phaser.Scene{
     String(a),
     0xe5a52f,
     ()=>{
-
      if(this.finished)return;
 
      if(a===5){
-
-      this.feedback.setText(
-       t("correct")
-      );
-
+      this.feedback.setText(t("correct"));
       this.win();
-
      }else{
-
-      this.feedback.setText(
-       t("wrong")
-      );
-
+      this.feedback.setText(t("wrong"));
      }
-
     },
     28
    );
   });
  }
 
- /* -------------------------------------------------
-    MISSION 5
- ------------------------------------------------- */
-
  makeOrderGame(){
 
-  character(
-   this,
-   CHARACTER_KEYS.tembo,
-   270,
-   270,
-   170
-  );
+  character(this,"tembo",270,270,170);
 
   const stones=[1,2,3,4];
 
@@ -1041,45 +851,23 @@ class MissionPlay extends Phaser.Scene{
 
   this.order=1;
 
-  this.status=
-   txt(
-    this,
-    270,800,
-    "0 / 4",
-    22
-   );
+  this.status=txt(this,270,800,"0 / 4",22);
 
   stones.forEach((num,i)=>{
 
-   const x=
-    90+(i%2)*350;
-
-   const y=
-    475+Math.floor(i/2)*150;
+   const x=90+(i%2)*350;
+   const y=475+Math.floor(i/2)*150;
 
    const g=this.add.graphics();
 
    g.fillStyle(0xc2d0d0,1);
-   g.fillEllipse(
-    x,y,
-    115,80
-   );
+   g.fillEllipse(x,y,115,80);
 
-   txt(
-    this,
-    x,y,
-    String(num),
-    28,
-    "#315b35"
-   );
+   txt(this,x,y,String(num),28,"#315b35");
 
    this.add.rectangle(
-    x,y,
-    120,90,
-    0xffffff,0
-   )
-   .setInteractive()
-   .on("pointerdown",()=>{
+    x,y,120,90,0xffffff,0
+   ).setInteractive().on("pointerdown",()=>{
 
     if(this.finished)return;
 
@@ -1087,197 +875,100 @@ class MissionPlay extends Phaser.Scene{
 
      this.order++;
 
-     txt(
-      this,
-      x,y,
-      "✓",
-      25,
-      "#315b35"
-     );
+     txt(this,x,y,"✓",25,"#315b35");
 
      this.status.setText(
       `${this.order-1} / 4`
      );
 
-     this.feedback.setText(
-      t("great")
-     );
+     this.feedback.setText(t("great"));
 
-     if(this.order===5)
-      this.win();
+     if(this.order===5)this.win();
 
     }else{
-
-     this.feedback.setText(
-      t("wrong")
-     );
-
+     this.feedback.setText(t("wrong"));
     }
-
    });
   });
  }
 
- /* -------------------------------------------------
-    MISSION 7
- ------------------------------------------------- */
-
  makeAnimalWords(){
 
-  character(
-   this,
-   CHARACTER_KEYS.zara,
-   270,
-   400,
-   180
-  );
+  character(this,"zara",270,400,180);
 
   txt(
-   this,
-   270,520,
-   t("animalsWord"),
-   22
+   this,270,520,
+   t("animalsWord"),22
   );
 
   const opts=
    Phaser.Utils.Array.Shuffle([
-    {
-     e:"🦓",
-     name:t("zebra"),
-     ok:true
-    },
-    {
-     e:"🦁",
-     name:t("lion"),
-     ok:false
-    },
-    {
-     e:"🐘",
-     name:t("elephant"),
-     ok:false
-    }
+    {e:"🦓",name:t("zebra"),ok:true},
+    {e:"🦁",name:t("lion"),ok:false},
+    {e:"🐘",name:t("elephant"),ok:false}
    ]);
 
   opts.forEach((o,i)=>{
 
    btn(
-    this,
-    270,
-    610+i*90,
+    this,270,610+i*90,
     300,70,
     `${o.e} ${o.name}`,
     0xe5a52f,
     ()=>{
-
      if(this.finished)return;
 
      if(o.ok){
-
-      this.feedback.setText(
-       t("correct")
-      );
-
+      this.feedback.setText(t("correct"));
       this.win();
-
      }else{
-
-      this.feedback.setText(
-       t("wrong")
-      );
-
+      this.feedback.setText(t("wrong"));
      }
-
     },
     22
    );
   });
  }
 
- /* -------------------------------------------------
-    MISSION 9
- ------------------------------------------------- */
-
  makeTracksQuiz(){
 
-  character(
-   this,
-   CHARACTER_KEYS.kimba,
-   270,
-   385,
-   170
-  );
+  character(this,"kimba",270,385,170);
+
+  txt(this,270,515,"🐾 🐾 🐾",42);
 
   txt(
-   this,
-   270,515,
-   "🐾 🐾 🐾",
-   42
-  );
-
-  txt(
-   this,
-   270,570,
-   t("trackQuestion"),
-   21
+   this,270,570,
+   t("trackQuestion"),21
   );
 
   const opts=
    Phaser.Utils.Array.Shuffle([
-    {
-     e:"🦁",
-     name:t("lion"),
-     ok:true
-    },
-    {
-     e:"🦓",
-     name:t("zebra"),
-     ok:false
-    },
-    {
-     e:"🐘",
-     name:t("elephant"),
-     ok:false
-    }
+    {e:"🦁",name:t("lion"),ok:true},
+    {e:"🦓",name:t("zebra"),ok:false},
+    {e:"🐘",name:t("elephant"),ok:false}
    ]);
 
   opts.forEach((o,i)=>{
 
    btn(
-    this,
-    270,
-    650+i*75,
+    this,270,650+i*75,
     300,60,
     `${o.e} ${o.name}`,
     0xe5a52f,
     ()=>{
-
      if(this.finished)return;
 
      if(o.ok){
-
-      this.feedback.setText(
-       t("correct")
-      );
-
+      this.feedback.setText(t("correct"));
       this.win();
-
      }else{
-
-      this.feedback.setText(
-       t("wrong")
-      );
-
+      this.feedback.setText(t("wrong"));
      }
-
     },
     22
    );
   });
  }
-
- /* -------------------------------------------------
-    COMPLETE
- ------------------------------------------------- */
 
  win(){
 
@@ -1285,31 +976,22 @@ class MissionPlay extends Phaser.Scene{
 
   this.finished=true;
 
-  this.feedback.setText(
-   t("success")
-  );
+  this.feedback.setText(t("success"));
 
-  this.time.delayedCall(
-   700,
-   ()=>{
-    this.scene.start(
-     "Complete",
-     {mission:this.idx}
-    );
-   }
-  );
+  this.time.delayedCall(700,()=>{
+   this.scene.start(
+    "Complete",
+    {mission:this.idx}
+   );
+  });
  }
 }
 
-/* -------------------------------------------------
-   COMPLETE SCREEN
-------------------------------------------------- */
+/* COMPLETE */
 
-class Complete extends Phaser.Scene{
+class Complete extends BaseScene{
 
- constructor(){
-  super("Complete");
- }
+ constructor(){super("Complete");}
 
  init(data){
   this.mission=data.mission??0;
@@ -1325,7 +1007,6 @@ class Complete extends Phaser.Scene{
   if(!already){
 
    completed.push(this.mission);
-
    stars++;
 
    localStorage.setItem(
@@ -1340,52 +1021,32 @@ class Complete extends Phaser.Scene{
   }
 
   txt(
-   this,
-   270,170,
-   t("finish"),
-   30,
-   "#fff6c7"
+   this,270,170,
+   t("finish"),30,"#fff6c7"
+  );
+
+  txt(this,270,285,"🏆",100);
+
+  txt(
+   this,270,405,
+   t("m"+(this.mission+1)),25
   );
 
   txt(
-   this,
-   270,285,
-   "🏆",
-   100
+   this,270,480,
+   t("reward"),23
   );
 
   txt(
-   this,
-   270,405,
-   t("m"+(this.mission+1)),
-   25
-  );
-
-  txt(
-   this,
-   270,480,
-   t("reward"),
-   23
-  );
-
-  txt(
-   this,
-   270,540,
+   this,270,540,
    `⭐ ${t("stars")}: ${stars}`,
    23
   );
 
-  character(
-   this,
-   CHARACTER_KEYS.leo,
-   270,
-   655,
-   210
-  );
+  character(this,"leo",270,655,210);
 
   btn(
-   this,
-   270,775,340,70,
+   this,270,775,340,70,
    t("continue"),
    0x35a85b,
    ()=>this.scene.start("Missions"),
@@ -1393,8 +1054,7 @@ class Complete extends Phaser.Scene{
   );
 
   btn(
-   this,
-   270,865,250,58,
+   this,270,865,250,58,
    t("hub"),
    0x3d83c5,
    ()=>this.scene.start("Park"),
@@ -1403,9 +1063,7 @@ class Complete extends Phaser.Scene{
  }
 }
 
-/* -------------------------------------------------
-   GAME
-------------------------------------------------- */
+/* GAME */
 
 new Phaser.Game({
 
@@ -1427,6 +1085,7 @@ new Phaser.Game({
   Home,
   Ranger,
   Park,
+  Wildlife,
   Missions,
   MissionPlay,
   Complete

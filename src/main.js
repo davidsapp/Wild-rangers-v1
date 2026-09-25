@@ -535,19 +535,21 @@ function txt(s,x,y,str,size=23,color="#fff"){
 
 function btn(s,x,y,w,h,label,color,fn,size=22){
 
- const g=s.add.graphics();
+ const shadow=s.add.graphics();
 
- g.fillStyle(0x49321f,.3);
- g.fillRoundedRect(
+ shadow.fillStyle(0x49321f,.3);
+ shadow.fillRoundedRect(
   x-w/2+3,
-  y-h/2+6,
+  y-h/2+7,
   w,
   h,
   20
  );
 
- g.fillStyle(0xffffff,1);
- g.fillRoundedRect(
+ const white=s.add.graphics();
+
+ white.fillStyle(0xffffff,1);
+ white.fillRoundedRect(
   x-w/2,
   y-h/2,
   w,
@@ -555,8 +557,10 @@ function btn(s,x,y,w,h,label,color,fn,size=22){
   20
  );
 
- g.fillStyle(color,1);
- g.fillRoundedRect(
+ const face=s.add.graphics();
+
+ face.fillStyle(color,1);
+ face.fillRoundedRect(
   x-w/2+5,
   y-h/2+5,
   w-10,
@@ -564,13 +568,110 @@ function btn(s,x,y,w,h,label,color,fn,size=22){
   16
  );
 
- txt(s,x,y-2,label,size);
+ const labelText=txt(
+  s,
+  x,
+  y-2,
+  label,
+  size
+ );
 
- s.add.rectangle(
-  x,y,w,h,0xffffff,0
+ const hit=s.add.rectangle(
+  x,
+  y,
+  w,
+  h,
+  0xffffff,
+  0
  ).setInteractive({
   useHandCursor:true
- }).on("pointerdown",fn);
+ });
+
+ hit.on("pointerover",()=>{
+
+  s.tweens.add({
+   targets:[face,labelText],
+   scale:1.03,
+   duration:100
+  });
+
+ });
+
+ hit.on("pointerout",()=>{
+
+  s.tweens.add({
+   targets:[face,labelText],
+   scale:1,
+   duration:100
+  });
+
+ });
+
+ hit.on("pointerdown",()=>{
+
+  s.tweens.add({
+   targets:[face,labelText],
+   scale:.96,
+   duration:70,
+   yoyo:true
+  });
+
+  fn();
+
+ });
+
+ return hit;
+}
+
+function popIn(s,obj,delay=0){
+
+ obj.setScale(.85);
+ obj.setAlpha(0);
+
+ s.tweens.add({
+  targets:obj,
+  scale:1,
+  alpha:1,
+  duration:350,
+  delay,
+  ease:"Back.Out"
+ });
+
+ return obj;
+}
+
+function pulse(s,obj){
+
+ s.tweens.add({
+  targets:obj,
+  scale:1.06,
+  duration:180,
+  yoyo:true,
+  ease:"Sine.easeInOut"
+ });
+
+}
+
+function fadeScene(s,next,data={}){
+
+ const cover=s.add.rectangle(
+  W/2,
+  H/2,
+  W,
+  H,
+  0x183d29,
+  0
+ );
+
+ s.tweens.add({
+  targets:cover,
+  alpha:1,
+  duration:220,
+  onComplete:()=>{
+   s.scene.start(next,data);
+  }
+ });
+
 }
 
 function savannah(s){
@@ -603,6 +704,25 @@ function savannah(s){
 
  g.fillStyle(0x9bd45a,1);
  g.fillEllipse(260,850,650,250);
+
+ /* simple grass details */
+
+ for(let i=0;i<14;i++){
+
+  const x=20+i*42;
+  const y=900-(i%4)*35;
+
+  g.lineStyle(3,0x4f9837,1);
+
+  g.beginPath();
+  g.moveTo(x,y);
+  g.lineTo(x-5,y-18);
+  g.moveTo(x,y);
+  g.lineTo(x+6,y-22);
+  g.strokePath();
+
+ }
+
 }
 
 function character(s,key,x,y,height=180){
@@ -612,6 +732,15 @@ function character(s,key,x,y,height=180){
  const scale=height/image.height;
 
  image.setScale(scale);
+
+ s.tweens.add({
+  targets:image,
+  y:y-5,
+  duration:1400+Math.random()*400,
+  yoyo:true,
+  repeat:-1,
+  ease:"Sine.easeInOut"
+ });
 
  return image;
 }
@@ -677,7 +806,9 @@ class Home extends BaseScene{
    78,
    t("start"),
    0x35a85b,
-   ()=>this.scene.start("Ranger"),
+   ()=>{
+    fadeScene(this,"Ranger");
+   },
    24
   );
 
@@ -810,7 +941,7 @@ class Ranger extends BaseScene{
    72,
    t("go"),
    0x35a85b,
-   ()=>this.scene.start("Park"),
+   ()=>fadeScene(this,"Park"),
    25
   );
 
@@ -822,7 +953,7 @@ class Ranger extends BaseScene{
    52,
    t("back"),
    0x3d83c5,
-   ()=>this.scene.start("Home"),
+   ()=>fadeScene(this,"Home"),
    19
   );
 
@@ -869,7 +1000,7 @@ class Park extends BaseScene{
    82,
    "🌟 "+t("missions"),
    0x35a85b,
-   ()=>this.scene.start("Missions"),
+   ()=>fadeScene(this,"Missions"),
    19
   );
 
@@ -881,7 +1012,7 @@ class Park extends BaseScene{
    82,
    "🦓 "+t("animals"),
    0xe5a52f,
-   ()=>this.scene.start("Wildlife"),
+   ()=>fadeScene(this,"Wildlife"),
    19
   );
 
@@ -893,7 +1024,7 @@ class Park extends BaseScene{
    82,
    "📚 "+t("learn"),
    0x3d83c5,
-   ()=>this.scene.start("Learning"),
+   ()=>fadeScene(this,"Learning"),
    19
   );
 
@@ -905,7 +1036,7 @@ class Park extends BaseScene{
    82,
    "🏅 "+t("badges"),
    0xb86ac9,
-   ()=>this.scene.start("Badges"),
+   ()=>fadeScene(this,"Badges"),
    18
   );
 
@@ -917,7 +1048,7 @@ class Park extends BaseScene{
    68,
    "👨‍👩‍👧 "+t("parent"),
    0x6d5acb,
-   ()=>this.scene.start("ParentLogin"),
+   ()=>fadeScene(this,"ParentLogin"),
    17
   );
 
@@ -929,7 +1060,7 @@ class Park extends BaseScene{
    68,
    "⭐ "+t("premium"),
    0xd89b28,
-   ()=>this.scene.start("Premium"),
+   ()=>fadeScene(this,"Premium"),
    16
   );
 
@@ -941,7 +1072,7 @@ class Park extends BaseScene{
    55,
    t("back"),
    0x3d83c5,
-   ()=>this.scene.start("Home"),
+   ()=>fadeScene(this,"Home"),
    19
   );
 
@@ -1017,21 +1148,29 @@ class Wildlife extends BaseScene{
     22
    );
 
-   character(
+   popIn(
     this,
-    a[0],
-    x-45,
-    y,
-    100
+    character(
+     this,
+     a[0],
+     x-45,
+     y,
+     100
+    ),
+    i*60
    );
 
-   txt(
+   popIn(
     this,
-    x+50,
-    y,
-    a[2],
-    13,
-    "#315b35"
+    txt(
+     this,
+     x+50,
+     y,
+     a[2],
+     13,
+     "#315b35"
+    ),
+    i*60
    );
 
    this.add.rectangle(
@@ -1064,7 +1203,7 @@ class Wildlife extends BaseScene{
    58,
    t("back"),
    0x3d83c5,
-   ()=>this.scene.start("Park"),
+   ()=>fadeScene(this,"Park"),
    20
   );
 
@@ -1087,7 +1226,7 @@ class Wildlife extends BaseScene{
    28
   );
 
-  character(
+  const animal=character(
    this,
    key,
    270,
@@ -1095,7 +1234,7 @@ class Wildlife extends BaseScene{
    260
   );
 
-  txt(
+  const title=txt(
    this,
    270,
    555,
@@ -1111,6 +1250,9 @@ class Wildlife extends BaseScene{
    emoji,
    42
   );
+
+  popIn(this,animal);
+  popIn(this,title,100);
 
   btn(
    this,
@@ -1220,7 +1362,7 @@ class Learning extends BaseScene{
    55,
    t("back"),
    0x3d83c5,
-   ()=>this.scene.start("Park"),
+   ()=>fadeScene(this,"Park"),
    19
   );
 
@@ -1232,6 +1374,7 @@ class Learning extends BaseScene{
   let fact="";
 
   if(type==="wildlife"){
+
    title=t("learnWildlife");
 
    const facts=[
@@ -1244,7 +1387,11 @@ class Learning extends BaseScene{
     "🐆 "+t("factCheetah")
    ];
 
-   fact=facts[Math.floor(Math.random()*facts.length)];
+   fact=facts[
+    Math.floor(
+     Math.random()*facts.length
+    )
+   ];
 
   }
 
@@ -1383,7 +1530,8 @@ class Badges extends BaseScene{
 
    const y=180+i*125;
 
-   const earned=completed.length>=b.need;
+   const earned=
+    completed.length>=b.need;
 
    const card=this.add.graphics();
 
@@ -1400,12 +1548,16 @@ class Badges extends BaseScene{
     20
    );
 
-   txt(
+   popIn(
     this,
-    105,
-    y,
-    b.emoji,
-    42
+    txt(
+     this,
+     105,
+     y,
+     b.emoji,
+     42
+    ),
+    i*80
    );
 
    txt(
@@ -1444,7 +1596,7 @@ class Badges extends BaseScene{
    55,
    t("back"),
    0x3d83c5,
-   ()=>this.scene.start("Park"),
+   ()=>fadeScene(this,"Park"),
    19
   );
 
@@ -1532,26 +1684,40 @@ class ParentLogin extends BaseScene{
      this.pin+=String(num);
 
      this.display.setText(
-      "•".repeat(this.pin.length)
+      "•".repeat(
+       this.pin.length
+      )
      );
 
      if(this.pin.length===4){
 
       if(this.pin===parentPin){
-       this.scene.start("ParentDashboard");
+
+       fadeScene(
+        this,
+        "ParentDashboard"
+       );
+
       }else{
-       this.display.setText(t("wrongPin"));
+
+       this.display.setText(
+        t("wrongPin")
+       );
 
        this.time.delayedCall(
         900,
         ()=>{
          this.pin="";
-         this.display.setText("----");
+         this.display.setText(
+          "----"
+         );
         }
        );
+
       }
 
      }
+
     },
     24
    );
@@ -1566,7 +1732,7 @@ class ParentLogin extends BaseScene{
    55,
    t("back"),
    0x3d83c5,
-   ()=>this.scene.start("Park"),
+   ()=>fadeScene(this,"Park"),
    19
   );
 
@@ -1605,7 +1771,10 @@ class ParentDashboard extends BaseScene{
 
   const panel=this.add.graphics();
 
-  panel.fillStyle(0xffffff,.96);
+  panel.fillStyle(
+   0xffffff,
+   .96
+  );
 
   panel.fillRoundedRect(
    45,
@@ -1718,7 +1887,7 @@ class ParentDashboard extends BaseScene{
    55,
    t("back"),
    0x3d83c5,
-   ()=>this.scene.start("Park"),
+   ()=>fadeScene(this,"Park"),
    19
   );
 
@@ -1781,7 +1950,11 @@ class ParentDashboard extends BaseScene{
     ()=>{
      if(value.length<4){
       value+=String(num);
-      display.setText("•".repeat(value.length));
+      display.setText(
+       "•".repeat(
+        value.length
+       )
+      );
      }
     },
     18
@@ -1799,6 +1972,7 @@ class ParentDashboard extends BaseScene{
    0x35a85b,
    ()=>{
     if(value.length===4){
+
      parentPin=value;
 
      localStorage.setItem(
@@ -1807,6 +1981,7 @@ class ParentDashboard extends BaseScene{
      );
 
      this.scene.restart();
+
     }
    },
    17
@@ -1816,9 +1991,12 @@ class ParentDashboard extends BaseScene{
 
  changeLanguage(){
 
-  if(lang==="en")lang="fr";
-  else if(lang==="fr")lang="es";
-  else lang="en";
+  if(lang==="en")
+   lang="fr";
+  else if(lang==="fr")
+   lang="es";
+  else
+   lang="en";
 
   localStorage.setItem(
    "wr_v1_lang",
@@ -1826,6 +2004,7 @@ class ParentDashboard extends BaseScene{
   );
 
   this.scene.restart();
+
  }
 
  showInfo(){
@@ -1871,15 +2050,7 @@ class ParentDashboard extends BaseScene{
    t("close"),
    0x35a85b,
    ()=>{
-    overlay.destroy();
-
-    this.children.list
-     .filter(o=>
-      o.type==="Text" &&
-      o.y>=350 &&
-      o.y<=500
-     )
-     .forEach(o=>o.destroy());
+    this.scene.restart();
    },
    18
   );
@@ -2042,7 +2213,7 @@ class Premium extends BaseScene{
    55,
    t("back"),
    0x3d83c5,
-   ()=>this.scene.start("Park"),
+   ()=>fadeScene(this,"Park"),
    19
   );
 
@@ -2164,7 +2335,8 @@ class Missions extends BaseScene{
       return;
      }
 
-     this.scene.start(
+     fadeScene(
+      this,
       "MissionPlay",
       {idx:i}
      );
@@ -2183,7 +2355,7 @@ class Missions extends BaseScene{
    58,
    t("back"),
    0x3d83c5,
-   ()=>this.scene.start("Park"),
+   ()=>fadeScene(this,"Park"),
    20
   );
 
@@ -2313,7 +2485,7 @@ class MissionPlay extends BaseScene{
    52,
    t("back"),
    0x3d83c5,
-   ()=>this.scene.start("Missions"),
+   ()=>fadeScene(this,"Missions"),
    19
   );
 
@@ -2522,6 +2694,11 @@ class MissionPlay extends BaseScene{
       t("great")
      );
 
+     pulse(
+      this,
+      this.feedback
+     );
+
      if(this.count===3)
       this.win();
 
@@ -2572,7 +2749,12 @@ class MissionPlay extends BaseScene{
      if(a===5){
 
       this.feedback.setText(
-       t("correct")
+       "⭐ "+t("correct")
+      );
+
+      pulse(
+       this,
+       this.feedback
       );
 
       this.win();
@@ -2580,7 +2762,7 @@ class MissionPlay extends BaseScene{
      }else{
 
       this.feedback.setText(
-       t("wrong")
+       "💡 "+t("wrong")
       );
 
      }
@@ -2684,7 +2866,7 @@ class MissionPlay extends BaseScene{
       );
 
       this.feedback.setText(
-       t("great")
+       "⭐ "+t("great")
       );
 
       if(this.order===5)
@@ -2693,7 +2875,7 @@ class MissionPlay extends BaseScene{
      }else{
 
       this.feedback.setText(
-       t("wrong")
+       "💡 "+t("wrong")
       );
 
      }
@@ -2759,7 +2941,7 @@ class MissionPlay extends BaseScene{
      if(o.ok){
 
       this.feedback.setText(
-       t("correct")
+       "⭐ "+t("correct")
       );
 
       this.win();
@@ -2767,7 +2949,7 @@ class MissionPlay extends BaseScene{
      }else{
 
       this.feedback.setText(
-       t("wrong")
+       "💡 "+t("wrong")
       );
 
      }
@@ -2842,7 +3024,7 @@ class MissionPlay extends BaseScene{
      if(o.ok){
 
       this.feedback.setText(
-       t("correct")
+       "⭐ "+t("correct")
       );
 
       this.win();
@@ -2850,7 +3032,7 @@ class MissionPlay extends BaseScene{
      }else{
 
       this.feedback.setText(
-       t("wrong")
+       "💡 "+t("wrong")
       );
 
      }
@@ -2870,13 +3052,19 @@ class MissionPlay extends BaseScene{
   this.finished=true;
 
   this.feedback.setText(
-   t("success")
+   "🎉 "+t("success")+" ⭐"
+  );
+
+  pulse(
+   this,
+   this.feedback
   );
 
   this.time.delayedCall(
-   700,
+   1100,
    ()=>{
-    this.scene.start(
+    fadeScene(
+     this,
      "Complete",
      {mission:this.idx}
     );
@@ -2937,13 +3125,25 @@ class Complete extends BaseScene{
    "#fff6c7"
   );
 
-  txt(
-   this,
-   270,
-   285,
-   "🏆",
-   100
-  );
+  const trophy=
+   txt(
+    this,
+    270,
+    285,
+    "🏆",
+    100
+   );
+
+  this.tweens.add({
+   targets:trophy,
+   scale:1.15,
+   duration:500,
+   yoyo:true,
+   repeat:-1,
+   ease:"Sine.easeInOut"
+  });
+
+  this.celebrate();
 
   txt(
    this,
@@ -2961,13 +3161,22 @@ class Complete extends BaseScene{
    23
   );
 
-  txt(
-   this,
-   270,
-   540,
-   `⭐ ${t("stars")}: ${stars}`,
-   23
-  );
+  const starText=
+   txt(
+    this,
+    270,
+    540,
+    `⭐ ${t("stars")}: ${stars}`,
+    23
+   );
+
+  this.tweens.add({
+   targets:starText,
+   scale:1.08,
+   duration:600,
+   yoyo:true,
+   repeat:-1
+  });
 
   character(
    this,
@@ -2985,7 +3194,7 @@ class Complete extends BaseScene{
    70,
    t("continue"),
    0x35a85b,
-   ()=>this.scene.start("Missions"),
+   ()=>fadeScene(this,"Missions"),
    23
   );
 
@@ -2997,9 +3206,60 @@ class Complete extends BaseScene{
    58,
    t("hub"),
    0x3d83c5,
-   ()=>this.scene.start("Park"),
+   ()=>fadeScene(this,"Park"),
    20
   );
+
+ }
+
+ celebrate(){
+
+  const emojis=[
+   "⭐",
+   "✨",
+   "🎉",
+   "🏆",
+   "⭐",
+   "✨",
+   "🎊",
+   "🌟",
+   "⭐",
+   "🎉"
+  ];
+
+  emojis.forEach((emoji,i)=>{
+
+   const x=
+    35+Math.random()*470;
+
+   const startY=
+    170+Math.random()*600;
+
+   const e=
+    txt(
+     this,
+     x,
+     startY,
+     emoji,
+     25
+    );
+
+   e.setAlpha(0);
+
+   this.tweens.add({
+    targets:e,
+    alpha:1,
+    y:startY-100,
+    duration:900,
+    delay:i*80,
+    yoyo:true,
+    ease:"Sine.easeOut",
+    onComplete:()=>{
+     e.destroy();
+    }
+   });
+
+  });
 
  }
 

@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+noimport Phaser from "phaser";
 
 const W = 540;
 const H = 960;
@@ -2027,7 +2027,6 @@ class Home
       }
     );
   }
-}
 }
 
 /* =========================================================

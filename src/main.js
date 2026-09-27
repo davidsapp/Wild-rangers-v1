@@ -2014,17 +2014,18 @@ class Home
       });
    
    btn(
-      this,
-      270,
-      740,
-      180,
-      48,
-      "🔒 Parents",
-      () => {
-        startAudio();
-        fadeScene(this, "ParentLogin");
-      }
-    );
+  this,
+  270,
+  680,
+  180,
+  48,
+  "🔒 Parents",
+  0x183d29,
+  () => {
+    startAudio();
+    fadeScene(this, "ParentLogin");
+  }
+);
   }
 }
 

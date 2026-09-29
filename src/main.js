@@ -2374,44 +2374,27 @@ class Park
 }/* =========================================================
    WILDLIFE
 ========================================================= */
-
 class Wildlife
   extends BaseScene {
 
   constructor() {
     super("Wildlife");
+    this.pageIndex = 0;
+  }
+
+  init(data) {
+    if (
+      data &&
+      Number.isInteger(data.pageIndex)
+    ) {
+      this.pageIndex = data.pageIndex;
+    } else {
+      this.pageIndex = 0;
+    }
   }
 
   create() {
     this.audio();
-
-    savannah(this);
-
-    txt(
-      this,
-      270,
-      50,
-      t("wildlife"),
-      31,
-      "#fff6c7"
-    );
-
-    txt(
-      this,
-      270,
-      95,
-      t("animalFriends"),
-      20
-    );
-
-    txt(
-      this,
-      270,
-      130,
-      t("tapAnimal"),
-      15,
-      "#fff6c7"
-    );
 
     const animals = [
       [
@@ -2458,198 +2441,313 @@ class Wildlife
       ]
     ];
 
-    animals.forEach(
-      (a, i) => {
+    const a =
+      animals[this.pageIndex];
 
-        const col =
-          i % 2;
+    /* =========================
+       SAFARI BACKGROUND
+    ========================= */
 
-        const row =
-          Math.floor(i / 2);
+    savannah(this);
 
-        const x =
-          145 + col * 250;
+    /* =========================
+       STORYBOOK COVER
+    ========================= */
 
-        const y =
-          245 + row * 150;
-
-        const card =
-          this.add.graphics();
-
-        card.fillStyle(
-          0xffffff,
-          0.96
-        );
-
-        card.fillRoundedRect(
-          x - 105,
-          y - 60,
-          210,
-          120,
-          22
-        );
-
-        const animal =
-          character(
-            this,
-            a[0],
-            x - 45,
-            y,
-            100
-          );
-
-        if (animal) {
-          popIn(
-            this,
-            animal,
-            i * 60
-          );
-        }
-
-        popIn(
-          this,
-          txt(
-            this,
-            x + 50,
-            y,
-            a[2],
-            13,
-            "#315b35"
-          ),
-          i * 60
-        );
-
-        this.add
-          .rectangle(
-            x,
-            y,
-            210,
-            120,
-            0xffffff,
-            0
-          )
-          .setInteractive({
-            useHandCursor: true
-          })
-          .on(
-            "pointerdown",
-            () => {
-              startAudio();
-              soundTap();
-
-              this.showAnimal(a);
-            }
-          );
-      }
-    );
-
-    btn(
-      this,
-      270,
-      875,
-      230,
-      58,
-      t("back"),
-      0x3d83c5,
-      () =>
-        fadeScene(
-          this,
-          "Park"
-        ),
-      20
-    );
-  }
-
-  showAnimal(a) {
-    const shade =
-      this.add.rectangle(
-        W / 2,
-        H / 2,
-        W,
-        H,
-        0x000000,
-        0.35
-      );
-
-    const o =
+    const book =
       this.add.graphics();
 
-    o.fillStyle(
+    book.fillStyle(
       0x183d29,
       0.98
     );
 
-    o.fillRoundedRect(
-      30,
-      160,
-      480,
-      590,
-      28
+    book.fillRoundedRect(
+      18,
+      92,
+      504,
+      800,
+      30
     );
 
-    const animal =
-      character(
-        this,
-        a[0],
-        270,
-        350,
-        230
-      );
+    /* Book gold border */
 
-    if (animal) {
-      animal.setDepth(101);
-    }
+    book.lineStyle(
+      4,
+      0xd89b28,
+      1
+    );
+
+    book.strokeRoundedRect(
+      18,
+      92,
+      504,
+      800,
+      30
+    );
+
+    /* =========================
+       CREAM PAGE
+    ========================= */
+
+    const page =
+      this.add.graphics();
+
+    page.fillStyle(
+      0xfff6d8,
+      1
+    );
+
+    page.fillRoundedRect(
+      38,
+      112,
+      464,
+      760,
+      22
+    );
+
+    page.lineStyle(
+      3,
+      0xd8b66a,
+      1
+    );
+
+    page.strokeRoundedRect(
+      38,
+      112,
+      464,
+      760,
+      22
+    );
+
+    /* =========================
+       BOOK DECORATION
+    ========================= */
+
+    txt(
+      this,
+      62,
+      135,
+      "🌿",
+      25
+    );
+
+    txt(
+      this,
+      478,
+      135,
+      "🌿",
+      25
+    );
 
     txt(
       this,
       270,
-      505,
-      a[2],
-      25,
+      55,
+      t("wildlife"),
+      29,
       "#fff6c7"
     );
 
     txt(
       this,
       270,
+      145,
+      t("animalFriends"),
+      21,
+      "#315b35"
+    );
+
+    /* Page number */
+
+    txt(
+      this,
+      270,
+      185,
+      `${this.pageIndex + 1} / ${animals.length}`,
+      17,
+      "#8b6b32"
+    );
+
+    /* =========================
+       ANIMAL
+    ========================= */
+
+    const animal =
+      character(
+        this,
+        a[0],
+        270,
+        365,
+        285
+      );
+
+    if (animal) {
+      animal.setDepth(5);
+    }
+
+    /* =========================
+       ANIMAL NAME
+    ========================= */
+
+    txt(
+      this,
+      270,
       555,
+      a[2],
+      25,
+      "#315b35"
+    );
+
+    /* Emoji */
+
+    txt(
+      this,
+      270,
+      600,
       a[1],
-      42
+      35
+    );
+
+    /* =========================
+       FACT BOX
+    ========================= */
+
+    const factBox =
+      this.add.graphics();
+
+    factBox.fillStyle(
+      0xffffff,
+      0.82
+    );
+
+    factBox.fillRoundedRect(
+      65,
+      635,
+      410,
+      105,
+      18
+    );
+
+    factBox.lineStyle(
+      2,
+      0xd8b66a,
+      1
+    );
+
+    factBox.strokeRoundedRect(
+      65,
+      635,
+      410,
+      105,
+      18
     );
 
     txt(
       this,
       270,
-      615,
+      655,
       "🤖 " + t("leoFact"),
-      17,
-      "#ffdf65"
+      16,
+      "#b07a16"
     );
 
     txt(
       this,
       270,
-      670,
+      700,
       a[3],
-      17,
-      "#fff"
+      16,
+      "#315b35"
     );
 
-    shade.setDepth(99);
-    o.setDepth(100);
+    /* =========================
+       PREVIOUS BUTTON
+    ========================= */
+
+    if (this.pageIndex > 0) {
+
+      btn(
+        this,
+        125,
+        805,
+        145,
+        52,
+        "◀ " + t("back"),
+        0x3d83c5,
+        () => {
+
+          startAudio();
+          soundTap();
+
+          this.scene.restart({
+            pageIndex:
+              this.pageIndex - 1
+          });
+
+        },
+        16
+      );
+
+    }
+
+    /* =========================
+       NEXT BUTTON
+    ========================= */
+
+    if (
+      this.pageIndex <
+      animals.length - 1
+    ) {
+
+      btn(
+        this,
+        415,
+        805,
+        145,
+        52,
+        t("next") + " ▶",
+        0x35a85b,
+        () => {
+
+          startAudio();
+          soundTap();
+
+          this.scene.restart({
+            pageIndex:
+              this.pageIndex + 1
+          });
+
+        },
+        16
+      );
+
+    }
+
+    /* =========================
+       BACK TO PARK
+    ========================= */
 
     btn(
       this,
       270,
-      725,
-      140,
-      50,
-      t("close"),
-      0x35a85b,
+      855,
+      190,
+      42,
+      t("back"),
+      0x183d29,
       () => {
-        this.scene.restart();
+
+        startAudio();
+        soundTap();
+
+        fadeScene(
+          this,
+          "Park"
+        );
+
       },
-      18
+      17
     );
   }
 }

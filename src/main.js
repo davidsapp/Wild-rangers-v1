@@ -1897,13 +1897,34 @@ class Home
     super("Home");
   }
 
+  preload() {
+    super.preload();
+
+    this.load.image(
+      "homeBackground",
+      "/assets/home_safari_background.png"
+    );
+  }
+
   create() {
     startAudio();
 
     this.audio();
 
-    savannah(this);
+    const homeBg = this.add.image(
+  W / 2,
+  H / 2,
+  "homeBackground"
+);
 
+homeBg.setScale(
+  Math.max(
+    W / homeBg.width,
+    H / homeBg.height
+  )
+);
+
+homeBg.setDepth(-10);
     txt(
       this,
       270,

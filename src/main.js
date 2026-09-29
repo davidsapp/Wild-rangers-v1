@@ -2465,13 +2465,12 @@ class Wildlife extends BaseScene {
     ========================= */
 
     const animal = character(
-      this,
-      a[0],
-      270,
-      360,
-      300
-    );
-
+  this,
+  a[0],
+  270,
+  360,
+  a[0] === "mimi" ? 360 : 300
+);
     if (animal) {
       animal.setDepth(5);
     }

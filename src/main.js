@@ -2469,8 +2469,7 @@ class Wildlife extends BaseScene {
   a[0],
   270,
   360,
-  a[0] === "mimi" ? 360 : 300
-);
+  a[0] === "mimi" ? 420 : 300
     if (animal) {
       animal.setDepth(5);
     }

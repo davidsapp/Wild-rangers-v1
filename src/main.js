@@ -1259,8 +1259,8 @@ const CHARACTERS = {
   "/assets/characters/Zara_Zebra_clean.png",
   bongo:
   "/assets/characters/Bongo_Hippo_clean.png",
-  chase:
-    "/assets/characters/Chase_Cheetah.png"
+ chase:
+  "/assets/characters/Chase_Cheetah_clean.png", 
 };/* =========================================================
    UI HELPERS
 ========================================================= */

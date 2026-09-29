@@ -1254,8 +1254,7 @@ const CHARACTERS = {
   tembo:
   "/assets/characters/Tembo_Elephant_clean.png",
   zuri:
-    "/assets/characters/Zuri_Giraffe.png",
-
+  "/assets/characters/Zuri_Giraffe_clean.png",
   zara:
     "/assets/characters/Zara_Zebra.png",
 

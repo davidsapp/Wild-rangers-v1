@@ -1252,8 +1252,7 @@ const CHARACTERS = {
   kimba:
   "/assets/characters/Kimba_Lion_Cub_clean.png",
   tembo:
-    "/assets/characters/Tembo_Elephant.png",
-
+  "/assets/characters/Tembo_Elephant_clean.png",
   zuri:
     "/assets/characters/Zuri_Giraffe.png",
 

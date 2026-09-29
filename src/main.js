@@ -1246,7 +1246,7 @@ const t = k =>
 
 const CHARACTERS = {
   leo:
-    "/assets/characters/Leo_Junior_Ranger.png",
+  "/assets/characters/Leo_Junior_Ranger_transparent-1.png",
 
   mimi:
     "/assets/characters/Mimi_Monkey.png",

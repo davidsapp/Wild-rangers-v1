@@ -1258,8 +1258,7 @@ const CHARACTERS = {
   zara:
   "/assets/characters/Zara_Zebra_clean.png",
   bongo:
-    "/assets/characters/Bongo_Hippo.png",
-
+  "/assets/characters/Bongo_Hippo_clean.png",
   chase:
     "/assets/characters/Chase_Cheetah.png"
 };/* =========================================================

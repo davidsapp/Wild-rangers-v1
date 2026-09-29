@@ -1246,22 +1246,29 @@ const t = k =>
 
 const CHARACTERS = {
   leo:
-  "/assets/characters/Leo_Junior_Ranger_transparent-1.png",
+    "/assets/characters/Leo_Junior_Ranger_transparent-1.png",
 
-  mimi: "/assets/characters/Mimi_Monkey_clean.png",
+  mimi:
+    "/assets/characters/Mimi_Monkey_clean_cropped.png",
+
   kimba:
-  "/assets/characters/Kimba_Lion_Cub_clean.png",
+    "/assets/characters/Kimba_Lion_Cub_clean_cropped.png",
+
   tembo:
-  "/assets/characters/Tembo_Elephant_clean.png",
+    "/assets/characters/Tembo_Elephant_clean_cropped.png",
+
   zuri:
-  "/assets/characters/Zuri_Giraffe_clean.png",
+    "/assets/characters/Zuri_Giraffe_clean_cropped.png",
+
   zara:
-  "/assets/characters/Zara_Zebra_clean.png",
+    "/assets/characters/Zara_Zebra_clean_cropped.png",
+
   bongo:
-  "/assets/characters/Bongo_Hippo_clean.png",
- chase:
-  "/assets/characters/Chase_Cheetah_clean.png", 
-};/* =========================================================
+    "/assets/characters/Bongo_Hippo_clean_cropped.png",
+
+  chase:
+    "/assets/characters/Chase_Cheetah_clean_cropped.png"
+}; =========================================================
    UI HELPERS
 ========================================================= */
 

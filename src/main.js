@@ -2464,16 +2464,17 @@ class Wildlife extends BaseScene {
        ANIMAL
     ========================= */
 
-    const animal = character(
+  const animal = character(
   this,
   a[0],
   270,
   360,
   a[0] === "mimi" ? 420 : 300
-    if (animal) {
-      animal.setDepth(5);
-    }
+);
 
+if (animal) {
+  animal.setDepth(5);
+}
     /* =========================
        ANIMAL NAME
     ========================= */

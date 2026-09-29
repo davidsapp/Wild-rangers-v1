@@ -2374,8 +2374,7 @@ class Park
 }/* =========================================================
    WILDLIFE
 ========================================================= */
-class Wildlife
-  extends BaseScene {
+class Wildlife extends BaseScene {
 
   constructor() {
     super("Wildlife");
@@ -2383,204 +2382,94 @@ class Wildlife
   }
 
   init(data) {
-    if (
-      data &&
-      Number.isInteger(data.pageIndex)
-    ) {
-      this.pageIndex = data.pageIndex;
-    } else {
-      this.pageIndex = 0;
-    }
+    this.pageIndex =
+      data && Number.isInteger(data.pageIndex)
+        ? data.pageIndex
+        : 0;
   }
 
   create() {
     this.audio();
 
     const animals = [
-      [
-        "mimi",
-        "🐒",
-        t("monkey"),
-        t("factMonkey")
-      ],
-      [
-        "kimba",
-        "🦁",
-        t("lionCub"),
-        t("factLion")
-      ],
-      [
-        "tembo",
-        "🐘",
-        t("temboName"),
-        t("factElephant")
-      ],
-      [
-        "zuri",
-        "🦒",
-        t("giraffe"),
-        t("factGiraffe")
-      ],
-      [
-        "zara",
-        "🦓",
-        t("zaraName"),
-        t("factZebra")
-      ],
-      [
-        "bongo",
-        "🦛",
-        t("hippo"),
-        t("factHippo")
-      ],
-      [
-        "chase",
-        "🐆",
-        t("cheetah"),
-        t("factCheetah")
-      ]
+      ["mimi", "🐒", t("monkey"), t("factMonkey")],
+      ["kimba", "🦁", t("lionCub"), t("factLion")],
+      ["tembo", "🐘", t("temboName"), t("factElephant")],
+      ["zuri", "🦒", t("giraffe"), t("factGiraffe")],
+      ["zara", "🦓", t("zaraName"), t("factZebra")],
+      ["bongo", "🦛", t("hippo"), t("factHippo")],
+      ["chase", "🐆", t("cheetah"), t("factCheetah")]
     ];
 
-    const a =
-      animals[this.pageIndex];
+    const a = animals[this.pageIndex];
 
     /* =========================
-       SAFARI BACKGROUND
+       BACKGROUND
     ========================= */
 
     savannah(this);
 
     /* =========================
-       STORYBOOK COVER
+       TITLE
     ========================= */
-
-    const book =
-      this.add.graphics();
-
-    book.fillStyle(
-      0x183d29,
-      0.98
-    );
-
-    book.fillRoundedRect(
-      18,
-      92,
-      504,
-      800,
-      30
-    );
-
-    /* Book gold border */
-
-    book.lineStyle(
-      4,
-      0xd89b28,
-      1
-    );
-
-    book.strokeRoundedRect(
-      18,
-      92,
-      504,
-      800,
-      30
-    );
-
-    /* =========================
-       CREAM PAGE
-    ========================= */
-
-    const page =
-      this.add.graphics();
-
-    page.fillStyle(
-      0xfff6d8,
-      1
-    );
-
-    page.fillRoundedRect(
-      38,
-      112,
-      464,
-      760,
-      22
-    );
-
-    page.lineStyle(
-      3,
-      0xd8b66a,
-      1
-    );
-
-    page.strokeRoundedRect(
-      38,
-      112,
-      464,
-      760,
-      22
-    );
-
-    /* =========================
-       BOOK DECORATION
-    ========================= */
-
-    txt(
-      this,
-      62,
-      135,
-      "🌿",
-      25
-    );
-
-    txt(
-      this,
-      478,
-      135,
-      "🌿",
-      25
-    );
 
     txt(
       this,
       270,
       55,
       t("wildlife"),
-      29,
+      32,
+      "#fff6c7"
+    );
+
+    /* =========================
+       BOOK HEADER
+    ========================= */
+
+    const header = this.add.graphics();
+
+    header.fillStyle(
+      0x183d29,
+      0.94
+    );
+
+    header.fillRoundedRect(
+      35,
+      95,
+      470,
+      78,
+      24
+    );
+
+    txt(
+      this,
+      270,
+      122,
+      t("animalFriends"),
+      25,
       "#fff6c7"
     );
 
     txt(
       this,
       270,
-      145,
-      t("animalFriends"),
-      21,
-      "#315b35"
-    );
-
-    /* Page number */
-
-    txt(
-      this,
-      270,
-      185,
+      153,
       `${this.pageIndex + 1} / ${animals.length}`,
-      17,
-      "#8b6b32"
+      18,
+      "#ffffff"
     );
 
     /* =========================
        ANIMAL
     ========================= */
 
-    const animal =
-      character(
-        this,
-        a[0],
-        270,
-        365,
-        285
-      );
+    const animal = character(
+      this,
+      a[0],
+      270,
+      360,
+      300
+    );
 
     if (animal) {
       animal.setDepth(5);
@@ -2593,90 +2482,74 @@ class Wildlife
     txt(
       this,
       270,
-      555,
-      a[2],
-      25,
-      "#315b35"
-    );
-
-    /* Emoji */
-
-    txt(
-      this,
-      270,
-      600,
-      a[1],
-      35
+      545,
+      `${a[1]}  ${a[2]}`,
+      29,
+      "#183d29"
     );
 
     /* =========================
-       FACT BOX
+       RANGER FACT
     ========================= */
 
-    const factBox =
-      this.add.graphics();
-
-    factBox.fillStyle(
-      0xffffff,
-      0.82
-    );
-
-    factBox.fillRoundedRect(
-      65,
-      635,
-      410,
-      105,
-      18
-    );
-
-    factBox.lineStyle(
-      2,
-      0xd8b66a,
-      1
-    );
-
-    factBox.strokeRoundedRect(
-      65,
-      635,
-      410,
-      105,
-      18
-    );
-
     txt(
       this,
       270,
-      655,
-      "🤖 " + t("leoFact"),
-      16,
-      "#b07a16"
-    );
-
-    txt(
-      this,
-      270,
-      700,
-      a[3],
-      16,
-      "#315b35"
+      595,
+      "🔍  " + t("leoFact"),
+      22,
+      "#8b5e16"
     );
 
     /* =========================
-       PREVIOUS BUTTON
+       FACT TEXT
+    ========================= */
+
+    txt(
+      this,
+      270,
+      660,
+      a[3],
+      21,
+      "#183d29",
+      380
+    );
+
+    /* =========================
+       PAGE DECORATION
+    ========================= */
+
+    txt(
+      this,
+      65,
+      205,
+      "🌿",
+      24
+    );
+
+    txt(
+      this,
+      475,
+      205,
+      "🌿",
+      24
+    );
+
+    /* =========================
+       PREVIOUS
     ========================= */
 
     if (this.pageIndex > 0) {
 
       btn(
         this,
-        125,
-        805,
-        145,
-        52,
+        105,
+        810,
+        155,
+        58,
         "◀ " + t("back"),
         0x3d83c5,
         () => {
-
           startAudio();
           soundTap();
 
@@ -2684,15 +2557,14 @@ class Wildlife
             pageIndex:
               this.pageIndex - 1
           });
-
         },
-        16
+        19
       );
 
     }
 
     /* =========================
-       NEXT BUTTON
+       NEXT
     ========================= */
 
     if (
@@ -2702,14 +2574,13 @@ class Wildlife
 
       btn(
         this,
-        415,
-        805,
-        145,
-        52,
+        435,
+        810,
+        155,
+        58,
         t("next") + " ▶",
         0x35a85b,
         () => {
-
           startAudio();
           soundTap();
 
@@ -2717,9 +2588,8 @@ class Wildlife
             pageIndex:
               this.pageIndex + 1
           });
-
         },
-        16
+        19
       );
 
     }
@@ -2731,13 +2601,12 @@ class Wildlife
     btn(
       this,
       270,
-      855,
-      190,
-      42,
+      890,
+      210,
+      48,
       t("back"),
       0x183d29,
       () => {
-
         startAudio();
         soundTap();
 
@@ -2745,13 +2614,11 @@ class Wildlife
           this,
           "Park"
         );
-
       },
-      17
+      18
     );
   }
 }
-
 /* =========================================================
    LEARNING
 ========================================================= */

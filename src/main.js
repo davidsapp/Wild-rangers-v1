@@ -1296,12 +1296,24 @@ const t = k =>
 /* =========================================================
    CHARACTER PNG ASSETS
 ========================================================= */
-
 const CHARACTERS = {
   leo:
     "/assets/characters/Leo_Junior_Ranger_transparent-1.png",
 
+  leoGreen:
+    "/assets/characters/Leo_Green_Ranger.png",
+
+  leoGolden:
+    "/assets/characters/Leo_Golden_Ranger.png",
+
+  leoBlue:
+    "/assets/characters/Leo_Blue_Ranger.png",
+
+  leoRed:
+    "/assets/characters/Leo_Red_Ranger.png",
+
   mimi:
+
     "/assets/characters/Mimi_Monkey_clean_cropped.png",
 
   kimba:
@@ -2142,10 +2154,17 @@ class Ranger
           "wr_v1_outfit"
         )
       ) || 0;
+const outfitKey =
+  [
+    "leoGreen",
+    "leoGolden",
+    "leoBlue",
+    "leoRed"
+  ][chosen] || "leoGreen";
 
     character(
       this,
-      "leo",
+     outfitKey,
       270,
       430,
       360

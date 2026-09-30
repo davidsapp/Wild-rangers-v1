@@ -450,7 +450,30 @@ const L = {
     natureFact:
       "Plants, water and clean habitats help animals live safely.",
     safetyFact:
-      "A good Ranger watches animals from a safe distance.",
+      "A good Ranger watches animals from a safe distance.",natureShade:
+  "Trees give us shade and cool places to rest."
+,
+natureOxygen:
+  "Trees help put oxygen into the air we breathe."
+,
+natureHomes:
+  "Trees give birds, insects and other animals a place to live."
+,
+natureWater:
+  "Clean water helps animals drink, cool down and survive."
+,
+natureHabitat:
+  "Clean land and water help plants and animals stay healthy."
+,
+safetyFeed:
+  "Never feed wild animals. Let them find their natural food."
+,
+safetyAdult:
+  "Stay with a trusted grown-up when exploring."
+,
+safetyRespect:
+  "Respect plants, animals and their homes."
+,
     learningTip:
       "Keep exploring and learning, Little Ranger!",
 
@@ -743,7 +766,22 @@ const L = {
     natureFact:
       "Les plantes, l'eau et les habitats propres aident les animaux à vivre en sécurité.",
     safetyFact:
-      "Un bon Ranger observe les animaux à une distance sûre.",
+      "Un bon Ranger observe les animaux à une distance sûre.",natureShade:
+  "Les arbres donnent de l'ombre et des endroits frais pour se reposer.",
+natureOxygen:
+  "Les arbres aident à mettre de l'oxygène dans l'air que nous respirons.",
+natureHomes:
+  "Les arbres offrent aux oiseaux, aux insectes et à d'autres animaux un endroit où vivre.",
+natureWater:
+  "L'eau propre aide les animaux à boire, à se rafraîchir et à survivre.",
+natureHabitat:
+  "La terre et l'eau propres aident les plantes et les animaux à rester en bonne santé.",
+safetyFeed:
+  "Ne nourris jamais les animaux sauvages. Laisse-les trouver leur nourriture naturelle.",
+safetyAdult:
+  "Reste avec un adulte de confiance lorsque tu explores.",
+safetyRespect:
+  "Respecte les plantes, les animaux et leurs habitats.",
     learningTip:
       "Continue à explorer et à apprendre, petit Ranger!",
 
@@ -1084,7 +1122,22 @@ const L = {
     natureFact:
       "Las plantas, el agua y los hábitats limpios ayudan a los animales a vivir seguros.",
     safetyFact:
-      "Un buen Ranger observa a los animales desde una distancia segura.",
+      "Un buen Ranger observa a los animales desde una distancia segura.",natureShade:
+  "Los árboles dan sombra y lugares frescos para descansar.",
+natureOxygen:
+  "Los árboles ayudan a poner oxígeno en el aire que respiramos.",
+natureHomes:
+  "Los árboles dan a las aves, los insectos y otros animales un lugar donde vivir.",
+natureWater:
+  "El agua limpia ayuda a los animales a beber, refrescarse y sobrevivir.",
+natureHabitat:
+  "La tierra y el agua limpias ayudan a las plantas y los animales a estar sanos.",
+safetyFeed:
+  "Nunca alimentes a los animales salvajes. Deja que encuentren su comida natural.",
+safetyAdult:
+  "Quédate con un adulto de confianza cuando explores.",
+safetyRespect:
+  "Respeta las plantas, los animales y sus hogares.",
     learningTip:
       "¡Sigue explorando y aprendiendo, pequeño Ranger!",
 

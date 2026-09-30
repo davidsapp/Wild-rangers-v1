@@ -1299,19 +1299,18 @@ const t = k =>
 const CHARACTERS = {
   leo:
     "/assets/characters/Leo_Junior_Ranger_transparent-1.png",
-
-  leoGreen:
-  "/assets/characters/Leo_Green_Ranger_v2.png",
+leoGreen:
+  "/assets/characters/Leo_Green_Ranger_exact-face.png",
 
 leoGolden:
-  "/assets/characters/Leo_Golden_Ranger_v2.png",
+  "/assets/characters/Leo_Golden_Ranger_exact-face.png",
 
 leoBlue:
-  "/assets/characters/Leo_Blue_Ranger_v2.png",
+  "/assets/characters/Leo_Blue_Ranger_exact-face.png",
 
 leoRed:
-  "/assets/characters/Leo_Red_Ranger_v2.png",
-
+  "/assets/characters/Leo_Red_Ranger_exact-face.png",
+  
   mimi:
 
     "/assets/characters/Mimi_Monkey_clean_cropped.png",

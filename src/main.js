@@ -3118,7 +3118,10 @@ class Learning
         startAudio();
         soundTap();
 
-        this.scene.restart();
+       this.scene.restart({
+  bookType: null,
+  pageIndex: 0
+}); 
       },
       19
     );

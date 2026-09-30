@@ -1300,16 +1300,16 @@ const CHARACTERS = {
   leo:
     "/assets/characters/Leo_Junior_Ranger_transparent-1.png",
 leoGreen:
-  "/assets/characters/Leo_Green_Ranger_game.png",
+  "/assets/characters/Leo_Green_Ranger_RangerCreation_FINAL.png",
 
 leoGolden:
-  "/assets/characters/Leo_Golden_Ranger_game.png",
+  "/assets/characters/Leo_Golden_Ranger_RangerCreation_FINAL.png",
 
 leoBlue:
-  "/assets/characters/Leo_Blue_Ranger_game.png",
+  "/assets/characters/Leo_Blue_Ranger_RangerCreation_FINAL.png",
 
 leoRed:
-  "/assets/characters/Leo_Red_Ranger_game.png",
+  "/assets/characters/Leo_Red_Ranger_RangerCreation_FINAL.png",
   mimi:
 
     "/assets/characters/Mimi_Monkey_clean_cropped.png",

@@ -2630,8 +2630,25 @@ class Learning
     super("Learning");
   }
 
+  init(data) {
+    this.bookType =
+      data && data.bookType
+        ? data.bookType
+        : null;
+
+    this.pageIndex =
+      data && Number.isInteger(data.pageIndex)
+        ? data.pageIndex
+        : 0;
+  }
+
   create() {
     this.audio();
+
+    if (this.bookType) {
+      this.createBookPage();
+      return;
+    }
 
     savannah(this);
 
@@ -2660,10 +2677,7 @@ class Learning
       82,
       "🦁 " + t("learnWildlife"),
       0x35a85b,
-      () =>
-        this.showLesson(
-          "wildlife"
-        ),
+      () => this.openBook("wildlife"),
       20
     );
 
@@ -2675,10 +2689,7 @@ class Learning
       82,
       "🌱 " + t("learnNature"),
       0x3d83c5,
-      () =>
-        this.showLesson(
-          "nature"
-        ),
+      () => this.openBook("nature"),
       20
     );
 
@@ -2690,10 +2701,7 @@ class Learning
       82,
       "🛡️ " + t("learnSafety"),
       0xe5a52f,
-      () =>
-        this.showLesson(
-          "safety"
-        ),
+      () => this.openBook("safety"),
       20
     );
 
@@ -2729,140 +2737,340 @@ class Learning
       42,
       t("back"),
       0x3d83c5,
-      () =>
-        fadeScene(
-          this,
-          "Park"
-        ),
+      () => fadeScene(this, "Park"),
       16
     );
   }
 
-  showLesson(type) {
-    let title = "";
-    let fact = "";
+  openBook(type) {
+    startAudio();
+    soundTap();
 
-    if (
-      type === "wildlife"
-    ) {
-      title =
-        t("learnWildlife");
+    this.scene.restart({
+      bookType: type,
+      pageIndex: 0
+    });
+  }
 
-      fact =
-        Phaser.Utils.Array.GetRandom(
-          [
-            "🐒 " +
-              t("factMonkey"),
-            "🦁 " +
-              t("factLion"),
-            "🐘 " +
-              t("factElephant"),
-            "🦒 " +
-              t("factGiraffe"),
-            "🦓 " +
-              t("factZebra"),
-            "🦛 " +
-              t("factHippo"),
-            "🐆 " +
-              t("factCheetah")
-          ]
-        );
+  createBookPage() {
+
+    const wildlifePages = [
+      [
+        "mimi",
+        "🐒",
+        t("monkey"),
+        t("factMonkey"),
+        250
+      ],
+      [
+        "kimba",
+        "🦁",
+        t("lionCub"),
+        t("factLion"),
+        250
+      ],
+      [
+        "tembo",
+        "🐘",
+        t("temboName"),
+        t("factElephant"),
+        250
+      ],
+      [
+        "zuri",
+        "🦒",
+        t("giraffe"),
+        t("factGiraffe"),
+        260
+      ],
+      [
+        "zara",
+        "🦓",
+        t("zaraName"),
+        t("factZebra"),
+        250
+      ],
+      [
+        "bongo",
+        "🦛",
+        t("hippo"),
+        t("factHippo"),
+        250
+      ],
+      [
+        "chase",
+        "🐆",
+        t("cheetah"),
+        t("factCheetah"),
+        250
+      ]
+    ];
+
+    const naturePages = [
+      [
+        "🌳",
+        t("natureShade")
+      ],
+      [
+        "🌳",
+        t("natureOxygen")
+      ],
+      [
+        "🌳",
+        t("natureHomes")
+      ],
+      [
+        "💧",
+        t("natureWater")
+      ],
+      [
+        "🌍",
+        t("natureHabitat")
+      ]
+    ];
+
+    const safetyPages = [
+      [
+        "🛡️",
+        t("safetyFact")
+      ],
+      [
+        "🚫",
+        t("safetyFeed")
+      ],
+      [
+        "👨‍👩‍👧",
+        t("safetyAdult")
+      ],
+      [
+        "🌿",
+        t("safetyRespect")
+      ]
+    ];
+
+    let pages;
+    let sectionTitle;
+
+    if (this.bookType === "wildlife") {
+      pages = wildlifePages;
+      sectionTitle = t("learnWildlife");
+    } else if (this.bookType === "nature") {
+      pages = naturePages;
+      sectionTitle = t("learnNature");
+    } else {
+      pages = safetyPages;
+      sectionTitle = t("learnSafety");
     }
 
-    if (
-      type === "nature"
-    ) {
-      title =
-        t("learnNature");
+    if (!pages.length) return;
 
-      fact =
-        "🌿 " +
-        t("natureFact");
+    if (this.pageIndex < 0) {
+      this.pageIndex = 0;
     }
 
-    if (
-      type === "safety"
-    ) {
-      title =
-        t("learnSafety");
-
-      fact =
-        "🛡️ " +
-        t("safetyFact");
+    if (this.pageIndex >= pages.length) {
+      this.pageIndex = pages.length - 1;
     }
 
-    const shade =
-      this.add.rectangle(
-        W / 2,
-        H / 2,
-        W,
-        H,
-        0x000000,
-        0.35
+    const page = pages[this.pageIndex];
+
+    savannah(this);
+
+    txt(
+      this,
+      270,
+      50,
+      t("learningTitle"),
+      25,
+      "#fff6c7"
+    );
+
+    const card = this.add.graphics();
+
+    card.fillStyle(
+      0xfff6c7,
+      0.96
+    );
+
+    card.fillRoundedRect(
+      30,
+      90,
+      480,
+      690,
+      30
+    );
+
+    const header = this.add.graphics();
+
+    header.fillStyle(
+      0x183d29,
+      0.96
+    );
+
+    header.fillRoundedRect(
+      55,
+      110,
+      430,
+      72,
+      22
+    );
+
+    txt(
+      this,
+      270,
+      138,
+      sectionTitle,
+      25,
+      "#fff6c7"
+    );
+
+    txt(
+      this,
+      270,
+      165,
+      `${this.pageIndex + 1} / ${pages.length}`,
+      16,
+      "#ffffff"
+    );
+
+    if (this.bookType === "wildlife") {
+
+      const animal = character(
+        this,
+        page[0],
+        270,
+        365,
+        page[4]
       );
 
-    const o =
-      this.add.graphics();
+      if (animal) {
+        animal.setDepth(5);
+      }
 
-    o.fillStyle(
-      0x183d29,
-      0.98
-    );
+      txt(
+        this,
+        270,
+        510,
+        `${page[1]}  ${page[2]}`,
+        27,
+        "#183d29"
+      );
 
-    o.fillRoundedRect(
-      30,
-      225,
-      480,
-      430,
-      28
-    );
+      txt(
+        this,
+        270,
+        555,
+        "🔍  " + t("leoFact"),
+        20,
+        "#8b5e16"
+      );
 
-    shade.setDepth(99);
-    o.setDepth(100);
+      txt(
+        this,
+        270,
+        625,
+        page[3],
+        21,
+        "#183d29"
+      );
 
-    txt(
-      this,
-      270,
-      290,
-      title,
-      27,
-      "#fff6c7"
-    ).setDepth(101);
+    } else {
 
-    txt(
-      this,
-      270,
-      435,
-      fact,
-      21,
-      "#fff"
-    ).setDepth(101);
+      txt(
+        this,
+        270,
+        355,
+        page[0],
+        90,
+        "#183d29"
+      );
 
-    txt(
-      this,
-      270,
-      535,
-      "🤖 " + t("leoLearn"),
-      17,
-      "#ffdf65"
-    ).setDepth(101);
+      txt(
+        this,
+        270,
+        510,
+        "🔍  " + t("leoFact"),
+        20,
+        "#8b5e16"
+      );
+
+      txt(
+        this,
+        270,
+        600,
+        page[1],
+        22,
+        "#183d29"
+      );
+    }
+
+    if (this.pageIndex > 0) {
+
+      btn(
+        this,
+        105,
+        805,
+        155,
+        58,
+        "◀ " + t("back"),
+        0x3d83c5,
+        () => {
+          startAudio();
+          soundTap();
+
+          this.scene.restart({
+            bookType: this.bookType,
+            pageIndex: this.pageIndex - 1
+          });
+        },
+        18
+      );
+    }
+
+    if (
+      this.pageIndex <
+      pages.length - 1
+    ) {
+
+      btn(
+        this,
+        435,
+        805,
+        155,
+        58,
+        t("next") + " ▶",
+        0x35a85b,
+        () => {
+          startAudio();
+          soundTap();
+
+          this.scene.restart({
+            bookType: this.bookType,
+            pageIndex: this.pageIndex + 1
+          });
+        },
+        18
+      );
+    }
 
     btn(
       this,
       270,
-      600,
-      150,
-      55,
+      890,
+      190,
+      52,
       t("close"),
-      0x35a85b,
-      () =>
-        this.scene.restart(),
-      19
-    ).setDepth(102);
-  }
-}
+      0x183d29,
+      () => {
+        startAudio();
+        soundTap();
 
-/* =========================================================
+        this.scene.restart();
+      },
+      19
+    );
+  }
+} =========================================================
    BADGES
 ========================================================= */
 

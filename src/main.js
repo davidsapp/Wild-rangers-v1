@@ -1694,6 +1694,9 @@ function character(
   y,
   height = 180
 ) {
+  if (key === "leo") {
+    key = selectedLeoKey();
+  }
   /*
    * Real PNG character loader.
    *

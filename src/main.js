@@ -1,4 +1,4 @@
-wwwimport Phaser from "phaser";
+import Phaser from "phaser";
 
 const W = 540;
 const H = 960;

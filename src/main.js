@@ -2800,7 +2800,7 @@ btn(
   82,
   "🧠 RANGER QUIZ",
   0x6d5acb,
-  () => {},
+  () => fadeScene(this, "RangerQuiz"),
   20
 );
 

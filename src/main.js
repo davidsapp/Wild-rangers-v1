@@ -2757,59 +2757,60 @@ class Learning
     );
 
     btn(
-      this,
-      270,
-      200,
-      390,
-      82,
-      "🦁 " + t("learnWildlife"),
-      0x35a85b,
-      () => this.openBook("wildlife"),
-      20
-    );
+  this,
+  270,
+  200,
+  390,
+  82,
+  "🦁 " + t("learnWildlife"),
+  0x35a85b,
+  () => this.openBook("wildlife"),
+  20
+);
 
-    btn(
-      this,
-      270,
-      320,
-      390,
-      82,
-      "🌱 " + t("learnNature"),
-      0x3d83c5,
-      () => this.openBook("nature"),
-      20
-    );
+btn(
+  this,
+  270,
+  300,
+  390,
+  82,
+  "🌱 " + t("learnNature"),
+  0x3d83c5,
+  () => this.openBook("nature"),
+  20
+);
 
-    btn(
-      this,
-      270,
-      440,
-      390,
-      82,
-      "🛡️ " + t("learnSafety"),
-      0xe5a52f,
-      () => this.openBook("safety"),
-      20
-    );
-    btn(
-      this,
-      270,
-      545,
-      390,
-      82,
-      "🧠 RANGER QUIZ",
-      0x6d5acb,
-      () => {},
-      20
-    );
-    character(
-      this,
-      "leo",
-      270,
-      700,
-      230
-    );
+btn(
+  this,
+  270,
+  400,
+  390,
+  82,
+  "🛡️ " + t("learnSafety"),
+  0xe5a52f,
+  () => this.openBook("safety"),
+  20
+);
 
+btn(
+  this,
+  270,
+  500,
+  390,
+  82,
+  "🧠 RANGER QUIZ",
+  0x6d5acb,
+  () => {},
+  20
+);
+
+character(
+  this,
+  "leo",
+  270,
+  660,
+  230
+);
     txt(
       this,
       270,

@@ -2808,7 +2808,7 @@ character(
   this,
   "leo",
   270,
-  660,
+  670,
   230
 );
     txt(

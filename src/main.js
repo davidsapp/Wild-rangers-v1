@@ -2796,7 +2796,7 @@ class Learning
       270,
       525,
       390,
-      58,
+      82,
       "🧠 RANGER QUIZ",
       0x6d5acb,
       () => {},

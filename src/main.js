@@ -5540,19 +5540,20 @@ new Phaser.Game({
     autoCenter:
       Phaser.Scale.CENTER_BOTH
   },
-
-  scene: [
-    Home,
-    Ranger,
-    Park,
-    Wildlife,
-    Learning,
-    Badges,
-    ParentLogin,
-    ParentDashboard,
-    Premium,
-    Missions,
-    MissionPlay,
-    Complete
-  ]
+scene: [
+  Home,
+  Ranger,
+  Park,
+  Wildlife,
+  Learning,
+  RangerQuiz,
+  Badges,
+  ParentLogin,
+  ParentDashboard,
+  Premium,
+  Missions,
+  MissionPlay,
+  Complete
+]
+  
 });

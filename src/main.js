@@ -2800,7 +2800,7 @@ class Learning
       "🧠 RANGER QUIZ",
       0x6d5acb,
       () => {},
-      18
+      20
     );
     character(
       this,

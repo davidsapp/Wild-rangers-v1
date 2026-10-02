@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+wwwimport Phaser from "phaser";
 
 const W = 540;
 const H = 960;
@@ -2806,7 +2806,7 @@ class Learning
       this,
       "leo",
       270,
-      675,
+      700,
       230
     );
 

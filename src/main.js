@@ -2794,7 +2794,7 @@ class Learning
     btn(
       this,
       270,
-      525,
+      545,
       390,
       82,
       "🧠 RANGER QUIZ",

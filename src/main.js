@@ -2791,7 +2791,17 @@ class Learning
       () => this.openBook("safety"),
       20
     );
-
+    btn(
+      this,
+      270,
+      525,
+      390,
+      58,
+      "🧠 RANGER QUIZ",
+      0x6d5acb,
+      () => {},
+      18
+    );
     character(
       this,
       "leo",

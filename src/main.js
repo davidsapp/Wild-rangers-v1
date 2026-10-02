@@ -3172,7 +3172,275 @@ character(
     );
     }
 }
+/* =========================================================
+   RANGER QUIZ
+========================================================= */
+class RangerQuiz
+  extends BaseScene {
 
+  constructor() {
+    super("RangerQuiz");
+  }
+
+  create() {
+    this.audio();
+
+    savannah(this);
+
+    txt(
+      this,
+      270,
+      55,
+      "🧠 RANGER QUIZ",
+      30,
+      "#fff6c7"
+    );
+
+    txt(
+      this,
+      270,
+      105,
+      "Test your Ranger knowledge!",
+      19
+    );
+
+    const questions = [
+      {
+        question: "Which animal has a long trunk?",
+        choices: [
+          ["🐘 Elephant", true],
+          ["🦓 Zebra", false],
+          ["🦒 Giraffe", false]
+        ]
+      },
+      {
+        question: "Which animal has stripes?",
+        choices: [
+          ["🦁 Lion", false],
+          ["🦓 Zebra", true],
+          ["🐘 Elephant", false]
+        ]
+      },
+      {
+        question: "Which animal is the fastest?",
+        choices: [
+          ["🐆 Cheetah", true],
+          ["🦛 Hippo", false],
+          ["🐒 Monkey", false]
+        ]
+      }
+    ];
+
+    this.quizData = questions;
+    this.quizIndex = 0;
+    this.score = 0;
+
+    this.showQuestion();
+  }
+
+  showQuestion() {
+    if (this.questionGroup) {
+      this.questionGroup.destroy(true);
+    }
+
+    this.questionGroup =
+      this.add.container(0, 0);
+
+    const q =
+      this.quizData[this.quizIndex];
+
+    const card =
+      this.add.graphics();
+
+    card.fillStyle(
+      0xfff6c7,
+      0.97
+    );
+
+    card.fillRoundedRect(
+      35,
+      150,
+      470,
+      560,
+      28
+    );
+
+    this.questionGroup.add(card);
+
+    const progress =
+      txt(
+        this,
+        270,
+        180,
+        `Question ${this.quizIndex + 1} / ${this.quizData.length}`,
+        18,
+        "#315b35"
+      );
+
+    this.questionGroup.add(progress);
+
+    const questionText =
+      txt(
+        this,
+        270,
+        245,
+        q.question,
+        23,
+        "#183d29",
+        410
+      );
+
+    this.questionGroup.add(questionText);
+
+    q.choices.forEach(
+      (choice, i) => {
+        const y =
+          360 + i * 105;
+
+        const button =
+          btn(
+            this,
+            270,
+            y,
+            380,
+            78,
+            choice[0],
+            0x3d83c5,
+            () => {
+              this.answer(choice[1]);
+            },
+            20
+          );
+
+        this.questionGroup.add(button);
+      }
+    );
+
+    const scoreText =
+      txt(
+        this,
+        270,
+        665,
+        `⭐ Score: ${this.score}`,
+        20,
+        "#8b5e16"
+      );
+
+    this.questionGroup.add(scoreText);
+
+    btn(
+      this,
+      270,
+      800,
+      180,
+      52,
+      t("back"),
+      0x183d29,
+      () => {
+        soundTap();
+        fadeScene(
+          this,
+          "Learning"
+        );
+      },
+      18
+    );
+  }
+
+  answer(correct) {
+    soundTap();
+
+    if (correct) {
+      this.score++;
+      soundCorrect();
+    } else {
+      soundWrong();
+    }
+
+    this.time.delayedCall(
+      500,
+      () => {
+        if (
+          this.quizIndex <
+          this.quizData.length - 1
+        ) {
+          this.quizIndex++;
+          this.showQuestion();
+        } else {
+          this.showResult();
+        }
+      }
+    );
+  }
+
+  showResult() {
+    if (this.questionGroup) {
+      this.questionGroup.destroy(true);
+    }
+
+    txt(
+      this,
+      270,
+      270,
+      "🎉 GREAT JOB!",
+      32,
+      "#fff6c7"
+    );
+
+    txt(
+      this,
+      270,
+      350,
+      `You scored ${this.score} / ${this.quizData.length}`,
+      23,
+      "#fff6c7"
+    );
+
+    txt(
+      this,
+      270,
+      430,
+      "Keep learning, Little Ranger!",
+      20,
+      "#fff6c7"
+    );
+
+    soundWin();
+
+    btn(
+      this,
+      270,
+      560,
+      260,
+      65,
+      "🔄 PLAY AGAIN",
+      0x35a85b,
+      () => {
+        this.quizIndex = 0;
+        this.score = 0;
+        this.showQuestion();
+      },
+      19
+    );
+
+    btn(
+      this,
+      270,
+      660,
+      220,
+      55,
+      t("back"),
+      0x3d83c5,
+      () => {
+        fadeScene(
+          this,
+          "Learning"
+        );
+      },
+      18
+    );
+  }
+}
 /* =========================================================
    BADGES
 ========================================================= */

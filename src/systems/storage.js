@@ -3,6 +3,8 @@
 // STORAGE SYSTEM
 // =========================================================
 
+import { OUTFIT_KEYS } from "../data/characters.js";
+
 export function selectedLeoKey() {
   const chosen =
     Number(
@@ -10,11 +12,7 @@ export function selectedLeoKey() {
     ) || 0;
 
   return (
-    [
-      "leoGreen",
-      "leoGolden",
-      "leoBlue",
-      "leoRed"
-    ][chosen] || "leoGreen"
+    OUTFIT_KEYS[chosen] ||
+    "leoGreen"
   );
 }

@@ -21,16 +21,18 @@ import {
   soundWrong,
   soundWin
 } from "../systems/audio.js";
-
 import {
   btn,
   txt,
   fadeScene,
-  savannah,
-  guideButton,
-  leoGuide,
   pulse
 } from "../helpers/ui.js";
+
+import {
+  savannah,
+  guideButton,
+  leoGuide
+} from "../helpers/effects.js";
 
 import {
   character

@@ -1367,7 +1367,8 @@ function btn(
   label,
   color,
   fn,
-  size = 22
+ size = 22,
+group = null
 ) {
   const sh = s.add.graphics();
 
@@ -1464,7 +1465,15 @@ function btn(
 
     fn();
   });
-
+if (group) {
+  group.add([
+    sh,
+    wh,
+    face,
+    lt,
+    hit
+  ]);
+}
   return hit;
 }
 
@@ -3242,10 +3251,13 @@ class RangerQuiz
     if (this.questionGroup) {
       this.questionGroup.destroy(true);
     }
-
+if (this.resultGroup) {
+  this.resultGroup.destroy(true);
+  this.resultGroup = null;
+}
     this.questionGroup =
       this.add.container(0, 0);
-
+this.quizObjects = [];
     const q =
       this.quizData[this.quizIndex];
 
@@ -3309,10 +3321,11 @@ class RangerQuiz
             () => {
               this.answer(choice[1]);
             },
-            20
-          );
+           20,
+this.questionGroup
+); 
 
-        this.questionGroup.add(button);
+        
       }
     );
 
@@ -3343,8 +3356,9 @@ class RangerQuiz
           "Learning"
         );
       },
-      18
-    );
+   18,
+this.questionGroup
+); 
   }
 
   answer(correct) {
@@ -3377,8 +3391,10 @@ class RangerQuiz
     if (this.questionGroup) {
       this.questionGroup.destroy(true);
     }
-
-    txt(
+this.resultGroup =
+  this.add.container(0, 0);
+   const resultTitle =
+  txt( 
       this,
       270,
       270,
@@ -3386,8 +3402,9 @@ class RangerQuiz
       32,
       "#fff6c7"
     );
-
-    txt(
+this.resultGroup.add(resultTitle);
+   const resultScore =
+  txt(
       this,
       270,
       350,
@@ -3395,8 +3412,9 @@ class RangerQuiz
       23,
       "#fff6c7"
     );
-
-    txt(
+this.resultGroup.add(resultScore);
+   const resultMessage =
+  txt( 
       this,
       270,
       430,
@@ -3404,7 +3422,7 @@ class RangerQuiz
       20,
       "#fff6c7"
     );
-
+this.resultGroup.add(resultMessage);
     soundWin();
 
     btn(
@@ -3420,8 +3438,10 @@ class RangerQuiz
         this.score = 0;
         this.showQuestion();
       },
-      19
-    );
+      
+    19,
+this.resultGroup
+);
 
     btn(
       this,
@@ -3437,8 +3457,10 @@ class RangerQuiz
           "Learning"
         );
       },
-      18
-    );
+    18,
+this.resultGroup
+);  
+    
   }
 }
 /* =========================================================

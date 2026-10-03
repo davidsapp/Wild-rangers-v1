@@ -13,7 +13,12 @@ import {
 import {
   t
 } from "../systems/locale.js";
-
+import {
+  getStars,
+  getCompleted,
+  setParentPin,
+  saveProgress
+} from "../systems/storage.js";
 import {
   btn,
   txt,
@@ -91,21 +96,11 @@ export default class ParentDashboard extends Phaser.Scene {
        PROGRESS
     ----------------------------------------------------- */
 
-    const completed =
-      JSON.parse(
-        localStorage.getItem(
-          "wr_v1_completed"
-        ) || "[]"
-      );
+   const completed =
+  getCompleted();
 
-
-    const stars =
-      Number(
-        localStorage.getItem(
-          "wr_v1_stars"
-        )
-      ) || 0;
-
+const stars =
+  getStars(); 
 
     const progressPanel =
       this.add.graphics();
@@ -381,11 +376,9 @@ export default class ParentDashboard extends Phaser.Scene {
     }
 
 
-    localStorage.setItem(
-      "wr_v1_parent_pin",
-      newPin
-    );
-
+    setParentPin(
+  newPin
+);
 
     window.alert(
       t("pinChanged")
@@ -412,18 +405,11 @@ export default class ParentDashboard extends Phaser.Scene {
       return;
     }
 
-
-    localStorage.setItem(
-      "wr_v1_stars",
-      "0"
-    );
-
-
-    localStorage.setItem(
-      "wr_v1_completed",
-      "[]"
-    );
-
+saveProgress(
+  [],
+  0
+);
+   
 
     window.alert(
       t("progressReset")

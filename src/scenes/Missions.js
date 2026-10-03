@@ -11,11 +11,13 @@ import {
 } from "../config.js";
 
 import {
-  t,
-  stars,
-  completed
+  t
 } from "../systems/locale.js";
 
+import {
+  getStars,
+  getCompleted
+} from "../systems/storage.js";
 import {
   btn,
   txt,
@@ -31,7 +33,11 @@ export default class Missions extends Phaser.Scene {
 
 
   create() {
+const stars =
+  getStars();
 
+const completed =
+  getCompleted();
     /* -----------------------------------------------------
        BACKGROUND
     ----------------------------------------------------- */

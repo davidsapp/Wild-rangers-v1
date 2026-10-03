@@ -11,10 +11,12 @@ import {
 } from "../config.js";
 
 import {
-  t,
-  stars
+  t
 } from "../systems/locale.js";
 
+import {
+  getStars
+} from "../systems/storage.js";
 import {
   btn,
   txt,
@@ -34,7 +36,8 @@ export default class Badges extends Phaser.Scene {
 
 
   create() {
-
+const stars =
+  getStars();
     /* -----------------------------------------------------
        BACKGROUND
     ----------------------------------------------------- */

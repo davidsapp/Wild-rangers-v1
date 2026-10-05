@@ -4,7 +4,7 @@
 ========================================================= */
 
 import Phaser from "phaser";
-
+import BaseScene from "./BaseScene.js";
 import {
   W,
   H
@@ -26,7 +26,8 @@ import {
 } from "../helpers/ui.js";
 
 
-export default class ParentDashboard extends Phaser.Scene {
+export default class ParentDashboard
+extends BaseScene {
 
   constructor() {
     super("ParentDashboard");

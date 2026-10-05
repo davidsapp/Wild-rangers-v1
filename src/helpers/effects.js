@@ -343,44 +343,38 @@ export function leoGuide(
   ------------------------------------------------------- */
 
   const ok =
-    btn(
-      s,
-      270,
-      555,
-      190,
-      58,
-      t("gotIt"),
-      0x35a85b,
-      () => {
+  btn(
+    s,
+    270,
+    555,
+    190,
+    58,
+    t("gotIt"),
+    0x35a85b,
+    () => {
 
-        overlay.destroy(
-          true
-        );
+      overlay.destroy(
+        true
+      );
 
-        ok.destroy();
+      if (
+        s.soundGuideActive
+      ) {
 
+        s.soundGuideActive =
+          false;
 
-        if (
-          s.soundGuideActive
-        ) {
+      }
 
-          s.soundGuideActive =
-            false;
-
-        }
-
-      },
-      18
-    );
-
-
-  overlay.setDepth(
-    100
+    },
+    18,
+    overlay
   );
 
-  ok.setDepth(
-    101
-  );
+
+overlay.setDepth(
+  100
+);
 
 
   s.soundGuideActive =

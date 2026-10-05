@@ -147,7 +147,7 @@ BaseScene {
 
     bubble.fillRoundedRect(
       55,
-      235,
+      175,
       430,
       75,
       24
@@ -157,7 +157,7 @@ BaseScene {
     txt(
       this,
       W / 2,
-      273,
+      213,
       t("welcome"),
       22,
       "#49321f"

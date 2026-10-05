@@ -4,7 +4,7 @@
 ========================================================= */
 
 import Phaser from "phaser";
-
+import BaseScene from "./BaseScene.js";
 import {
   W,
   H
@@ -25,7 +25,8 @@ import {
 } from "../helpers/ui.js";
 
 
-export default class Missions extends Phaser.Scene {
+export default class Missions extends
+BaseScene {
 
   constructor() {
     super("Missions");

@@ -148,15 +148,15 @@ export function btn(
     fn();
   });
 
-  if (group) {
-    group.add([
-      sh,
-      wh,
-      face,
-      lt,
-      hit
-    ]);
-  }
+ if (group) {
+  group.addMultiple([
+    sh,
+    wh,
+    face,
+    lt,
+    hit
+  ]);
+} 
 
   return hit;
 }

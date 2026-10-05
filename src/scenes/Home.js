@@ -9,11 +9,12 @@ import {
   W,
   H
 } from "../config.js";
-
 import {
   t,
-  lang
+  lang,
+  setLanguage
 } from "../systems/locale.js";
+
 import {
   btn,
   txt,
@@ -243,12 +244,11 @@ export default class Home extends Phaser.Scene {
             ? 0xe5a52f
             : 0x3d83c5,
           () => {
-localStorage.setItem(
-  "wr_v1_lang",
+ setLanguage(
   item.code
 );
 
-window.location.reload(); 
+window.location.reload();
           },
           17
         );

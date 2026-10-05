@@ -4,7 +4,7 @@
 ========================================================= */
 
 import Phaser from "phaser";
-
+import BaseScene from "./BaseScene.js";
 import {
   W,
   H,
@@ -29,7 +29,8 @@ import {
 } from "../helpers/character.js";
 
 
-export default class Park extends Phaser.Scene {
+export default class Park extends
+BaseScene {
 
   constructor() {
     super("Park");

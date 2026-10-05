@@ -4,7 +4,7 @@
 ========================================================= */
 
 import Phaser from "phaser";
-
+import BaseScene from "./BaseScene.js";
 import {
   W,
   H
@@ -40,7 +40,7 @@ import {
 
 
 export default class MissionPlay
-  extends Phaser.Scene {
+  extends BaseScene {
 
   constructor() {
     super("MissionPlay");

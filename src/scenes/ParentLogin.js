@@ -13,7 +13,9 @@ import {
 import {
   t
 } from "../systems/locale.js";
-
+import {
+  getParentPin
+} from "../systems/storage.js";
 import {
   btn,
   txt,
@@ -37,9 +39,7 @@ export default class ParentLogin extends Phaser.Scene {
     this.pin = "";
 
     this.parentPin =
-      localStorage.getItem(
-        "wr_v1_parent_pin"
-      ) || "1234";
+  getParentPin();
 
 
     /* -----------------------------------------------------

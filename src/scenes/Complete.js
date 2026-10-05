@@ -4,7 +4,7 @@
 // =========================================================
 
 import Phaser from "phaser";
-
+import BaseScene from "./BaseScene.js";
 import {
   W,
   H
@@ -42,7 +42,7 @@ import {
 // MISSION COMPLETE
 // =========================================================
 
-class Complete extends Phaser.Scene {
+class Complete extends BaseScene {
 
   constructor() {
     super("Complete");

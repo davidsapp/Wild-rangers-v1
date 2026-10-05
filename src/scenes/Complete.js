@@ -13,7 +13,11 @@ import {
 import {
   t
 } from "../systems/locale.js";
-
+import {
+  getStars,
+  getCompleted,
+  saveProgress
+} from "../systems/storage.js";
 import {
   startAudio,
   soundWin
@@ -76,18 +80,10 @@ class Complete extends Phaser.Scene {
      */
 
     let completed =
-      JSON.parse(
-        localStorage.getItem(
-          "wr_v1_completed"
-        ) || "[]"
-      );
+  getCompleted();
 
-    let stars =
-      Number(
-        localStorage.getItem(
-          "wr_v1_stars"
-        )
-      ) || 0;
+let stars =
+  getStars();
 
 
     if (
@@ -103,18 +99,10 @@ class Complete extends Phaser.Scene {
       stars++;
 
 
-      localStorage.setItem(
-        "wr_v1_completed",
-        JSON.stringify(
-          completed
-        )
-      );
-
-
-      localStorage.setItem(
-        "wr_v1_stars",
-        String(stars)
-      );
+     saveProgress(
+  completed,
+  stars
+); 
 
     }
 

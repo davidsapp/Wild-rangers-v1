@@ -19,7 +19,9 @@ import {
   txt,
   fadeScene
 } from "../helpers/ui.js";
-
+import {
+  guideButton
+} from "../helpers/effects.js";
 import {
   character
 } from "../helpers/character.js";

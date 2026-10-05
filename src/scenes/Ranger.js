@@ -14,7 +14,10 @@ import {
 import {
   t
 } from "../systems/locale.js";
-
+import {
+  getOutfitIndex,
+  setOutfitIndex
+} from "../systems/storage.js";
 import {
   btn,
   txt,
@@ -96,12 +99,8 @@ export default class Ranger extends Phaser.Scene {
        SELECTED OUTFIT
     ----------------------------------------------------- */
 
-    let chosen =
-      Number(
-        localStorage.getItem(
-          "wr_v1_outfit"
-        )
-      ) || 0;
+   let chosen =
+  getOutfitIndex(); 
 
 
     /* -----------------------------------------------------
@@ -196,10 +195,7 @@ export default class Ranger extends Phaser.Scene {
           "pointerdown",
           () => {
 
-            localStorage.setItem(
-              "wr_v1_outfit",
-              String(i)
-            );
+           setOutfitIndex(i); 
 
             this.scene.restart();
 

@@ -88,7 +88,12 @@ export function getOutfitIndex() {
     ) || 0
   );
 }
-
+export function setOutfitIndex(index) {
+  localStorage.setItem(
+    "wr_v1_outfit",
+    String(index)
+  );
+}
 // ---------------------------------------------------------
 // SELECTED LEO
 // ---------------------------------------------------------

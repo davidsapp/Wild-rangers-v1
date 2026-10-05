@@ -236,25 +236,12 @@ BaseScene {
        ASK LEO
     ----------------------------------------------------- */
 
-    btn(
-      this,
-      270,
-      875,
-      300,
-      50,
-      `🦁 ${t("askLeo")}`,
-      0x2c9b58,
-      () => {
-
-        this.showLesson(
-          t("askLeoTitle"),
-          t("askLeoMessage")
-        );
-
-      },
-      18
-    );
-
+   guideButton(
+  this,
+  270,
+  875,
+  t("leoLearn")
+); 
 
     /* -----------------------------------------------------
        BACK

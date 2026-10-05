@@ -4,7 +4,7 @@
 ========================================================= */
 
 import Phaser from "phaser";
-
+import BaseScene from "./BaseScene.js";
 import {
   W,
   H
@@ -25,7 +25,8 @@ import {
 } from "../helpers/character.js";
 
 
-export default class Learning extends Phaser.Scene {
+export default class Learning extends
+BaseScene {
 
   constructor() {
     super("Learning");

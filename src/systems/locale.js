@@ -1178,3 +1178,21 @@ export function changeLanguage() {
 
   return lang;
 }
+export function setLanguage(code) {
+  if (
+    code !== "en" &&
+    code !== "fr" &&
+    code !== "es"
+  ) {
+    return lang;
+  }
+
+  lang = code;
+
+  localStorage.setItem(
+    "wr_v1_lang",
+    lang
+  );
+
+  return lang;
+}

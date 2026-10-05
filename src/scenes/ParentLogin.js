@@ -4,7 +4,7 @@
 ========================================================= */
 
 import Phaser from "phaser";
-
+import BaseScene from "./BaseScene.js";
 import {
   W,
   H
@@ -23,7 +23,8 @@ import {
 } from "../helpers/ui.js";
 
 
-export default class ParentLogin extends Phaser.Scene {
+export default class ParentLogin
+extends BaseScene {
 
   constructor() {
     super("ParentLogin");

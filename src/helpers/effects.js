@@ -337,3 +337,30 @@ export function leoGuide(
 
   return overlay;
 }
+/* =========================================================
+   GUIDE BUTTON
+========================================================= */
+
+export function guideButton(
+  s,
+  x,
+  y,
+  message
+) {
+  return btn(
+    s,
+    x,
+    y,
+    170,
+    52,
+    "🤖 " + t("askLeo"),
+    0x6d5acb,
+    () => {
+      leoGuide(
+        s,
+        message
+      );
+    },
+    16
+  );
+}

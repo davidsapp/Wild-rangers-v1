@@ -949,54 +949,36 @@ export default class MissionPlay
   ------------------------------------------------------- */
 
   win() {
-
-    if (
-      this.finished
-    ) {
-      return;
-    }
-
-
-    this.finished = true;
-
-
-    soundWin();
-
-
-    this.feedback.setText(
-      "🎉 " +
-        t("success") +
-        " ⭐"
-    );
-
-
-    pulse(
-      this,
-      this.feedback
-    );
-
-
-    leoGuide(
-      this,
-      t("leoGreat")
-    );
-
-
-    this.time.delayedCall(
-      1600,
-      () => {
-
-        fadeScene(
-          this,
-          "Complete",
-          {
-            mission: this.idx
-          }
-        );
-
-      }
-    );
-
+  if (this.finished) {
+    return;
   }
 
+  this.finished = true;
+
+  soundWin();
+
+  this.feedback.setText(
+    "🎉 " +
+    t("success") +
+    " ⭐"
+  );
+
+  pulse(
+    this,
+    this.feedback
+  );
+
+  leoGuide(
+    this,
+    t("leoGreat"),
+    () => {
+      fadeScene(
+        this,
+        "Complete",
+        {
+          mission: this.idx
+        }
+      );
+    }
+  );
 }

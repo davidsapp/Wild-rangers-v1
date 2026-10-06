@@ -352,7 +352,9 @@ export function leoGuide(
     t("gotIt"),
     0x35a85b,
     () => {
-
+if (ok._buttonParts) {
+  ok._buttonParts.forEach(part => part.destroy());
+}
       overlay.destroy(
         true
       );

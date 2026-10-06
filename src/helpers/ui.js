@@ -148,7 +148,9 @@ export function btn(
     fn();
   });
 
- if (group) {
+ hit._buttonParts = [sh, wh, face, lt, hit];
+
+if (group) {
   group.addMultiple([
     sh,
     wh,
@@ -156,9 +158,9 @@ export function btn(
     lt,
     hit
   ]);
-} 
+}
 
-  return hit;
+return hit;
 }
 
 // ---------------------------------------------------------

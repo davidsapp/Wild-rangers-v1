@@ -392,31 +392,126 @@ overlay.setDepth(
    ASK LEO BUTTON
 ========================================================= */
 
-export function guideButton(
+export function leoGuide(
   s,
-  x,
-  y,
-  message
+  message,
+  onClose = null
 ) {
+  startAudio();
+  soundGuide();
 
-  return btn(
-    s,
-    x,
-    y,
-    170,
-    52,
-    "🤖 " +
-      t("askLeo"),
-    0x6d5acb,
-    () => {
+  const overlay = s.add.container(0, 0);
 
-      leoGuide(
-        s,
-        message
-      );
-
-    },
-    16
+  const shade = s.add.rectangle(
+    W / 2,
+    H / 2,
+    W,
+    H,
+    0x000000,
+    0.35
   );
 
+  // Make the full-screen shade a true modal.
+  // This prevents taps from reaching buttons underneath.
+  shade.setInteractive({
+    useHandCursor: false
+  });
+
+  const box = s.add.graphics();
+
+  box.fillStyle(
+    0x183d29,
+    0.98
+  );
+
+  box.fillRoundedRect(
+    25,
+    250,
+    490,
+    390,
+    28
+  );
+
+  const portrait = character(
+    s,
+    "leo",
+    105,
+    350,
+    145
+  );
+
+  const title = txt(
+    s,
+    270,
+    285,
+    t("leoGuide"),
+    24,
+    "#ffdf65"
+  );
+
+  const body = txt(
+    s,
+    295,
+    400,
+    message,
+    20,
+    "#fff6c7"
+  );
+
+  overlay.add([
+    shade,
+    box
+  ]);
+
+  if (portrait) {
+    overlay.add(portrait);
+  }
+
+  overlay.add([
+    title,
+    body
+  ]);
+
+  const ok = btn(
+    s,
+    270,
+    555,
+    190,
+    58,
+    t("gotIt"),
+    0x35a85b,
+    () => {
+      // Prevent the same phone tap from firing twice.
+      if (ok && !ok.destroyed) {
+        ok.disableInteractive();
+      }
+
+      // Hide the complete guide immediately.
+      overlay.setVisible(false);
+      overlay.setActive(false);
+
+      // Stop the guide from being considered active.
+      if (s.soundGuideActive) {
+        s.soundGuideActive = false;
+      }
+
+      // Continue the mission only after GOT IT is pressed.
+      if (typeof onClose === "function") {
+        onClose();
+      }
+
+      // Safely remove the guide.
+      if (overlay && !overlay.destroyed) {
+        overlay.destroy(true);
+      }
+    },
+    18,
+    overlay
+  );
+
+  overlay.setDepth(100);
+
+  s.soundGuideActive = true;
+
+  return overlay;
 }

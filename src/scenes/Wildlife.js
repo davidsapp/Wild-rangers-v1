@@ -309,12 +309,7 @@ export default class Wildlife extends BaseScene {
    * will never destroy it.
    */
   createBackButton() {
-    if (
-      this.backButton &&
-      !this.backButton.destroyed
-    ) {
-      return;
-    }
+  
 
     this.backButton = btn(
       this,

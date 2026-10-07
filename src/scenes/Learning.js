@@ -101,7 +101,7 @@ BaseScene {
     btn(
       this,
       270,
-      200,
+      160,
       400,
       68,
       `🦁 ${t("wildlife")}`,
@@ -125,7 +125,7 @@ BaseScene {
     btn(
       this,
       270,
-      300,
+      260,
       400,
       68,
       `🌿 ${t("nature")}`,
@@ -149,7 +149,7 @@ BaseScene {
     btn(
       this,
       270,
-      400,
+      360,
       400,
       68,
       `🛡️ ${t("safety")}`,
@@ -173,7 +173,7 @@ BaseScene {
     btn(
       this,
       270,
-      500,
+      460,
       400,
       68,
       `🧠 ${t("quiz")}`,

@@ -208,7 +208,38 @@ export function savannah(s) {
   }
 
 }
+/* =========================================================
+   SCENE FADE
+========================================================= */
 
+export function fadeScene(
+  s,
+  next,
+  data = {}
+) {
+  startAudio();
+
+  const c = s.add.rectangle(
+    W / 2,
+    H / 2,
+    W,
+    H,
+    0x183d29,
+    0
+  );
+
+  s.tweens.add({
+    targets: c,
+    alpha: 1,
+    duration: 220,
+    onComplete: () => {
+      s.scene.start(
+        next,
+        data
+      );
+    }
+  });
+}
 
 /* =========================================================
    ASK LEO BUTTON

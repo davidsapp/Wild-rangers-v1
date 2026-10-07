@@ -11,7 +11,15 @@ export default class Wildlife extends BaseScene {
     this.page = 0;
     this.animals = [];
     this.pageObjects = [];
+
     this.backButton = null;
+    this.backHandlerAdded = false;
+    this.backHandler = null;
+
+    this.swipeHandlersAdded = false;
+    this.swipeDownHandler = null;
+    this.swipeUpHandler = null;
+
     this.swipeStartX = 0;
     this.swipeStartY = 0;
   }
@@ -67,6 +75,10 @@ export default class Wildlife extends BaseScene {
   }
 
   buildBook() {
+    /*
+     * Destroy ONLY the objects belonging
+     * to the current animal page.
+     */
     this.pageObjects.forEach((obj) => {
       if (obj && !obj.destroyed) {
         obj.destroy();
@@ -111,11 +123,15 @@ export default class Wildlife extends BaseScene {
     );
 
     /*
-     * BOOK PAGE
+     * BOOK PAGE SHADOW
      */
     const shadow = this.add.graphics();
 
-    shadow.fillStyle(0x49321f, 0.35);
+    shadow.fillStyle(
+      0x49321f,
+      0.35
+    );
+
     shadow.fillRoundedRect(
       27,
       180,
@@ -124,9 +140,16 @@ export default class Wildlife extends BaseScene {
       28
     );
 
+    /*
+     * BOOK PAGE
+     */
     const page = this.add.graphics();
 
-    page.fillStyle(0xfffdf2, 1);
+    page.fillStyle(
+      0xfffdf2,
+      1
+    );
+
     page.fillRoundedRect(
       25,
       175,
@@ -140,7 +163,11 @@ export default class Wildlife extends BaseScene {
      */
     const spine = this.add.graphics();
 
-    spine.fillStyle(0xd7c79e, 1);
+    spine.fillStyle(
+      0xd7c79e,
+      1
+    );
+
     spine.fillRoundedRect(
       38,
       190,
@@ -152,7 +179,8 @@ export default class Wildlife extends BaseScene {
     /*
      * CURRENT ANIMAL
      */
-    const animal = this.animals[this.page];
+    const animal =
+      this.animals[this.page];
 
     const animalImage = character(
       this,
@@ -239,13 +267,18 @@ export default class Wildlife extends BaseScene {
         17
       );
 
-      this.pageObjects.push(previous);
+      this.pageObjects.push(
+        previous
+      );
     }
 
     /*
      * NEXT BUTTON
      */
-    if (this.page < this.animals.length - 1) {
+    if (
+      this.page <
+      this.animals.length - 1
+    ) {
       const next = btn(
         this,
         435,
@@ -260,120 +293,191 @@ export default class Wildlife extends BaseScene {
         17
       );
 
-      this.pageObjects.push(next);
+      this.pageObjects.push(
+        next
+      );
     }
   }
 
   /*
    * PERMANENT BACK BUTTON
    *
-   * This is deliberately NOT part of pageObjects.
-   * Therefore it is never destroyed/recreated
-   * when the animal page changes.
+   * This button is NOT included
+   * in pageObjects.
+   *
+   * Therefore changing animals
+   * will never destroy it.
    */
- createBackButton() {
-  this.backButton = btn(
-    this,
-    270,
-    925,
-    170,
-    45,
-    t("back"),
-    0x3d83c5,
-    () => {},
-    16
-  );
+  createBackButton() {
+    if (
+      this.backButton &&
+      !this.backButton.destroyed
+    ) {
+      return;
+    }
 
-  this.backButton.setDepth(1000);
+    this.backButton = btn(
+      this,
+      270,
+      925,
+      170,
+      45,
+      t("back"),
+      0x3d83c5,
+      () => {
+        this.goBackToPark();
+      },
+      16
+    );
 
-  if (this.backButton._buttonParts) {
-    this.backButton._buttonParts.forEach((part) => {
-      if (part && part.setDepth) {
-        part.setDepth(1000);
-      }
-    });
+    /*
+     * Keep BACK above everything.
+     */
+    this.backButton.setDepth(1000);
+
+    if (
+      this.backButton._buttonParts
+    ) {
+      this.backButton._buttonParts.forEach(
+        (part) => {
+          if (
+            part &&
+            part.setDepth
+          ) {
+            part.setDepth(1000);
+          }
+        }
+      );
+    }
+
+    /*
+     * Direct scene-level BACK handler.
+     *
+     * This is a backup for mobile taps.
+     */
+    if (!this.backHandlerAdded) {
+      this.backHandlerAdded = true;
+
+      this.backHandler = (
+        pointer
+      ) => {
+        const x = pointer.x;
+        const y = pointer.y;
+
+        if (
+          x >= 180 &&
+          x <= 360 &&
+          y >= 895 &&
+          y <= 960
+        ) {
+          this.goBackToPark();
+        }
+      };
+
+      this.input.on(
+        "pointerdown",
+        this.backHandler
+      );
+    }
   }
 
   /*
-   * BACK TAP HANDLER
-   *
-   * We deliberately handle the tap at scene level
-   * instead of relying on the button hit area.
+   * ONE CENTRAL BACK ACTION
    */
- if (!this.backHandlerAdded) {
-  this.backHandlerAdded = true;
-
-  this.backHandler = (pointer) => {
-    const x = pointer.x;
-    const y = pointer.y;
-
+  goBackToPark() {
+    /*
+     * Prevent repeated taps from
+     * starting Park multiple times.
+     */
     if (
-      x >= 180 &&
-      x <= 360 &&
-      y >= 895 &&
-      y <= 960
+      this.backButton &&
+      this.backButton._wildlifeLeaving
     ) {
-      this.scene.start("Park");
+      return;
     }
-  };
 
-  this.input.on(
-    "pointerdown",
-    this.backHandler
-  );
-} 
+    if (this.backButton) {
+      this.backButton._wildlifeLeaving =
+        true;
 
- setupSwipe() {
-  // Prevent duplicate Wildlife input listeners
-  if (this.swipeHandlersAdded) {
-    return;
+      this.backButton.disableInteractive();
+    }
+
+    this.scene.start("Park");
   }
 
-  this.swipeHandlersAdded = true;
-
-  this.swipeDownHandler = (pointer) => {
-    this.swipeStartX = pointer.x;
-    this.swipeStartY = pointer.y;
-  };
-
-  this.swipeUpHandler = (pointer) => {
-    const dx =
-      pointer.x - this.swipeStartX;
-
-    const dy =
-      pointer.y - this.swipeStartY;
-
-    /*
-     * Ignore vertical movement.
-     */
-    if (Math.abs(dy) > 110) {
+  /*
+   * SWIPE SYSTEM
+   *
+   * Prevent duplicate listeners.
+   */
+  setupSwipe() {
+    if (this.swipeHandlersAdded) {
       return;
     }
 
-    /*
-     * Require a real horizontal swipe.
-     */
-    if (Math.abs(dx) < 60) {
-      return;
-    }
+    this.swipeHandlersAdded = true;
 
-    if (dx < 0) {
-      this.nextPage();
-    } else {
-      this.previousPage();
-    }
-  };
+    this.swipeDownHandler = (
+      pointer
+    ) => {
+      this.swipeStartX =
+        pointer.x;
 
-  this.input.on(
-    "pointerdown",
-    this.swipeDownHandler
-  );
+      this.swipeStartY =
+        pointer.y;
+    };
 
-  this.input.on(
-    "pointerup",
-    this.swipeUpHandler
-  );
-}
+    this.swipeUpHandler = (
+      pointer
+    ) => {
+      const dx =
+        pointer.x -
+        this.swipeStartX;
+
+      const dy =
+        pointer.y -
+        this.swipeStartY;
+
+      /*
+       * Ignore vertical movement.
+       */
+      if (
+        Math.abs(dy) > 110
+      ) {
+        return;
+      }
+
+      /*
+       * Require a real horizontal swipe.
+       */
+      if (
+        Math.abs(dx) < 60
+      ) {
+        return;
+      }
+
+      if (dx < 0) {
+        this.nextPage();
+      } else {
+        this.previousPage();
+      }
+    };
+
+    this.input.on(
+      "pointerdown",
+      this.swipeDownHandler
+    );
+
+    this.input.on(
+      "pointerup",
+      this.swipeUpHandler
+    );
+  }
+
+  /*
+   * NEXT PAGE
+   */
   nextPage() {
     if (
       this.page >=
@@ -382,63 +486,89 @@ export default class Wildlife extends BaseScene {
       return;
     }
 
-    this.changePage(this.page + 1);
+    this.changePage(
+      this.page + 1
+    );
   }
 
+  /*
+   * PREVIOUS PAGE
+   */
   previousPage() {
     if (this.page <= 0) {
       return;
     }
 
-    this.changePage(this.page - 1);
+    this.changePage(
+      this.page - 1
+    );
   }
 
+  /*
+   * CHANGE PAGE
+   */
   changePage(newPage) {
     if (
       newPage < 0 ||
-      newPage >= this.animals.length
+      newPage >=
+        this.animals.length
     ) {
       return;
     }
 
-    if (this.page === newPage) {
+    if (
+      this.page === newPage
+    ) {
       return;
     }
 
     this.page = newPage;
 
-    this.pageObjects.forEach((obj) => {
-      if (
-        obj &&
-        obj.scene &&
-        !obj.destroyed
-      ) {
-        obj.setAlpha(0);
+    /*
+     * Fade current page out.
+     */
+    this.pageObjects.forEach(
+      (obj) => {
+        if (
+          obj &&
+          obj.scene &&
+          !obj.destroyed
+        ) {
+          obj.setAlpha(0);
+        }
       }
-    });
-
-    this.buildBook();
-
-    this.pageObjects.forEach((obj) => {
-      if (
-        obj &&
-        obj.scene &&
-        !obj.destroyed
-      ) {
-        obj.setAlpha(0);
-
-        this.tweens.add({
-          targets: obj,
-          alpha: 1,
-          duration: 220,
-          ease: "Sine.easeOut"
-        });
-      }
-    });
+    );
 
     /*
-     * BACK remains untouched because
-     * it is NOT inside pageObjects.
+     * Build the new page.
+     */
+    this.buildBook();
+
+    /*
+     * Fade new page in.
+     */
+    this.pageObjects.forEach(
+      (obj) => {
+        if (
+          obj &&
+          obj.scene &&
+          !obj.destroyed
+        ) {
+          obj.setAlpha(0);
+
+          this.tweens.add({
+            targets: obj,
+            alpha: 1,
+            duration: 220,
+            ease: "Sine.easeOut"
+          });
+        }
+      }
+    );
+
+    /*
+     * Make absolutely sure BACK
+     * remains visible and active.
      */
     if (
       this.backButton &&
@@ -446,6 +576,21 @@ export default class Wildlife extends BaseScene {
     ) {
       this.backButton.setAlpha(1);
       this.backButton.setDepth(1000);
+
+      if (
+        this.backButton._buttonParts
+      ) {
+        this.backButton._buttonParts.forEach(
+          (part) => {
+            if (
+              part &&
+              part.setDepth
+            ) {
+              part.setDepth(1000);
+            }
+          }
+        );
+      }
     }
   }
 }

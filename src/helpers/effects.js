@@ -320,7 +320,9 @@ shade.setInteractive(
     title,
     body
   ]);
-
+  // Create GOT IT as a top-level scene button.
+  // It must NOT be a child of the modal container,
+  // otherwise the full-screen modal can interfere with input.
   const ok = btn(
     s,
     270,
@@ -330,40 +332,49 @@ shade.setInteractive(
     t("gotIt"),
     0x35a85b,
     () => {
-      // Prevent the same phone tap from firing twice.
+      // Prevent repeated taps.
       if (ok && !ok.destroyed) {
         ok.disableInteractive();
       }
 
-      // Hide the complete guide immediately.
-      overlay.setVisible(false);
-      overlay.setActive(false);
+      // Remove every part of the top-level GOT IT button.
+      if (ok && ok._buttonParts) {
+        ok._buttonParts.forEach((part) => {
+          if (part && !part.destroyed) {
+            part.destroy();
+          }
+        });
+      }
 
       // Stop the guide from being considered active.
       if (s.soundGuideActive) {
         s.soundGuideActive = false;
       }
 
-      // Continue the mission only after GOT IT is pressed.
-      if (typeof onClose === "function") {
-        onClose();
-      }
-
-      // Safely remove the guide.
+      // Remove the complete Leo Guide.
       if (overlay && !overlay.destroyed) {
         overlay.destroy(true);
       }
-    },
-    18,
-    overlay
-  );
-  // Keep GOT IT above the full-screen
-// modal shade.
-overlay.sendToBack(shade);
-overlay.bringToTop(ok);
 
-overlay.setDepth(100);
-  s.soundGuideActive = true;
+      // Continue the mission only after GOT IT.
+      if (typeof onClose === "function") {
+        onClose();
+      }
+    },
+    18
+  );
+
+  // Keep the complete GOT IT button above the Leo modal.
+  if (ok && ok._buttonParts) {
+    ok._buttonParts.forEach((part) => {
+      if (part && !part.destroyed) {
+        part.setDepth(101);
+      }
+    });
+  }
+
+  overlay.setDepth(100);
+   s.soundGuideActive = true;
 
   return overlay;
 }

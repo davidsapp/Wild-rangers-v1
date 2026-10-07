@@ -271,38 +271,52 @@ export default class Wildlife extends BaseScene {
    * Therefore it is never destroyed/recreated
    * when the animal page changes.
    */
-  createBackButton() {
-    this.backButton = btn(
-      this,
-      270,
-      925,
-      170,
-      45,
-      t("back"),
-      0x3d83c5,
-     () => {
-  if (
-    this.backButton &&
-    !this.backButton.destroyed
-  ) {
-    this.backButton.disableInteractive();
+ createBackButton() {
+  this.backButton = btn(
+    this,
+    270,
+    925,
+    170,
+    45,
+    t("back"),
+    0x3d83c5,
+    () => {},
+    16
+  );
+
+  this.backButton.setDepth(1000);
+
+  if (this.backButton._buttonParts) {
+    this.backButton._buttonParts.forEach((part) => {
+      if (part && part.setDepth) {
+        part.setDepth(1000);
+      }
+    });
   }
 
-  this.scene.start("Park");
-},
-      16
-    );
+  /*
+   * BACK TAP HANDLER
+   *
+   * We deliberately handle the tap at scene level
+   * instead of relying on the button hit area.
+   */
+  this.input.on(
+    "pointerdown",
+    (pointer) => {
+      const x = pointer.x;
+      const y = pointer.y;
 
-    this.backButton.setDepth(1000);
-
-    if (this.backButton._buttonParts) {
-      this.backButton._buttonParts.forEach((part) => {
-        if (part && part.setDepth) {
-          part.setDepth(1000);
-        }
-      });
+      if (
+        x >= 180 &&
+        x <= 360 &&
+        y >= 895 &&
+        y <= 960
+      ) {
+        this.scene.start("Park");
+      }
     }
-  }
+  );
+} 
 
   setupSwipe() {
     this.input.on(

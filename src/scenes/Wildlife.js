@@ -300,21 +300,26 @@ export default class Wildlife extends BaseScene {
    * We deliberately handle the tap at scene level
    * instead of relying on the button hit area.
    */
+ if (!this.backHandlerAdded) {
+  this.backHandlerAdded = true;
+
+  this.backHandler = (pointer) => {
+    const x = pointer.x;
+    const y = pointer.y;
+
+    if (
+      x >= 180 &&
+      x <= 360 &&
+      y >= 895 &&
+      y <= 960
+    ) {
+      this.scene.start("Park");
+    }
+  };
+
   this.input.on(
     "pointerdown",
-    (pointer) => {
-      const x = pointer.x;
-      const y = pointer.y;
-
-      if (
-        x >= 180 &&
-        x <= 360 &&
-        y >= 895 &&
-        y <= 960
-      ) {
-        this.scene.start("Park");
-      }
-    }
+    this.backHandler
   );
 } 
 

@@ -23,22 +23,22 @@ export const CHARACTERS = {
     "/assets/characters/Mimi_Monkey_clean_cropped.png",
 
   kimba:
-    "/assets/characters/Kimba_Lion_Cub.png",
+    "/assets/characters/Kimba_Lion_Cub_clean_cropped.png",
 
   tembo:
-    "/assets/characters/Tembo_Elephant.png",
+    "/assets/characters/Tembo_Elephant_clean_cropped.png",
 
   zuri:
-    "/assets/characters/Zuri_Giraffe.png",
+    "/assets/characters/Zuri_Giraffe_clean_cropped.png",
 
   zara:
-    "/assets/characters/Zara_Zebra.png",
+    "/assets/characters/Zara_Zebra_clean_cropped.png",
 
   bongo:
-    "/assets/characters/Bongo_Hippo.png",
+    "/assets/characters/Bongo_Hippo_clean_cropped.png",
 
   chase:
-    "/assets/characters/Chase_Cheetah.png"
+    "/assets/characters/Chase_Cheetah_clean_cropped.png"
 };
 
 export const OUTFIT_COLORS = [

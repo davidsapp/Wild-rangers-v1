@@ -198,7 +198,7 @@ BaseScene {
       this,
       "leo",
       270,
-      670,
+      620,
       180
     );
 
@@ -217,7 +217,7 @@ BaseScene {
 
     tip.fillRoundedRect(
       45,
-      765,
+      780,
       450,
       105,
       24
@@ -227,7 +227,7 @@ BaseScene {
     txt(
       this,
       270,
-      800,
+      815,
       `💡 ${t("learningTip")}`,
       18,
       "#49321f"
@@ -241,7 +241,7 @@ BaseScene {
    guideButton(
   this,
   270,
-  875,
+  735,
   t("leoLearn")
 ); 
 

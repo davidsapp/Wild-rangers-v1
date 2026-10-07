@@ -264,7 +264,7 @@ export default class Wildlife extends BaseScene {
     /*
      * BACK TO PARK
      */
-    const back = btn(
+        const back = btn(
       this,
       270,
       925,
@@ -278,7 +278,16 @@ export default class Wildlife extends BaseScene {
       16
     );
 
-    this.pageObjects.push(back);
+    // Keep BACK above all book/page objects
+    back.setDepth(1000);
+
+    if (back._buttonParts) {
+      back._buttonParts.forEach((part) => {
+        if (part && part.setDepth) {
+          part.setDepth(1000);
+        }
+      });
+    }
   }
 
   setupSwipe() {

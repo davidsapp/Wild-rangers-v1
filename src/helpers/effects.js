@@ -233,11 +233,38 @@ export function leoGuide(
     0.35
   );
 
-  // Make the full-screen shade a true modal.
-  // This prevents taps from reaching buttons underneath.
-  shade.setInteractive({
-    useHandCursor: false
-  });
+  // Make the full-screen shade a modal,
+// but leave the GOT IT button's input area clear.
+const guideShadeHitArea = new Phaser.Geom.Rectangle(
+  -W / 2,
+  -H / 2,
+  W,
+  H
+);
+
+shade.setInteractive(
+  guideShadeHitArea,
+  (hitArea, x, y) => {
+    // GOT IT button area:
+    // x: 175–365
+    // y: 526–584
+    // Shade is centered at 270,480,
+    // so convert those coordinates to local coordinates.
+    const buttonLeft = 175 - W / 2;
+    const buttonRight = 365 - W / 2;
+    const buttonTop = 526 - H / 2;
+    const buttonBottom = 584 - H / 2;
+
+    // Do NOT let the shade capture touches inside GOT IT.
+    return !(
+      x >= buttonLeft &&
+      x <= buttonRight &&
+      y >= buttonTop &&
+      y <= buttonBottom
+    );
+  },
+  false
+);
 
   const box = s.add.graphics();
 

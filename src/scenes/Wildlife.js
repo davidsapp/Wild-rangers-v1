@@ -11,6 +11,7 @@ export default class Wildlife extends BaseScene {
     this.page = 0;
     this.animals = [];
     this.pageObjects = [];
+    this.backButton = null;
     this.swipeStartX = 0;
     this.swipeStartY = 0;
   }
@@ -61,6 +62,7 @@ export default class Wildlife extends BaseScene {
     ];
 
     this.buildBook();
+    this.createBackButton();
     this.setupSwipe();
   }
 
@@ -94,13 +96,13 @@ export default class Wildlife extends BaseScene {
     );
 
     const instruction = txt(
-  this,
-  270,
-  130,
-  t("wildlifeInstruction"),
-  15,
-  "#fff6c7"
-);
+      this,
+      270,
+      130,
+      t("wildlifeInstruction"),
+      15,
+      "#fff6c7"
+    );
 
     this.pageObjects.push(
       title,
@@ -260,11 +262,17 @@ export default class Wildlife extends BaseScene {
 
       this.pageObjects.push(next);
     }
+  }
 
-    /*
-     * BACK TO PARK
-     */
-        const back = btn(
+  /*
+   * PERMANENT BACK BUTTON
+   *
+   * This is deliberately NOT part of pageObjects.
+   * Therefore it is never destroyed/recreated
+   * when the animal page changes.
+   */
+  createBackButton() {
+    this.backButton = btn(
       this,
       270,
       925,
@@ -273,16 +281,22 @@ export default class Wildlife extends BaseScene {
       t("back"),
       0x3d83c5,
       () => {
+        if (
+          this.backButton &&
+          !this.backButton.destroyed
+        ) {
+          this.backButton.disableInteractive();
+        }
+
         fadeScene(this, "Park");
       },
       16
     );
 
-    // Keep BACK above all book/page objects
-    back.setDepth(1000);
+    this.backButton.setDepth(1000);
 
-    if (back._buttonParts) {
-      back._buttonParts.forEach((part) => {
+    if (this.backButton._buttonParts) {
+      this.backButton._buttonParts.forEach((part) => {
         if (part && part.setDepth) {
           part.setDepth(1000);
         }
@@ -302,8 +316,11 @@ export default class Wildlife extends BaseScene {
     this.input.on(
       "pointerup",
       (pointer) => {
-        const dx = pointer.x - this.swipeStartX;
-        const dy = pointer.y - this.swipeStartY;
+        const dx =
+          pointer.x - this.swipeStartX;
+
+        const dy =
+          pointer.y - this.swipeStartY;
 
         /*
          * Ignore vertical scrolling-style movement.
@@ -329,7 +346,10 @@ export default class Wildlife extends BaseScene {
   }
 
   nextPage() {
-    if (this.page >= this.animals.length - 1) {
+    if (
+      this.page >=
+      this.animals.length - 1
+    ) {
       return;
     }
 
@@ -345,7 +365,10 @@ export default class Wildlife extends BaseScene {
   }
 
   changePage(newPage) {
-    if (newPage < 0 || newPage >= this.animals.length) {
+    if (
+      newPage < 0 ||
+      newPage >= this.animals.length
+    ) {
       return;
     }
 
@@ -383,5 +406,17 @@ export default class Wildlife extends BaseScene {
         });
       }
     });
+
+    /*
+     * BACK remains untouched because
+     * it is NOT inside pageObjects.
+     */
+    if (
+      this.backButton &&
+      !this.backButton.destroyed
+    ) {
+      this.backButton.setAlpha(1);
+      this.backButton.setDepth(1000);
+    }
   }
 }

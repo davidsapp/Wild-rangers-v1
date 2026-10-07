@@ -280,16 +280,16 @@ export default class Wildlife extends BaseScene {
       45,
       t("back"),
       0x3d83c5,
-      () => {
-        if (
-          this.backButton &&
-          !this.backButton.destroyed
-        ) {
-          this.backButton.disableInteractive();
-        }
+     () => {
+  if (
+    this.backButton &&
+    !this.backButton.destroyed
+  ) {
+    this.backButton.disableInteractive();
+  }
 
-        fadeScene(this, "Park");
-      },
+  this.scene.start("Park");
+},
       16
     );
 

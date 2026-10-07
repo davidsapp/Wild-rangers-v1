@@ -330,10 +330,12 @@ export function leoGuide(
     18,
     overlay
   );
-  // Keep GOT IT above the full-screen modal shade.
-  ok.setDepth(101);
-  overlay.setDepth(100);
+  // Keep GOT IT above the full-screen
+// modal shade.
+overlay.sendToBack(shade);
+overlay.bringToTop(ok);
 
+overlay.setDepth(100);
   s.soundGuideActive = true;
 
   return overlay;

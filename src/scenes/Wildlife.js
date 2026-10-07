@@ -318,47 +318,57 @@ export default class Wildlife extends BaseScene {
   );
 } 
 
-  setupSwipe() {
-    this.input.on(
-      "pointerdown",
-      (pointer) => {
-        this.swipeStartX = pointer.x;
-        this.swipeStartY = pointer.y;
-      }
-    );
-
-    this.input.on(
-      "pointerup",
-      (pointer) => {
-        const dx =
-          pointer.x - this.swipeStartX;
-
-        const dy =
-          pointer.y - this.swipeStartY;
-
-        /*
-         * Ignore vertical scrolling-style movement.
-         */
-        if (Math.abs(dy) > 110) {
-          return;
-        }
-
-        /*
-         * Require a real horizontal swipe.
-         */
-        if (Math.abs(dx) < 60) {
-          return;
-        }
-
-        if (dx < 0) {
-          this.nextPage();
-        } else {
-          this.previousPage();
-        }
-      }
-    );
+ setupSwipe() {
+  // Prevent duplicate Wildlife input listeners
+  if (this.swipeHandlersAdded) {
+    return;
   }
 
+  this.swipeHandlersAdded = true;
+
+  this.swipeDownHandler = (pointer) => {
+    this.swipeStartX = pointer.x;
+    this.swipeStartY = pointer.y;
+  };
+
+  this.swipeUpHandler = (pointer) => {
+    const dx =
+      pointer.x - this.swipeStartX;
+
+    const dy =
+      pointer.y - this.swipeStartY;
+
+    /*
+     * Ignore vertical movement.
+     */
+    if (Math.abs(dy) > 110) {
+      return;
+    }
+
+    /*
+     * Require a real horizontal swipe.
+     */
+    if (Math.abs(dx) < 60) {
+      return;
+    }
+
+    if (dx < 0) {
+      this.nextPage();
+    } else {
+      this.previousPage();
+    }
+  };
+
+  this.input.on(
+    "pointerdown",
+    this.swipeDownHandler
+  );
+
+  this.input.on(
+    "pointerup",
+    this.swipeUpHandler
+  );
+}
   nextPage() {
     if (
       this.page >=

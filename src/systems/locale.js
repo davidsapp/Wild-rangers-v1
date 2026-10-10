@@ -143,6 +143,18 @@ export const L = {
 
     learningTitle:
       "RANGER LEARNING CENTRE",
+learning:
+  "RANGER LEARNING CENTRE",
+learningSubtitle:
+  "Learn about wildlife and nature!",
+nature:
+  "NATURE",
+safety:
+  "RANGER SAFETY",
+quiz:
+  "RANGER QUIZ",
+wildlifeInstruction:
+  "Turn the pages to meet the animals!",
     learningWelcome:
       "Learn about wildlife and nature!",
     learnWildlife: "WILDLIFE",
@@ -501,6 +513,18 @@ export const L = {
 
     learningTitle:
       "CENTRE D'APPRENTISSAGE RANGER",
+learning:
+  "CENTRE D'APPRENTISSAGE RANGER",
+learningSubtitle:
+  "Découvre les animaux et la nature !",
+nature:
+  "NATURE",
+safety:
+  "SÉCURITÉ RANGER",
+quiz:
+  "QUIZ DU RANGER",
+wildlifeInstruction:
+  "Tourne les pages pour découvrir les animaux !",
     learningWelcome:
       "Apprends sur les animaux et la nature!",
     learnWildlife:
@@ -909,6 +933,18 @@ export const L = {
 
     learningTitle:
       "CENTRO DE APRENDIZAJE RANGER",
+learning:
+  "CENTRO DE APRENDIZAJE RANGER",
+learningSubtitle:
+  "¡Aprende sobre los animales y la naturaleza!",
+nature:
+  "NATURALEZA",
+safety:
+  "SEGURIDAD RANGER",
+quiz:
+  "QUIZ DEL RANGER",
+wildlifeInstruction:
+  "¡Pasa las páginas para conocer a los animales!",
     learningWelcome:
       "¡Aprende sobre los animales y la naturaleza!",
     learnWildlife:

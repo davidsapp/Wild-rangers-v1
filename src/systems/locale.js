@@ -204,7 +204,32 @@ safetyLesson:
 
     learningTip:
       "Keep exploring and learning, Little Ranger!",
-
+badgesSubtitle:
+  "Collect badges by completing missions!",
+badgeBeginner:
+  "Junior Ranger",
+badgeBeginnerDesc:
+  "Complete your first mission!",
+badgeExplorer:
+  "Animal Explorer",
+badgeExplorerDesc:
+  "Discover amazing animals!",
+badgeStar:
+  "Star Ranger",
+badgeStarDesc:
+  "Earn stars on your adventures!",
+badgeQuiz:
+  "Quiz Champion",
+badgeQuizDesc:
+  "Test your Ranger knowledge!",
+badgeNature:
+  "Nature Protector",
+badgeNatureDesc:
+  "Learn how to protect nature!",
+badgeRanger:
+  "Ranger Hero",
+badgeRangerDesc:
+  "Complete all 10 missions!",
     badgeTitle:
       "MY RANGER BADGES",
     badgeWelcome:
@@ -578,7 +603,32 @@ safetyLesson: "LEÇON DE SÉCURITÉ DU RANGER",
 
     learningTip:
       "Continue à explorer et à apprendre, petit Ranger!",
-
+badgesSubtitle:
+  "Gagne des badges en terminant les missions !",
+badgeBeginner:
+  "Jeune Ranger",
+badgeBeginnerDesc:
+  "Termine ta première mission !",
+badgeExplorer:
+  "Explorateur des animaux",
+badgeExplorerDesc:
+  "Découvre des animaux extraordinaires !",
+badgeStar:
+  "Ranger étoilé",
+badgeStarDesc:
+  "Gagne des étoiles pendant tes aventures !",
+badgeQuiz:
+  "Champion du quiz",
+badgeQuizDesc:
+  "Teste tes connaissances de Ranger !",
+badgeNature:
+  "Protecteur de la nature",
+badgeNatureDesc:
+  "Apprends à protéger la nature !",
+badgeRanger:
+  "Héros Ranger",
+badgeRangerDesc:
+  "Termine les 10 missions !",
     badgeTitle:
       "MES BADGES DE RANGER",
     badgeWelcome:
@@ -1001,7 +1051,32 @@ safetyLesson: "LECCIÓN DE SEGURIDAD DEL RANGER",
 
     learningTip:
       "¡Sigue explorando y aprendiendo, pequeño Ranger!",
-
+badgesSubtitle:
+  "¡Consigue medallas completando misiones!",
+badgeBeginner:
+  "Ranger Junior",
+badgeBeginnerDesc:
+  "¡Completa tu primera misión!",
+badgeExplorer:
+  "Explorador de animales",
+badgeExplorerDesc:
+  "¡Descubre animales increíbles!",
+badgeStar:
+  "Ranger Estrella",
+badgeStarDesc:
+  "¡Consigue estrellas en tus aventuras!",
+badgeQuiz:
+  "Campeón del quiz",
+badgeQuizDesc:
+  "¡Pon a prueba tus conocimientos Ranger!",
+badgeNature:
+  "Protector de la naturaleza",
+badgeNatureDesc:
+  "¡Aprende a proteger la naturaleza!",
+badgeRanger:
+  "Héroe Ranger",
+badgeRangerDesc:
+  "¡Completa las 10 misiones!",
     badgeTitle:
       "MIS MEDALLAS RANGER",
     badgeWelcome:

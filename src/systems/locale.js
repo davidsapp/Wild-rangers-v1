@@ -1128,6 +1128,12 @@ badgeRangerDesc:
       "PANEL DE PADRES",
     parentPin:
       "Introduce el PIN de padres",
+createParentPin:
+  "Crea un nuevo PIN parental de 4 dígitos",
+confirmParentPin:
+  "Confirma tu PIN de 4 dígitos",
+parentPinMismatch:
+  "Los PIN no coinciden. Inténtalo de nuevo.",
     enterPin:
       "INTRODUCIR PIN",
     wrongPin:

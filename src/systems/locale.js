@@ -337,7 +337,7 @@ safetyLesson:
     quizQuestion:
       "Question",
     quizScore:
-      "⭐ Score",
+"⭐ Score: {score} / {total}",
     quizQ1:
       "Which animal has a long trunk?",
     quizQ1A:
@@ -733,7 +733,7 @@ safetyLesson: "LEÇON DE SÉCURITÉ DU RANGER",
     quizQuestion:
       "Question",
     quizScore:
-      "⭐ Score",
+"⭐ Score : {score} / {total}",
     quizQ1:
       "Quel animal a une longue trompe ?",
     quizQ1A:
@@ -1157,8 +1157,8 @@ safetyLesson: "LECCIÓN DE SEGURIDAD DEL RANGER",
       "¡Pon a prueba tus conocimientos de Ranger!",
     quizQuestion:
       "Pregunta",
-    quizScore:
-      "⭐ Puntuación",
+   quizScore:
+"⭐ Puntuación: {score} / {total}", 
     quizQ1:
       "¿Qué animal tiene una trompa larga?",
     quizQ1A:

@@ -20,7 +20,9 @@ import {
   fadeScene
 } from "../helpers/ui.js";
 
-
+import {
+  saveQuizBestScore
+} from "../systems/storage.js";
 export default class RangerQuiz
 extends BaseScene {
 
@@ -343,7 +345,9 @@ extends BaseScene {
   ------------------------------------------------------- */
 
   showResult() {
-
+    saveQuizBestScore(
+      this.score
+    );
     this.questionGroup.clear(
       true,
       true

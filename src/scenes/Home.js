@@ -174,7 +174,7 @@ BaseScene {
       680,
       180,
       48,
-      "🔒 Parents",
+      `🔒 ${t("parent")}`,
       0x183d29,
       () => {
         fadeScene(

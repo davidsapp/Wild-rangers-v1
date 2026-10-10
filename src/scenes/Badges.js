@@ -5,6 +5,7 @@
 
 import Phaser from "phaser";
 import BaseScene from "./BaseScene.js";
+
 import {
   W,
   H
@@ -15,8 +16,11 @@ import {
 } from "../systems/locale.js";
 
 import {
-  getStars
+  getStars,
+  getCompleted,
+  getQuizBestScore
 } from "../systems/storage.js";
+
 import {
   btn,
   txt,
@@ -28,8 +32,7 @@ import {
 } from "../helpers/character.js";
 
 
-export default class Badges extends
-BaseScene {
+export default class Badges extends BaseScene {
 
   constructor() {
     super("Badges");
@@ -37,39 +40,50 @@ BaseScene {
 
 
   create() {
-const stars =
-  getStars();
+
+    const stars = getStars();
+    const completed = getCompleted();
+    const quizBest = getQuizBestScore();
+
+    // Check which badges have been earned.
+    const mission1 = completed.includes(0);
+
+    const missions2to4 =
+      completed.includes(1) &&
+      completed.includes(2) &&
+      completed.includes(3);
+
+    const fiveStars = stars >= 5;
+
+    const quizChampion = quizBest >= 3;
+
+    const mission8 = completed.includes(7);
+
+    const allMissions = Array.from(
+      { length: 10 },
+      (_, index) => index
+    ).every(index => completed.includes(index));
+
+
     /* -----------------------------------------------------
        BACKGROUND
     ----------------------------------------------------- */
 
-    if (
-      this.textures.exists(
-        "savannah"
-      )
-    ) {
+    if (this.textures.exists("savannah")) {
 
       this.add
-        .image(
-          W / 2,
-          H / 2,
-          "savannah"
-        )
-        .setDisplaySize(
-          W,
-          H
-        );
+        .image(W / 2, H / 2, "savannah")
+        .setDisplaySize(W, H);
 
     } else {
 
-      this.add
-        .rectangle(
-          W / 2,
-          H / 2,
-          W,
-          H,
-          0x9bdc78
-        );
+      this.add.rectangle(
+        W / 2,
+        H / 2,
+        W,
+        H,
+        0x9bdc78
+      );
 
     }
 
@@ -85,7 +99,6 @@ const stars =
       t("badges"),
       31
     );
-
 
     txt(
       this,
@@ -118,52 +131,53 @@ const stars =
       275,
       "🌱",
       t("badgeBeginner"),
-      t("badgeBeginnerDesc")
+      t("badgeBeginnerDesc"),
+      mission1
     );
-
 
     this.badgeCard(
       395,
       275,
       "🦁",
       t("badgeExplorer"),
-      t("badgeExplorerDesc")
+      t("badgeExplorerDesc"),
+      missions2to4
     );
-
 
     this.badgeCard(
       145,
       475,
       "🌟",
       t("badgeStar"),
-      t("badgeStarDesc")
+      t("badgeStarDesc"),
+      fiveStars
     );
-
 
     this.badgeCard(
       395,
       475,
       "🧠",
       t("badgeQuiz"),
-      t("badgeQuizDesc")
+      t("badgeQuizDesc"),
+      quizChampion
     );
-
 
     this.badgeCard(
       145,
       675,
       "🌿",
       t("badgeNature"),
-      t("badgeNatureDesc")
+      t("badgeNatureDesc"),
+      mission8
     );
-
 
     this.badgeCard(
       395,
       675,
       "🏆",
       t("badgeRanger"),
-      t("badgeRangerDesc")
+      t("badgeRangerDesc"),
+      allMissions
     );
 
 
@@ -193,12 +207,7 @@ const stars =
       t("back"),
       0x3d83c5,
       () => {
-
-        fadeScene(
-          this,
-          "Park"
-        );
-
+        fadeScene(this, "Park");
       },
       20
     );
@@ -215,15 +224,16 @@ const stars =
     y,
     emoji,
     name,
-    description
+    description,
+    earned
   ) {
 
-    const card =
-      this.add.graphics();
+    const card = this.add.graphics();
 
+    // Green for earned badges, pale grey for locked badges.
     card.fillStyle(
-      0xffffff,
-      0.94
+      earned ? 0xd9f5c8 : 0xe4e4e4,
+      0.96
     );
 
     card.fillRoundedRect(
@@ -234,11 +244,10 @@ const stars =
       24
     );
 
-
     card.lineStyle(
       3,
-      0x49321f,
-      0.25
+      earned ? 0x388b35 : 0x777777,
+      0.65
     );
 
     card.strokeRoundedRect(
@@ -254,7 +263,7 @@ const stars =
       this,
       x,
       y - 42,
-      emoji,
+      earned ? emoji : "🔒",
       36
     );
 
@@ -272,10 +281,20 @@ const stars =
     txt(
       this,
       x,
-      y + 38,
+      y + 35,
       description,
-      13,
+      12,
       "#49321f"
+    );
+
+
+    txt(
+      this,
+      x,
+      y + 60,
+      earned ? t("earned") : t("lockedBadge"),
+      12,
+      earned ? "#24752b" : "#666666"
     );
 
   }

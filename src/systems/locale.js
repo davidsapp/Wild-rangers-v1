@@ -260,6 +260,12 @@ badgeRangerDesc:
       "PARENT DASHBOARD",
     parentPin:
       "Enter parent PIN",
+createParentPin:
+  "Create a new 4-digit parent PIN",
+confirmParentPin:
+  "Confirm your 4-digit PIN",
+parentPinMismatch:
+  "PINs do not match. Try again.",
     enterPin:
       "ENTER PIN",
     wrongPin:

@@ -5,6 +5,7 @@
 
 import Phaser from "phaser";
 import BaseScene from "./BaseScene.js";
+
 import {
   W,
   H
@@ -27,8 +28,7 @@ import {
 } from "../helpers/ui.js";
 
 
-export default class ParentLogin
-extends BaseScene {
+export default class ParentLogin extends BaseScene {
 
   constructor() {
     super("ParentLogin");
@@ -37,12 +37,14 @@ extends BaseScene {
 
   create() {
 
+    /* -----------------------------------------------------
+       PIN STATE
+    ----------------------------------------------------- */
+
     this.pin = "";
     this.parentPin = getParentPin();
 
-    this.setupMode =
-      !hasParentPin();
-
+    this.setupMode = !hasParentPin();
     this.setupStep = 1;
     this.firstPin = "";
 
@@ -51,12 +53,14 @@ extends BaseScene {
        BACKGROUND
     ----------------------------------------------------- */
 
-    if (
-      this.textures.exists("savannah")
-    ) {
+    if (this.textures.exists("savannah")) {
 
       this.add
-        .image(W / 2, H / 2, "savannah")
+        .image(
+          W / 2,
+          H / 2,
+          "savannah"
+        )
         .setDisplaySize(W, H);
 
     } else {
@@ -86,12 +90,16 @@ extends BaseScene {
     );
 
 
+    /* -----------------------------------------------------
+       INSTRUCTIONS
+    ----------------------------------------------------- */
+
     this.instructionText = txt(
       this,
       W / 2,
       155,
       this.setupMode
-        ? "Create a new 4-digit parent PIN"
+        ? t("createParentPin")
         : t("parentPin"),
       20
     );
@@ -132,10 +140,14 @@ extends BaseScene {
       }
 
       const column = index % 3;
-      const row = Math.floor(index / 3);
+
+      const row = Math.floor(
+        index / 3
+      );
 
       const x = 135 + column * 135;
       const y = 350 + row * 100;
+
 
       btn(
         this,
@@ -149,20 +161,37 @@ extends BaseScene {
           : 0x3d83c5,
         () => {
 
+          /* BACKSPACE */
+
           if (number === "⌫") {
 
             this.pin = this.pin.slice(0, -1);
+
             this.updatePinDisplay();
+
+            this.errorText.setText("");
 
             return;
           }
+
+
+          /* MAXIMUM FOUR DIGITS */
 
           if (this.pin.length >= 4) {
             return;
           }
 
+
+          /* ADD DIGIT */
+
           this.pin += String(number);
+
           this.updatePinDisplay();
+
+          this.errorText.setText("");
+
+
+          /* CHECK AFTER FOUR DIGITS */
 
           if (this.pin.length === 4) {
             this.checkPin();
@@ -190,7 +219,7 @@ extends BaseScene {
 
 
     /* -----------------------------------------------------
-       BACK
+       BACK BUTTON
     ----------------------------------------------------- */
 
     btn(
@@ -202,7 +231,12 @@ extends BaseScene {
       t("back"),
       0x183d29,
       () => {
-        fadeScene(this, "Park");
+
+        fadeScene(
+          this,
+          "Park"
+        );
+
       },
       20
     );
@@ -230,6 +264,7 @@ extends BaseScene {
   resetPinEntry() {
 
     this.pin = "";
+
     this.updatePinDisplay();
 
   }
@@ -241,39 +276,55 @@ extends BaseScene {
 
   checkPin() {
 
+    /* -----------------------------------------------------
+       FIRST-TIME PIN SETUP
+    ----------------------------------------------------- */
+
     if (this.setupMode) {
+
+      /* STEP 1: SAVE FIRST ENTRY TEMPORARILY */
 
       if (this.setupStep === 1) {
 
         this.firstPin = this.pin;
+
         this.setupStep = 2;
 
         this.resetPinEntry();
 
         this.instructionText.setText(
-          "Confirm your 4-digit PIN"
+          t("confirmParentPin")
         );
 
         this.errorText.setText("");
 
         return;
+
       }
+
+
+      /* STEP 2: CONFIRM THE PIN */
 
       if (this.pin !== this.firstPin) {
 
         this.errorText.setText(
-          "PINs do not match. Try again."
+          t("parentPinMismatch")
         );
 
         this.firstPin = "";
+
         this.setupStep = 1;
 
         this.time.delayedCall(1200, () => {
 
+          if (!this.scene.isActive()) {
+            return;
+          }
+
           this.resetPinEntry();
 
           this.instructionText.setText(
-            "Create a new 4-digit parent PIN"
+            t("createParentPin")
           );
 
           this.errorText.setText("");
@@ -281,22 +332,20 @@ extends BaseScene {
         });
 
         return;
+
       }
 
+
+      /* SAVE CONFIRMED PIN */
+
       setParentPin(this.pin);
+
       this.parentPin = this.pin;
+
       this.setupMode = false;
 
-      fadeScene(
-        this,
-        "ParentDashboard"
-      );
 
-      return;
-    }
-
-
-    if (this.pin === this.parentPin) {
+      /* OPEN PARENT DASHBOARD */
 
       fadeScene(
         this,
@@ -304,8 +353,32 @@ extends BaseScene {
       );
 
       return;
+
     }
 
+
+    /* -----------------------------------------------------
+       EXISTING PIN VERIFICATION
+    ----------------------------------------------------- */
+
+    if (
+      this.pin === this.parentPin &&
+      this.parentPin !== ""
+    ) {
+
+      fadeScene(
+        this,
+        "ParentDashboard"
+      );
+
+      return;
+
+    }
+
+
+    /* -----------------------------------------------------
+       INCORRECT PIN
+    ----------------------------------------------------- */
 
     this.errorText.setText(
       t("wrongPin")
@@ -313,7 +386,12 @@ extends BaseScene {
 
     this.time.delayedCall(900, () => {
 
+      if (!this.scene.isActive()) {
+        return;
+      }
+
       this.resetPinEntry();
+
       this.errorText.setText("");
 
     });

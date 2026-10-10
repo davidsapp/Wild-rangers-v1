@@ -254,48 +254,49 @@ badgeRangerDesc:
       "Complete 8 missions",
     badgeNeed10:
       "Complete all 10 missions",
-
-    parent: "PARENT AREA",
-    parentDashboard:
-      "PARENT DASHBOARD",
-    parentPin:
-      "Enter parent PIN",
+parent: "PARENT AREA",
+parentDashboard:
+  "PARENT DASHBOARD",
+parentDashboardSubtitle:
+  "View your child's progress",
+parentPin:
+  "Enter parent PIN",
 createParentPin:
   "Create a new 4-digit parent PIN",
 confirmParentPin:
   "Confirm your 4-digit PIN",
 parentPinMismatch:
   "PINs do not match. Try again.",
-    enterPin:
-      "ENTER PIN",
-    wrongPin:
-      "Incorrect PIN",
-    parentStats:
-      "RANGER PROGRESS",
-    totalStars:
-      "Total Stars",
-    completedMissions:
-      "Completed Missions",
-    currentOutfit:
-      "Current Outfit",
-    language: "Language",
-    changePin:
-      "CHANGE PIN",
-    newPin:
-      "New 4-digit PIN",
-    savePin:
-      "SAVE PIN",
-    parentInfo:
-      "Parent information",
-    parentText:
-      "Wild Rangers Adventure is designed to encourage children to explore, learn and care for nature.",
-    resetProgress:
-      "RESET PROGRESS",
-    resetConfirm:
-      "Reset all game progress?",
-    yes: "YES",
-    no: "NO",
-
+enterPin:
+  "ENTER PIN",
+wrongPin:
+  "Incorrect PIN",
+parentStats:
+  "RANGER PROGRESS",
+totalStars:
+  "Total Stars",
+completedMissions:
+  "Completed Missions",
+currentOutfit:
+  "Current Outfit",
+language: "Language",
+changePin:
+  "CHANGE PIN",
+newPin:
+  "New 4-digit PIN",
+savePin:
+  "SAVE PIN",
+parentInfo:
+  "Parent information",
+parentText:
+  "Wild Rangers Adventure is designed to encourage children to explore, learn and care for nature.",
+resetProgress:
+  "RESET PROGRESS",
+resetConfirm:
+  "Reset all game progress?",
+yes: "YES",
+no: "NO",
+    
     premium: "WILD RANGERS PLUS",
     premiumTitle:
       "MORE RANGER ADVENTURES",
@@ -668,49 +669,50 @@ badgeRangerDesc:
     badgeNeed10:
       "Termine les 10 missions",
 
-    parent:
-      "ESPACE PARENTS",
-    parentDashboard:
-      "TABLEAU DE BORD PARENT",
-    parentPin:
-      "Entre le code parent",
+   parent:
+  "ESPACE PARENTS",
+parentDashboard:
+  "TABLEAU DE BORD PARENT",
+parentDashboardSubtitle:
+  "Consultez les progrès de votre enfant",
+parentPin:
+  "Entre le code parent",
 createParentPin:
   "Créez un nouveau code PIN parental à 4 chiffres",
 confirmParentPin:
   "Confirmez votre code PIN à 4 chiffres",
 parentPinMismatch:
   "Les codes PIN ne correspondent pas. Réessayez.",
-    enterPin:
-      "ENTRER LE CODE",
-    wrongPin:
-      "Code incorrect",
-    parentStats:
-      "PROGRÈS DU RANGER",
-    totalStars:
-      "Étoiles totales",
-    completedMissions:
-      "Missions terminées",
-    currentOutfit:
-      "Tenue actuelle",
-    language:
-      "Langue",
-    changePin:
-      "CHANGER LE CODE",
-    newPin:
-      "Nouveau code à 4 chiffres",
-    savePin:
-      "ENREGISTRER",
-    parentInfo:
-      "Informations parent",
-    parentText:
-      "Wild Rangers Adventure encourage les enfants à explorer, apprendre et protéger la nature.",
-    resetProgress:
-      "RÉINITIALISER",
-    resetConfirm:
-      "Réinitialiser toute la progression ?",
-    yes: "OUI",
-    no: "NON",
-
+enterPin:
+  "ENTRER LE CODE",
+wrongPin:
+  "Code incorrect",
+parentStats:
+  "PROGRÈS DU RANGER",
+totalStars:
+  "Étoiles totales",
+completedMissions:
+  "Missions terminées",
+currentOutfit:
+  "Tenue actuelle",
+language:
+  "Langue",
+changePin:
+  "CHANGER LE CODE",
+newPin:
+  "Nouveau code à 4 chiffres",
+savePin:
+  "ENREGISTRER",
+parentInfo:
+  "Informations parent",
+parentText:
+  "Wild Rangers Adventure encourage les enfants à explorer, apprendre et protéger la nature.",
+resetProgress:
+  "RÉINITIALISER",
+resetConfirm:
+  "Réinitialiser toute la progression ?",
+yes: "OUI",
+no: "NON", 
     premium:
       "WILD RANGERS PLUS",
     premiumTitle:
@@ -1122,51 +1124,50 @@ badgeRangerDesc:
     badgeNeed10:
       "Completa las 10 misiones",
 
-    parent:
-      "ÁREA DE PADRES",
-    parentDashboard:
-      "PANEL DE PADRES",
-    parentPin:
-      "Introduce el PIN de padres",
+ parent:
+  "ÁREA DE PADRES",
+parentDashboard:
+  "PANEL DE PADRES",
+parentDashboardSubtitle:
+  "Consulta el progreso de tu hijo",
+parentPin:
+  "Introduce el PIN de padres",
 createParentPin:
   "Crea un nuevo PIN parental de 4 dígitos",
 confirmParentPin:
   "Confirma tu PIN de 4 dígitos",
 parentPinMismatch:
   "Los PIN no coinciden. Inténtalo de nuevo.",
-    enterPin:
-      "INTRODUCIR PIN",
-    wrongPin:
-      "PIN incorrecto",
-    parentStats:
-      "PROGRESO DEL RANGER",
-    totalStars:
-      "Estrellas totales",
-    completedMissions:
-      "Misiones completadas",
-    currentOutfit:
-      "Uniforme actual",
-    language:
-      "Idioma",
-    changePin:
-      "CAMBIAR PIN",
-    newPin:
-      "Nuevo PIN de 4 dígitos",
-    savePin:
-      "GUARDAR PIN",
-    parentInfo:
-      "Información para padres",
-    parentText:
-      "Wild Rangers Adventure anima a los niños a explorar, aprender y cuidar la naturaleza.",
-    resetProgress:
-      "REINICIAR PROGRESO",
-    resetConfirm:
-      "¿Reiniciar todo el progreso?",
-    yes:
-      "SÍ",
-    no:
-      "NO",
-
+enterPin:
+  "INTRODUCIR PIN",
+wrongPin:
+  "PIN incorrecto",
+parentStats:
+  "PROGRESO DEL RANGER",
+totalStars:
+  "Estrellas totales",
+completedMissions:
+  "Misiones completadas",
+currentOutfit:
+  "Uniforme actual",
+language:
+  "Idioma",
+changePin:
+  "CAMBIAR PIN",
+newPin:
+  "Nuevo PIN de 4 dígitos",
+savePin:
+  "GUARDAR PIN",
+parentInfo:
+  "Información para padres",
+parentText:
+  "Wild Rangers Adventure anima a los niños a explorar, aprender y cuidar la naturaleza.",
+resetProgress:
+  "REINICIAR PROGRESO",
+resetConfirm:
+  "¿Reiniciar todo el progreso?",
+yes: "SÍ",
+no: "NO",
     premium:
       "WILD RANGERS PLUS",
     premiumTitle:

@@ -674,6 +674,12 @@ badgeRangerDesc:
       "TABLEAU DE BORD PARENT",
     parentPin:
       "Entre le code parent",
+createParentPin:
+  "Créez un nouveau code PIN parental à 4 chiffres",
+confirmParentPin:
+  "Confirmez votre code PIN à 4 chiffres",
+parentPinMismatch:
+  "Les codes PIN ne correspondent pas. Réessayez.",
     enterPin:
       "ENTRER LE CODE",
     wrongPin:

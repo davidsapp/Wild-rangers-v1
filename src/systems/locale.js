@@ -160,6 +160,10 @@ wildlifeInstruction:
     learnWildlife: "WILDLIFE",
     learnNature: "NATURE",
     learnSafety: "RANGER SAFETY",
+natureLesson:
+  "NATURE LESSON",
+safetyLesson:
+  "RANGER SAFETY LESSON",
 
     factMonkey:
       "Monkeys use their hands and tails to move through trees.",
@@ -533,6 +537,8 @@ wildlifeInstruction:
       "NATURE",
     learnSafety:
       "SÉCURITÉ RANGER",
+natureLesson: "LEÇON SUR LA NATURE",
+safetyLesson: "LEÇON DE SÉCURITÉ DU RANGER",
 
     factMonkey:
       "Les singes utilisent leurs mains et leur queue pour se déplacer dans les arbres.",
@@ -954,6 +960,8 @@ wildlifeInstruction:
     learnSafety:
       "SEGURIDAD RANGER",
 
+natureLesson: "LECCIÓN SOBRE LA NATURALEZA",
+safetyLesson: "LECCIÓN DE SEGURIDAD DEL RANGER",
     factMonkey:
       "Los monos usan sus manos y colas para moverse entre los árboles.",
     factLion:

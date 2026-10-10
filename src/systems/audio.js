@@ -313,63 +313,37 @@ export function soundLabel() {
 // ON-SCREEN AUDIO BUTTON
 // ---------------------------------------------------------
 
+
 export function audioControl(s) {
-  const hit =
-    s.add
-      .rectangle(
-        500,
-        55,
-        58,
-        50,
-        0xffffff,
-        0
-      )
-      .setInteractive({
-        useHandCursor: true
-      });
+  const g = s.add.graphics();
 
-  const g =
-    s.add.graphics();
+  g.fillStyle(0x183d29, 0.96);
+  g.fillRoundedRect(450, 25, 70, 60, 16);
 
-  g.fillStyle(
-    0x183d29,
-    0.92
-  );
-
-  g.fillRoundedRect(
-    470,
-    30,
-    58,
-    50,
-    16
-  );
-
-  const label =
-    s.add
-      .text(
-        499,
-        55,
-        soundLabel(),
-        {
-          fontFamily: "Arial",
-          fontSize: "24px"
-        }
-      )
-      .setOrigin(0.5);
-
-  hit.on(
-    "pointerdown",
-    () => {
-      toggleSound();
-      label.setText(
-        soundLabel()
-      );
+  const label = s.add.text(
+    485,
+    55,
+    soundLabel(),
+    {
+      fontFamily: "Arial",
+      fontSize: "28px",
+      color: "#ffffff"
     }
-  );
+  ).setOrigin(0.5);
 
-  return {
-    hit,
-    g,
-    label
-  };
+  const hit = s.add.rectangle(
+    485,
+    55,
+    70,
+    60,
+    0xffffff,
+    0
+  ).setInteractive({ useHandCursor: true });
+
+  hit.on("pointerdown", () => {
+    const enabled = toggleSound();
+    label.setText(enabled ? "🔊" : "🔇");
+  });
+
+  return { hit, g, label };
 }

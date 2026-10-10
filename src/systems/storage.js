@@ -107,3 +107,35 @@ export function selectedLeoKey() {
     "leoGreen"
   );
 }
+
+/* ---------------------------------------------------------
+   RANGER QUIZ BADGE PROGRESS
+--------------------------------------------------------- */
+
+export function getQuizBestScore() {
+  return (
+    Number(
+      localStorage.getItem(
+        "wr_v1_quiz_best"
+      )
+    ) || 0
+  );
+}
+
+export function saveQuizBestScore(score) {
+  const previous =
+    getQuizBestScore();
+
+  const next =
+    Math.max(
+      previous,
+      Number(score) || 0
+    );
+
+  localStorage.setItem(
+    "wr_v1_quiz_best",
+    String(next)
+  );
+
+  return next;
+}

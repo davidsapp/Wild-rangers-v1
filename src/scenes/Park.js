@@ -38,7 +38,6 @@ BaseScene {
 
 create() {
 
-this.audio();
 
 const stars =
 getStars();
@@ -242,7 +241,7 @@ getStars();
       },
       20
     );
-
+this.audio();
   }
 
 

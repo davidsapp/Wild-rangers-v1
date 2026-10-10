@@ -38,9 +38,10 @@ BaseScene {
 
 create() {
 
-  const stars =
-    getStars();
-  
+this.audio();
+
+const stars =
+getStars();
 
     /* -----------------------------------------------------
        BACKGROUND

@@ -60,12 +60,12 @@ export function saveProgress(
 // PARENT PIN
 // ---------------------------------------------------------
 
+export function hasParentPin() {
+  return localStorage.getItem("wr_v1_parent_pin") !== null;
+}
+
 export function getParentPin() {
-  return (
-    localStorage.getItem(
-      "wr_v1_parent_pin"
-    ) || "1234"
-  );
+  return localStorage.getItem("wr_v1_parent_pin") || "";
 }
 
 export function setParentPin(pin) {

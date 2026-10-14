@@ -275,11 +275,14 @@ window.location.reload();
       es: "/privacy-es.html"
     };
 
+    const savedLanguage =
+      localStorage.getItem("wr_v1_lang") || "en";
+
     const privacyLink = txt(
       this,
       125,
       680,
-      privacyLabels[lang] || privacyLabels.en,
+      privacyLabels[savedLanguage] || privacyLabels.en,
       15,
       "#ffffff"
     );
@@ -291,14 +294,18 @@ window.location.reload();
     privacyLink.on(
       "pointerdown",
       () => {
+        const currentLanguage =
+          localStorage.getItem("wr_v1_lang") || "en";
+
         window.open(
-          privacyPaths[lang] || privacyPaths.en,
+          privacyPaths[currentLanguage] || privacyPaths.en,
           "_blank",
           "noopener,noreferrer"
         );
       }
     );
 
+   
     /* -----------------------------------------------------
        FOOTER
     ----------------------------------------------------- */

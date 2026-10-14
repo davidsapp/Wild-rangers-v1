@@ -265,8 +265,8 @@ window.location.reload();
 
     const privacyLink = txt(
       this,
-      W / 2,
-      920,
+      125,
+      680,
       "Privacy Policy",
       15,
       "#ffffff"
@@ -286,6 +286,7 @@ window.location.reload();
         );
       }
     );
+
 
     /* -----------------------------------------------------
        FOOTER

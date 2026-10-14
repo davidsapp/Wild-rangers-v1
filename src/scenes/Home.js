@@ -263,11 +263,23 @@ window.location.reload();
        PRIVACY POLICY
     ----------------------------------------------------- */
 
+    const privacyLabels = {
+      en: "Privacy Policy",
+      fr: "Politique de confidentialité",
+      es: "Política de privacidad"
+    };
+
+    const privacyPaths = {
+      en: "/privacy.html",
+      fr: "/privacy-fr.html",
+      es: "/privacy-es.html"
+    };
+
     const privacyLink = txt(
       this,
       125,
       680,
-      "Privacy Policy",
+      privacyLabels[lang] || privacyLabels.en,
       15,
       "#ffffff"
     );
@@ -280,13 +292,12 @@ window.location.reload();
       "pointerdown",
       () => {
         window.open(
-          "/privacy.html",
+          privacyPaths[lang] || privacyPaths.en,
           "_blank",
           "noopener,noreferrer"
         );
       }
     );
-
 
     /* -----------------------------------------------------
        FOOTER

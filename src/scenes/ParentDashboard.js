@@ -13,12 +13,15 @@ import {
 import {
   t
 } from "../systems/locale.js";
+
 import {
   getStars,
   getCompleted,
   setParentPin,
-  saveProgress
+  saveProgress,
+  resetQuizBestScore
 } from "../systems/storage.js";
+
 import {
   btn,
   txt,
@@ -392,6 +395,7 @@ const stars =
      RESET PROGRESS
   ------------------------------------------------------- */
 
+  
   resetProgress() {
 
     const confirmed =
@@ -399,26 +403,23 @@ const stars =
         t("confirmReset")
       );
 
-
     if (
       !confirmed
     ) {
       return;
     }
 
-saveProgress(
-  [],
-  0
-);
-   
+    saveProgress(
+      [],
+      0
+    );
+
+    resetQuizBestScore();
 
     window.alert(
       t("progressReset")
     );
 
-
     this.scene.restart();
 
   }
-
-}

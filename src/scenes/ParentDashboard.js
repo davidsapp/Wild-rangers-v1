@@ -17,6 +17,7 @@ import {
 import {
   getStars,
   getCompleted,
+  getQuizBestScore,
   setParentPin,
   saveProgress,
   resetQuizBestScore
@@ -104,7 +105,10 @@ extends BaseScene {
   getCompleted();
 
 const stars =
-  getStars(); 
+  getStars();
+
+const quizBest =
+  getQuizBestScore();
 
     const progressPanel =
       this.add.graphics();
@@ -152,6 +156,14 @@ const stars =
       "#49321f"
     );
 
+txt(
+  this,
+  W / 2,
+  335,
+  `${t("quizTitle")}: ${quizBest} / 3`,
+  18,
+  "#49321f"
+);
 
     /* -----------------------------------------------------
        CHILD PROGRESS

@@ -432,6 +432,8 @@ txt(
       t("progressReset")
     );
 
-    this.scene.restart();
+       this.scene.restart();
 
   }
+
+} 

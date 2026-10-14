@@ -259,6 +259,7 @@ window.location.reload();
 
 
  
+  
     /* -----------------------------------------------------
        PRIVACY POLICY
     ----------------------------------------------------- */
@@ -280,8 +281,8 @@ window.location.reload();
 
     const privacyLink = txt(
       this,
-      125,
-      680,
+      W / 2,
+      845,
       privacyLabels[savedLanguage] || privacyLabels.en,
       15,
       "#ffffff"
@@ -304,6 +305,7 @@ window.location.reload();
         );
       }
     );
+
 
    
     /* -----------------------------------------------------

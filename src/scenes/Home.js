@@ -298,4 +298,7 @@ window.location.reload();
       t("footer"),
       17
     );
- 
+
+   }
+
+}

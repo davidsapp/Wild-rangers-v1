@@ -139,3 +139,14 @@ export function saveQuizBestScore(score) {
 
   return next;
 }
+
+
+/* ---------------------------------------------------------
+   RESET RANGER QUIZ BEST SCORE
+--------------------------------------------------------- */
+
+export function resetQuizBestScore() {
+  localStorage.removeItem(
+    "wr_v1_quiz_best"
+  );
+}

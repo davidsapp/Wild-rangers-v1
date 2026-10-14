@@ -258,6 +258,35 @@ window.location.reload();
     );
 
 
+ 
+    /* -----------------------------------------------------
+       PRIVACY POLICY
+    ----------------------------------------------------- */
+
+    const privacyLink = txt(
+      this,
+      W / 2,
+      920,
+      "Privacy Policy",
+      15,
+      "#ffffff"
+    );
+
+    privacyLink.setInteractive(
+      { useHandCursor: true }
+    );
+
+    privacyLink.on(
+      "pointerdown",
+      () => {
+        window.open(
+          "/privacy.html",
+          "_blank",
+          "noopener,noreferrer"
+        );
+      }
+    );
+
     /* -----------------------------------------------------
        FOOTER
     ----------------------------------------------------- */
@@ -269,7 +298,4 @@ window.location.reload();
       t("footer"),
       17
     );
-
-  }
-
-}
+ 

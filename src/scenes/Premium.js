@@ -1,134 +1,65 @@
 /* =========================================================
    WILD RANGERS ADVENTURE
-   PREMIUM SCENE
+   PREMIUM SCENE — EPISODE 1
 ========================================================= */
 
 import Phaser from "phaser";
 import BaseScene from "./BaseScene.js";
-import {
-  W,
-  H
-} from "../config.js";
 
-import {
-  t
-} from "../systems/locale.js";
-
-import {
-  btn,
-  txt,
-  fadeScene
-} from "../helpers/ui.js";
-
-import {
-  character
-} from "../helpers/character.js";
+import { W, H } from "../config.js";
+import { t } from "../systems/locale.js";
+import { btn, txt, fadeScene } from "../helpers/ui.js";
+import { character } from "../helpers/character.js";
 
 
-export default class Premium extends
-BaseScene {
+export default class Premium extends BaseScene {
 
   constructor() {
     super("Premium");
   }
 
-
   create() {
 
-    /* -----------------------------------------------------
-       BACKGROUND
-    ----------------------------------------------------- */
+    /* BACKGROUND */
 
-    if (
-      this.textures.exists(
-        "savannah"
-      )
-    ) {
+    if (this.textures.exists("savannah")) {
 
       this.add
-        .image(
-          W / 2,
-          H / 2,
-          "savannah"
-        )
-        .setDisplaySize(
-          W,
-          H
-        );
+        .image(W / 2, H / 2, "savannah")
+        .setDisplaySize(W, H);
 
     } else {
 
-      this.add
-        .rectangle(
-          W / 2,
-          H / 2,
-          W,
-          H,
-          0x8a633f
-        );
+      this.add.rectangle(
+        W / 2,
+        H / 2,
+        W,
+        H,
+        0x8a633f
+      );
 
     }
 
 
-    /* -----------------------------------------------------
-       TITLE
-    ----------------------------------------------------- */
+    /* TITLE */
 
-    txt(
-      this,
-      W / 2,
-      55,
-      t("premiumTitle"),
-      30
-    );
+    txt(this, W / 2, 55, t("premiumTitle"), 30);
+
+    txt(this, W / 2, 105, t("premium"), 20);
+
+    txt(this, W / 2, 155, t("premiumText"), 19);
 
 
-    txt(
-      this,
-      W / 2,
-      105,
-      t("premium"),
-      20
-    );
+    /* LEO — KEEP EXISTING CHARACTER */
+
+    character(this, "leo", W / 2, 290, 190);
 
 
-    /* -----------------------------------------------------
-       LEAD TEXT
-    ----------------------------------------------------- */
+    /* EPISODE 1 PANEL */
 
-    txt(
-      this,
-      W / 2,
-      155,
-      t("premiumText"),
-      19
-    );
+    const panel = this.add.graphics();
 
-
-    /* -----------------------------------------------------
-       LEO
-    ----------------------------------------------------- */
-
-    character(
-      this,
-      "leo",
-      W / 2,
-      290,
-      190
-    );
-
-
-    /* -----------------------------------------------------
-       PLUS FEATURES
-    ----------------------------------------------------- */
-
-    const panel =
-      this.add.graphics();
-
-    panel.fillStyle(
-      0xffffff,
-      0.94
-    );
+    panel.fillStyle(0xffffff, 0.94);
 
     panel.fillRoundedRect(
       40,
@@ -143,11 +74,22 @@ BaseScene {
       this,
       W / 2,
       425,
-      t("plusPlan"),
-      23,
+      t("episodeTitle"),
+      21,
       "#49321f"
     );
 
+    txt(
+      this,
+      W / 2,
+      465,
+      t("episodeDescription"),
+      16,
+      "#49321f"
+    );
+
+
+    /* INCLUDED FEATURES */
 
     const features = [
       "premium_f1",
@@ -156,82 +98,62 @@ BaseScene {
       "premium_f4"
     ];
 
+    features.forEach((key, index) => {
 
-    features.forEach(
-      (key, index) => {
+      txt(
+        this,
+        W / 2,
+        510 + index * 32,
+        `⭐ ${t(key)}`,
+        15,
+        "#49321f"
+      );
 
-        txt(
-          this,
-          W / 2,
-          475 + index * 42,
-          `⭐ ${t(key)}`,
-          16,
-          "#49321f"
-        );
-
-      }
-    );
+    });
 
 
-    /* -----------------------------------------------------
-       MONTHLY PLAN
-    ----------------------------------------------------- */
-
-    btn(
-      this,
-      160,
-      710,
-      215,
-      65,
-      `${t("monthly")}\n${t("monthlyPrice")}`,
-      0x35a85b,
-      () => {
-
-        this.showPremiumMessage();
-
-      },
-      16
-    );
-
-
-    /* -----------------------------------------------------
-       YEARLY PLAN
-    ----------------------------------------------------- */
-
-    btn(
-      this,
-      380,
-      710,
-      215,
-      65,
-      `${t("yearly")}\n${t("yearlyPrice")}`,
-      0xe5a52f,
-      () => {
-
-        this.showPremiumMessage();
-
-      },
-      16
-    );
-
-
-    /* -----------------------------------------------------
-       FREE PLAN
-    ----------------------------------------------------- */
+    /* ONE-TIME PURCHASE PRICE */
 
     txt(
       this,
       W / 2,
-      790,
-      t("freePlan"),
-      17,
+      680,
+      t("episodePrice"),
+      22,
       "#ffffff"
     );
 
 
-    /* -----------------------------------------------------
-       BACK
-    ----------------------------------------------------- */
+    /* BUY EPISODE 1 — PAYMENT NOT CONNECTED */
+
+    btn(
+      this,
+      W / 2,
+      745,
+      330,
+      65,
+      t("episodeBuy"),
+      0x35a85b,
+      () => {
+        this.showPremiumMessage();
+      },
+      17
+    );
+
+
+    /* PAYMENT STATUS */
+
+    txt(
+      this,
+      W / 2,
+      815,
+      t("episodePaymentPending"),
+      13,
+      "#ffffff"
+    );
+
+
+    /* BACK TO PARK */
 
     btn(
       this,
@@ -242,12 +164,7 @@ BaseScene {
       t("back"),
       0x183d29,
       () => {
-
-        fadeScene(
-          this,
-          "Park"
-        );
-
+        fadeScene(this, "Park");
       },
       20
     );
@@ -255,38 +172,28 @@ BaseScene {
   }
 
 
-  /* -------------------------------------------------------
-     PREMIUM MESSAGE
-  ------------------------------------------------------- */
+  /* PAYMENT MESSAGE */
 
   showPremiumMessage() {
 
-    const group =
-      this.add.group();
+    const group = this.add.group();
 
 
-    const shade =
-      this.add.rectangle(
-        W / 2,
-        H / 2,
-        W,
-        H,
-        0x000000,
-        0.5
-      );
-
-    group.add(
-      shade
+    const shade = this.add.rectangle(
+      W / 2,
+      H / 2,
+      W,
+      H,
+      0x000000,
+      0.5
     );
 
+    group.add(shade);
 
-    const panel =
-      this.add.graphics();
 
-    panel.fillStyle(
-      0xffffff,
-      1
-    );
+    const panel = this.add.graphics();
+
+    panel.fillStyle(0xffffff, 1);
 
     panel.fillRoundedRect(
       45,
@@ -296,24 +203,19 @@ BaseScene {
       28
     );
 
-    group.add(
-      panel
+    group.add(panel);
+
+
+    const message = txt(
+      this,
+      W / 2,
+      440,
+      t("episodePaymentPending"),
+      18,
+      "#49321f"
     );
 
-
-    const message =
-      txt(
-        this,
-        W / 2,
-        440,
-        t("premiumSoon"),
-        21,
-        "#49321f"
-      );
-
-    group.add(
-      message
-    );
+    group.add(message);
 
 
     btn(
@@ -325,11 +227,7 @@ BaseScene {
       t("ok"),
       0x3d83c5,
       () => {
-
-        group.destroy(
-          true
-        );
-
+        group.destroy(true);
       },
       20,
       group

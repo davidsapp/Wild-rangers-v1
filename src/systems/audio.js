@@ -362,6 +362,14 @@ export function stopWildlifeAmbience() {
     clearInterval(wildlifeTimer);
     wildlifeTimer = null;
   }
+
+  if (windSource) {
+    try {
+      windSource.stop();
+    } catch (e) {}
+
+    windSource = null;
+  }
 }
 
 // ---------------------------------------------------------

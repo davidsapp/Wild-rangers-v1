@@ -211,9 +211,9 @@ export function savannah(s) {
       grassBlades.forEach((blade, i) => {
 
         const movement =
-          grassMotion.value * (5 + (i % 3) * 2);
+  grassMotion.value * (2 + (i % 3));
 
-        grass.lineStyle(3, 0x397b32, 0.8);
+       grass.lineStyle(2, 0x397b32, 0.55); 
 
         grass.beginPath();
 

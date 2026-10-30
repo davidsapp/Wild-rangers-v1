@@ -8,7 +8,7 @@ let soundOn =
 
 let audioCtx = null;
 let musicTimer = null;
-
+let wildlifeTimer = null;
 // ---------------------------------------------------------
 // START AUDIO
 // ---------------------------------------------------------
@@ -277,6 +277,88 @@ export function stopAmbient() {
   if (musicTimer) {
     clearTimeout(musicTimer);
     musicTimer = null;
+  }
+}
+
+/* ---------------------------------------------------------
+   WILDLIFE AMBIENCE
+--------------------------------------------------------- */
+
+function playBirdChirp() {
+  if (!soundOn || !audioCtx) return;
+
+  const notes = [880, 1046, 1174];
+
+  tone(
+    notes[Math.floor(Math.random() * notes.length)],
+    0.09,
+    "sine",
+    0.008
+  );
+
+  tone(
+    1396,
+    0.07,
+    "sine",
+    0.006,
+    0.13
+  );
+}
+
+function playSavannahWind() {
+  if (!soundOn || !audioCtx) return;
+
+  const buffer = audioCtx.createBuffer(
+    1,
+    audioCtx.sampleRate * 2,
+    audioCtx.sampleRate
+  );
+
+  const data = buffer.getChannelData(0);
+
+  for (let i = 0; i < data.length; i++) {
+    data[i] = Math.random() * 2 - 1;
+  }
+
+  const source = audioCtx.createBufferSource();
+  const filter = audioCtx.createBiquadFilter();
+  const gain = audioCtx.createGain();
+
+  source.buffer = buffer;
+  filter.type = "lowpass";
+  filter.frequency.value = 350;
+
+  gain.gain.value = 0.004;
+
+  source.connect(filter);
+  filter.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  source.start();
+}
+
+export function startWildlifeAmbience() {
+  if (!soundOn || wildlifeTimer) return;
+
+  startAudio();
+
+  playBirdChirp();
+
+  wildlifeTimer = setInterval(() => {
+    if (!soundOn) {
+      stopWildlifeAmbience();
+      return;
+    }
+
+    playBirdChirp();
+
+  }, 9000);
+}
+
+export function stopWildlifeAmbience() {
+  if (wildlifeTimer) {
+    clearInterval(wildlifeTimer);
+    wildlifeTimer = null;
   }
 }
 

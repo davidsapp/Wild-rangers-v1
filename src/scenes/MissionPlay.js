@@ -19,7 +19,9 @@ import {
   soundCollect,
   soundCorrect,
   soundWrong,
-  soundWin
+  soundWin,
+  startWildlifeAmbience,
+  stopWildlifeAmbience
 } from "../systems/audio.js";
 import {
   btn,
@@ -83,7 +85,12 @@ export default class MissionPlay
   create() {
 
     startAudio();
+startWildlifeAmbience();
 
+this.events.once(
+  "shutdown",
+  stopWildlifeAmbience
+);
     savannah(this);
 
     const n =

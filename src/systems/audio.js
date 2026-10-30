@@ -309,7 +309,7 @@ function playSavannahWind() {
 
   const buffer = audioCtx.createBuffer(
     1,
-    audioCtx.sampleRate * 2,
+    audioCtx.sampleRate * 3,
     audioCtx.sampleRate
   );
 
@@ -324,10 +324,12 @@ function playSavannahWind() {
   const gain = audioCtx.createGain();
 
   source.buffer = buffer;
-  filter.type = "lowpass";
-  filter.frequency.value = 350;
+  source.loop = true;
 
-  gain.gain.value = 0.004;
+  filter.type = "lowpass";
+  filter.frequency.value = 250;
+
+  gain.gain.value = 0.008;
 
   source.connect(filter);
   filter.connect(gain);

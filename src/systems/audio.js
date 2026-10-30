@@ -9,6 +9,7 @@ let soundOn =
 let audioCtx = null;
 let musicTimer = null;
 let wildlifeTimer = null;
+let animalTimer = null;
 let windSource = null;
 // ---------------------------------------------------------
 // START AUDIO

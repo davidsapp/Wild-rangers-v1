@@ -10,6 +10,7 @@ let audioCtx = null;
 let musicTimer = null;
 let wildlifeTimer = null;
 let animalTimer = null;
+let elephantTimer = null;
 let windSource = null;
 // ---------------------------------------------------------
 // START AUDIO
@@ -284,7 +285,50 @@ export function stopAmbient() {
 /* ---------------------------------------------------------
    WILDLIFE AMBIENCE
 --------------------------------------------------------- */
+function playLionCall() {
+  if (!soundOn || !audioCtx) return;
 
+  tone(
+    110,
+    0.7,
+    "sawtooth",
+    0.012
+  );
+
+  tone(
+    95,
+    0.9,
+    "triangle",
+    0.009,
+    0.35
+  );
+}
+function playElephantCall() {
+  if (!soundOn || !audioCtx) return;
+
+  tone(
+    180,
+    0.8,
+    "triangle",
+    0.012
+  );
+
+  tone(
+    140,
+    1.0,
+    "sine",
+    0.015,
+    0.3
+  );
+
+  tone(
+    110,
+    0.7,
+    "triangle",
+    0.01,
+    0.7
+  );
+}
 function playBirdChirp() {
   if (!soundOn || !audioCtx) return;
 
@@ -339,14 +383,14 @@ function playSavannahWind() {
 
   windSource.start();
 }
-
 export function startWildlifeAmbience() {
   if (!soundOn || wildlifeTimer) return;
 
   startAudio();
 
   playBirdChirp();
-playSavannahWind();
+  playSavannahWind();
+
   wildlifeTimer = setInterval(() => {
     if (!soundOn) {
       stopWildlifeAmbience();
@@ -354,14 +398,41 @@ playSavannahWind();
     }
 
     playBirdChirp();
-
   }, 9000);
+
+  animalTimer = setInterval(() => {
+    if (!soundOn) {
+      stopWildlifeAmbience();
+      return;
+    }
+
+    playLionCall();
+  }, 45000);
+
+  elephantTimer = setInterval(() => {
+    if (!soundOn) {
+      stopWildlifeAmbience();
+      return;
+    }
+
+    playElephantCall();
+  }, 75000);
 }
 
 export function stopWildlifeAmbience() {
   if (wildlifeTimer) {
     clearInterval(wildlifeTimer);
     wildlifeTimer = null;
+  }
+
+  if (animalTimer) {
+    clearInterval(animalTimer);
+    animalTimer = null;
+  }
+
+  if (elephantTimer) {
+    clearInterval(elephantTimer);
+    elephantTimer = null;
   }
 
   if (windSource) {
@@ -386,16 +457,17 @@ export function toggleSound() {
   );
 
   if (soundOn) {
-    startAudio();
-    soundTap();
-    startAmbient();
-  } else {
+  startAudio();
+  soundTap();
+  startAmbient();
+  startWildlifeAmbience();
+} else {
     stopAmbient();
+    stopWildlifeAmbience();
   }
 
   return soundOn;
 }
-
 export function soundLabel() {
   return soundOn
     ? "🔊"

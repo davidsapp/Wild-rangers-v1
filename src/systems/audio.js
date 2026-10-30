@@ -292,14 +292,14 @@ function playBirdChirp() {
     notes[Math.floor(Math.random() * notes.length)],
     0.09,
     "sine",
-    0.008
+    0.035
   );
 
   tone(
     1396,
     0.07,
     "sine",
-    0.006,
+    0.025,
     0.13
   );
 }

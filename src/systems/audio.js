@@ -249,13 +249,12 @@ export function startAmbient() {
     );
 
     tone(
-      329,
-      0.55,
-      "sine",
-      0.025
-      0.18
-    );
-
+  329,
+  0.55,
+  "sine",
+  0.025,
+  0.18
+);
     tone(
       392,
       0.7,

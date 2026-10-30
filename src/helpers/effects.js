@@ -30,101 +30,165 @@ import {
 
 /* =========================================================
    SAVANNAH BACKGROUND
-   LAYERED 2D GAMEPLAY SCENERY
+   LAYERED 2D WITH GENTLE ANIMATION
 ========================================================= */
 
 export function savannah(s) {
 
   // -------------------------------------------------------
-  // BACKGROUND LAYER 1: SKY
+  // LAYER 1: SKY
   // -------------------------------------------------------
 
   if (s.textures.exists("savannah_sky")) {
-
-    s.add.image(
-      0,
-      0,
-      "savannah_sky"
-    )
-    .setOrigin(0, 0)
-    .setDisplaySize(W, H)
-    .setDepth(-50);
-
+    s.add.image(0, 0, "savannah_sky")
+      .setOrigin(0, 0)
+      .setDisplaySize(W, H)
+      .setDepth(-50);
   }
 
-
   // -------------------------------------------------------
-  // BACKGROUND LAYER 2: DISTANT MOUNTAINS
+  // LAYER 2: MOUNTAINS
   // -------------------------------------------------------
 
   if (s.textures.exists("savannah_mountains")) {
-
-    s.add.image(
-      0,
-      0,
-      "savannah_mountains"
-    )
-    .setOrigin(0, 0)
-    .setDisplaySize(W, H)
-    .setDepth(-40);
-
+    s.add.image(0, 0, "savannah_mountains")
+      .setOrigin(0, 0)
+      .setDisplaySize(W, H)
+      .setDepth(-40);
   }
 
-
   // -------------------------------------------------------
-  // BACKGROUND LAYER 3: SAVANNAH TREES
+  // LAYER 3: TREES
   // -------------------------------------------------------
 
   if (s.textures.exists("savannah_trees")) {
-
-    s.add.image(
-      0,
-      0,
-      "savannah_trees"
-    )
-    .setOrigin(0, 0)
-    .setDisplaySize(W, H)
-    .setDepth(-30);
-
+    s.add.image(0, 0, "savannah_trees")
+      .setOrigin(0, 0)
+      .setDisplaySize(W, H)
+      .setDepth(-30);
   }
 
-
   // -------------------------------------------------------
-  // BACKGROUND LAYER 4: GRASSLAND
+  // LAYER 4: GRASSLAND
   // -------------------------------------------------------
 
   if (s.textures.exists("savannah_grassland")) {
-
-    s.add.image(
-      0,
-      0,
-      "savannah_grassland"
-    )
-    .setOrigin(0, 0)
-    .setDisplaySize(W, H)
-    .setDepth(-20);
-
+    s.add.image(0, 0, "savannah_grassland")
+      .setOrigin(0, 0)
+      .setDisplaySize(W, H)
+      .setDepth(-20);
   }
 
-
   // -------------------------------------------------------
-  // BACKGROUND LAYER 5: FOREGROUND
+  // LAYER 5: FOREGROUND
   // -------------------------------------------------------
 
   if (s.textures.exists("savannah_foreground")) {
+    s.add.image(0, 0, "savannah_foreground")
+      .setOrigin(0, 0)
+      .setDisplaySize(W, H)
+      .setDepth(-10);
+  }
 
-    s.add.image(
-      0,
-      0,
-      "savannah_foreground"
-    )
-    .setOrigin(0, 0)
-    .setDisplaySize(W, H)
-    .setDepth(-10);
+  // -------------------------------------------------------
+  // ANIMATED CLOUDS
+  // -------------------------------------------------------
+
+  const clouds = [];
+
+  for (let i = 0; i < 3; i++) {
+
+    const cloud = s.add.container(
+      -100 + i * 230,
+      115 + i * 65
+    );
+
+    const cloudGraphics = s.add.graphics();
+
+    cloudGraphics.fillStyle(0xffffff, 0.32);
+
+    cloudGraphics.fillEllipse(0, 0, 85, 30);
+    cloudGraphics.fillCircle(-22, -8, 17);
+    cloudGraphics.fillCircle(0, -16, 22);
+    cloudGraphics.fillCircle(24, -7, 17);
+
+    cloud.add(cloudGraphics);
+
+    cloud.setDepth(-45);
+
+    clouds.push(cloud);
+
+    s.tweens.add({
+      targets: cloud,
+      x: 650,
+      duration: 45000 + i * 8000,
+      repeat: -1,
+      onRepeat: () => {
+        cloud.x = -100;
+      }
+    });
+  }
+
+  // -------------------------------------------------------
+  // GENTLE FOREGROUND GRASS MOVEMENT
+  // -------------------------------------------------------
+
+  const grass = s.add.graphics();
+
+  grass.setDepth(-5);
+
+  const grassBlades = [];
+
+  for (let i = 0; i < 18; i++) {
+
+    grassBlades.push({
+      x: 12 + i * 31,
+      y: 930 - (i % 4) * 13,
+      sway: 0
+    });
 
   }
 
+  const grassMotion = {
+    value: -1
+  };
+
+  s.tweens.add({
+    targets: grassMotion,
+    value: 1,
+    duration: 2200,
+    yoyo: true,
+    repeat: -1,
+    onUpdate: () => {
+
+      grass.clear();
+
+      grassBlades.forEach((blade, i) => {
+
+        const movement =
+          grassMotion.value * (5 + (i % 3) * 2);
+
+        grass.lineStyle(3, 0x397b32, 0.8);
+
+        grass.beginPath();
+
+        grass.moveTo(blade.x, blade.y);
+
+        grass.lineTo(
+          blade.x + movement,
+          blade.y - 28
+        );
+
+        grass.strokePath();
+
+      });
+
+    }
+  });
+
 }
+
+
 
 /* =========================================================
    SCENE FADE

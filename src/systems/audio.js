@@ -306,7 +306,7 @@ function playBirdChirp() {
 }
 
 function playSavannahWind() {
-  if (!soundOn || !audioCtx) return;
+  if (!soundOn || !audioCtx || windSource) return;
 
   const buffer = audioCtx.createBuffer(
     1,
@@ -320,23 +320,23 @@ function playSavannahWind() {
     data[i] = Math.random() * 2 - 1;
   }
 
-  const source = audioCtx.createBufferSource();
   const filter = audioCtx.createBiquadFilter();
   const gain = audioCtx.createGain();
 
-  source.buffer = buffer;
-  source.loop = true;
+  windSource = audioCtx.createBufferSource();
+  windSource.buffer = buffer;
+  windSource.loop = true;
 
   filter.type = "lowpass";
   filter.frequency.value = 250;
 
   gain.gain.value = 0.008;
 
-  source.connect(filter);
+  windSource.connect(filter);
   filter.connect(gain);
   gain.connect(audioCtx.destination);
 
-  source.start();
+  windSource.start();
 }
 
 export function startWildlifeAmbience() {

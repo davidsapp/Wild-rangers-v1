@@ -226,6 +226,58 @@ export function savannah(s) {
 }
 
 
+  // -------------------------------------------------------
+  // GENTLE BUTTERFLY ANIMATION
+  // -------------------------------------------------------
+
+  const butterflyColors = [
+    0xffd447,
+    0xff85b8,
+    0x8bdcff
+  ];
+
+  for (let i = 0; i < 3; i++) {
+
+    const butterfly = s.add.graphics();
+
+    butterfly.setDepth(-4);
+
+    const color = butterflyColors[i];
+
+    butterfly.fillStyle(color, 0.9);
+
+    butterfly.fillEllipse(-7, -4, 13, 16);
+    butterfly.fillEllipse(7, -4, 13, 16);
+
+    butterfly.fillStyle(0x35452b, 1);
+    butterfly.fillEllipse(0, 0, 3, 13);
+
+    butterfly.setPosition(
+      75 + i * 155,
+      790 + i * 35
+    );
+
+    s.tweens.add({
+      targets: butterfly,
+      y: butterfly.y - 28,
+      x: butterfly.x + 22,
+      duration: 2400 + i * 500,
+      yoyo: true,
+      repeat: -1,
+      ease: "Sine.easeInOut"
+    });
+
+    s.tweens.add({
+      targets: butterfly,
+      scaleX: 0.55,
+      duration: 350,
+      yoyo: true,
+      repeat: -1,
+      ease: "Sine.easeInOut"
+    });
+
+  }
+
 
 /* =========================================================
    SCENE FADE

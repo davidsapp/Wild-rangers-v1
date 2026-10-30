@@ -130,6 +130,43 @@ export function savannah(s) {
   }
 
   // -------------------------------------------------------
+  // DISTANT FLYING BIRDS
+  // -------------------------------------------------------
+
+  for (let i = 0; i < 3; i++) {
+
+    const bird = s.add.graphics();
+
+    bird.lineStyle(2.5, 0x29483b, 0.75);
+
+    bird.beginPath();
+    bird.moveTo(-12, 0);
+    bird.lineTo(0, -7);
+    bird.lineTo(12, 0);
+    bird.strokePath();
+
+    bird.setPosition(
+      -40 - i * 100,
+      245 + i * 22
+    );
+
+    bird.setDepth(-35);
+
+    s.tweens.add({
+      targets: bird,
+      x: W + 40,
+      y: bird.y - 12,
+      duration: 26000 + i * 5000,
+      repeat: -1,
+      onRepeat: () => {
+        bird.x = -40;
+        bird.y = 245 + i * 22;
+      }
+    });
+
+  }
+
+  // -------------------------------------------------------
   // GENTLE FOREGROUND GRASS MOVEMENT
   // -------------------------------------------------------
 

@@ -289,44 +289,60 @@ function playLionCall() {
   if (!soundOn || !audioCtx) return;
 
   tone(
-    110,
-    0.7,
+    220,
+    0.6,
     "sawtooth",
-    0.012
+    0.035
   );
 
   tone(
-    95,
-    0.9,
+    185,
+    0.8,
     "triangle",
-    0.009,
-    0.35
+    0.03,
+    0.25
+  );
+
+  tone(
+    150,
+    0.7,
+    "sawtooth",
+    0.025,
+    0.55
   );
 }
 function playElephantCall() {
   if (!soundOn || !audioCtx) return;
 
   tone(
+    260,
+    0.7,
+    "triangle",
+    0.035
+  );
+
+  tone(
+    220,
+    0.9,
+    "sine",
+    0.03,
+    0.25
+  );
+
+  tone(
     180,
     0.8,
     "triangle",
-    0.012
+    0.025,
+    0.65
   );
 
   tone(
-    140,
-    1.0,
+    320,
+    0.5,
     "sine",
-    0.015,
-    0.3
-  );
-
-  tone(
-    110,
-    0.7,
-    "triangle",
-    0.01,
-    0.7
+    0.025,
+    1.0
   );
 }
 function playBirdChirp() {

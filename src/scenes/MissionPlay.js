@@ -45,7 +45,32 @@ export default class MissionPlay
   constructor() {
     super("MissionPlay");
   }
+  // -------------------------------------------------------
+  // LOAD GAMEPLAY BACKGROUND ASSETS
+  // -------------------------------------------------------
 
+  preload() {
+
+    // Keep loading the existing character images.
+    super.preload();
+
+    const backgrounds = [
+      ["savannah_sky", "/assets/savannah_sky.png"],
+      ["savannah_mountains", "/assets/savannah_mountains.png"],
+      ["savannah_trees", "/assets/savannah_trees.png"],
+      ["savannah_grassland", "/assets/savannah_grassland.png"],
+      ["savannah_foreground", "/assets/savannah_foreground.png"]
+    ];
+
+    backgrounds.forEach(([key, path]) => {
+
+      if (!this.textures.exists(key)) {
+        this.load.image(key, path);
+      }
+
+    });
+
+  }
 
   init(data) {
 

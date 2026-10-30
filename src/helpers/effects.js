@@ -137,12 +137,19 @@ export function savannah(s) {
 
     const bird = s.add.graphics();
 
-    bird.lineStyle(2.5, 0x29483b, 0.75);
+    bird.lineStyle(2, 0x29483b, 0.7);
 
+    // Natural M-shaped flying bird silhouette
     bird.beginPath();
-    bird.moveTo(-12, 0);
-    bird.lineTo(0, -7);
-    bird.lineTo(12, 0);
+
+    bird.moveTo(-13, 0);
+    bird.lineTo(-9, -4);
+    bird.lineTo(-4, -5);
+    bird.lineTo(0, 0);
+    bird.lineTo(4, -5);
+    bird.lineTo(9, -4);
+    bird.lineTo(13, 0);
+
     bird.strokePath();
 
     bird.setPosition(
@@ -158,6 +165,7 @@ export function savannah(s) {
       y: bird.y - 12,
       duration: 26000 + i * 5000,
       repeat: -1,
+
       onRepeat: () => {
         bird.x = -40;
         bird.y = 245 + i * 22;

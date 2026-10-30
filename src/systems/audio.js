@@ -345,7 +345,7 @@ export function startWildlifeAmbience() {
   startAudio();
 
   playBirdChirp();
-
+playSavannahWind();
   wildlifeTimer = setInterval(() => {
     if (!soundOn) {
       stopWildlifeAmbience();
